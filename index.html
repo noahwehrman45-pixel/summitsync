@@ -1,6 +1,4 @@
-Output
-
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -27,19 +25,23 @@ Output
 <script type="text/babel">
 const { useState, useRef } = React;
 
+// ─── FULL RESORT DATABASE ─────────────────────────────────────────────────────
 const MOUNTAINS = [
+
+  // ── COLORADO ──────────────────────────────────────────────────────────────
   {
-    id:"abasin", name:"Arapahoe Basin", state:"CO", nickname:"The Legend",
+    id:"abasin", name:"Arapahoe Basin", state:"CO", region:"rockies", nickname:"The Legend",
     tags:["all-mountain","powder","advanced","intermediate","value"],
-    travelMode:"drive", distanceDenver:68, distanceSLC:450,
-    baseElevation:10780, summitElevation:13050, verticalDrop:2270,
-    skiableAcres:1428, averageSnowfall:350, currentBase:62,
+    travelMode:"drive", distanceDenver:68, distanceSLC:450, distanceSeattle:1200, distanceSF:1400,
+    verticalDrop:2270, skiableAcres:1428, averageSnowfall:350, currentBase:62,
     liftTicket:99, avgLodgingPerNight:160,
     crowdScore:28, snowScore:84, valueScore:92, accessScore:75,
     weeklyForecast:[{day:"Thu",icon:"⛅",snow:2},{day:"Fri",icon:"🌨",snow:8},{day:"Sat",icon:"🌨",snow:12},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
     description:"Colorado's highest ski area. No resort lodging keeps crowds thin. Famous for skiing into June.",
     pros:"Highest base in CO, thin crowds, incredible late-season skiing, free parking.",
     cons:"Limited on-mountain lodging, can be very windy at summit.",
+    openSnowLink:"https://opensnow.com/location/arapahoe-basin",
+    resortLink:"https://www.arapahoebasin.com/the-mountain/mountain-conditions/",
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Dillon Inn",pricePerNight:59,note:"10 min drive, basic rooms, free parking",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Keystone Condos",pricePerNight:160,note:"Full kitchen, slope views, easy A-Basin drive",link:"https://www.expedia.com/Hotel-Search?destination=Keystone+Colorado"},
@@ -47,17 +49,18 @@ const MOUNTAINS = [
     ],
   },
   {
-    id:"steamboat", name:"Steamboat Springs", state:"CO", nickname:"Ski Town USA",
+    id:"steamboat", name:"Steamboat Springs", state:"CO", region:"rockies", nickname:"Ski Town USA",
     tags:["all-mountain","family","intermediate","powder","beginner"],
-    travelMode:"either", distanceDenver:157, distanceSLC:380,
-    baseElevation:6900, summitElevation:10568, verticalDrop:3668,
-    skiableAcres:2965, averageSnowfall:349, currentBase:55,
+    travelMode:"either", distanceDenver:157, distanceSLC:380, distanceSeattle:1300, distanceSF:1500,
+    verticalDrop:3668, skiableAcres:2965, averageSnowfall:349, currentBase:55,
     liftTicket:159, avgLodgingPerNight:240,
     crowdScore:48, snowScore:80, valueScore:65, accessScore:70,
     weeklyForecast:[{day:"Thu",icon:"☀️",snow:0},{day:"Fri",icon:"⛅",snow:4},{day:"Sat",icon:"🌨",snow:14},{day:"Sun",icon:"🌨",snow:9},{day:"Mon",icon:"⛅",snow:2}],
     description:"Home of Champagne Powder™. Lively western town with great restaurants and après.",
     pros:"World-famous snow quality, great town scene, excellent beginner terrain.",
     cons:"Further from Denver, pricier on weekends.",
+    openSnowLink:"https://opensnow.com/location/steamboat",
+    resortLink:"https://www.steamboat.com/the-mountain/mountain-report",
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Steamboat Hostel",pricePerNight:65,note:"Walk to gondola, free breakfast, great social scene",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Storm Meadows Condos",pricePerNight:240,note:"Ski-in/ski-out, full kitchen, great for groups",link:"https://www.expedia.com/Hotel-Search?destination=Steamboat+Springs+Colorado"},
@@ -65,35 +68,18 @@ const MOUNTAINS = [
     ],
   },
   {
-    id:"snowbird", name:"Snowbird", state:"UT", nickname:"The Deep",
-    tags:["all-mountain","powder","advanced"],
-    travelMode:"fly", distanceDenver:525, distanceSLC:25,
-    baseElevation:7760, summitElevation:11000, verticalDrop:3240,
-    skiableAcres:2500, averageSnowfall:500, currentBase:90,
-    liftTicket:209, avgLodgingPerNight:320,
-    crowdScore:58, snowScore:97, valueScore:52, accessScore:74,
-    weeklyForecast:[{day:"Thu",icon:"🌨",snow:10},{day:"Fri",icon:"🌨",snow:18},{day:"Sat",icon:"🌨",snow:22},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
-    description:"500+ inches average. Consistently the deepest snowpack in North America.",
-    pros:"Best snow in NA, aerial tram to summit, long season.",
-    cons:"Minimal beginner terrain, requires flying from Denver.",
-    lodgingTiers:[
-      {tier:"budget",label:"Budget",name:"SLC Airport Hotel + Drive",pricePerNight:90,note:"Stay in SLC, 35 min canyon drive. Saves $150+/night",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
-      {tier:"mid",label:"Mid-Range",name:"The Cliff Lodge",pricePerNight:320,note:"Slope-side, rooftop pool, ski locker room on-site",link:"https://www.expedia.com/Hotel-Search?destination=Snowbird+Utah"},
-      {tier:"luxury",label:"Luxury",name:"Snowbird Mountain Suite",pricePerNight:620,note:"Ski-in/ski-out suite, panoramic views, butler service",link:"https://www.booking.com/searchresults.html?ss=Snowbird%2C+Utah"},
-    ],
-  },
-  {
-    id:"breckenridge", name:"Breckenridge", state:"CO", nickname:"Breck",
+    id:"breckenridge", name:"Breckenridge", state:"CO", region:"rockies", nickname:"Breck",
     tags:["all-mountain","park","intermediate","beginner","family"],
-    travelMode:"drive", distanceDenver:85, distanceSLC:500,
-    baseElevation:9600, summitElevation:12998, verticalDrop:3398,
-    skiableAcres:2908, averageSnowfall:360, currentBase:58,
+    travelMode:"drive", distanceDenver:85, distanceSLC:500, distanceSeattle:1250, distanceSF:1450,
+    verticalDrop:3398, skiableAcres:2908, averageSnowfall:360, currentBase:58,
     liftTicket:199, avgLodgingPerNight:280,
     crowdScore:80, snowScore:74, valueScore:46, accessScore:88,
     weeklyForecast:[{day:"Thu",icon:"⛅",snow:1},{day:"Fri",icon:"🌨",snow:6},{day:"Sat",icon:"🌨",snow:10},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
     description:"Colorado's most visited resort. Victorian town, great nightlife, best park terrain in the state.",
     pros:"Easy I-70 access, charming town, world-class park, Epic Pass compatible.",
     cons:"Very crowded weekends, expensive lodging.",
+    openSnowLink:"https://opensnow.com/location/breckenridge",
+    resortLink:"https://www.breckenridge.com/mountain/snow-and-weather-report.aspx",
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Frisco Inn on Galena",pricePerNight:89,note:"Stay in Frisco, 15 min free bus to Breck. Way cheaper.",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Village at Breckenridge",pricePerNight:280,note:"Ski-in/ski-out, full kitchen, walk to Main St",link:"https://www.expedia.com/Hotel-Search?destination=Breckenridge+Colorado"},
@@ -101,17 +87,18 @@ const MOUNTAINS = [
     ],
   },
   {
-    id:"telluride", name:"Telluride", state:"CO", nickname:"The Box Canyon",
+    id:"telluride", name:"Telluride", state:"CO", region:"rockies", nickname:"The Box Canyon",
     tags:["all-mountain","powder","advanced","intermediate"],
-    travelMode:"fly", distanceDenver:333, distanceSLC:475,
-    baseElevation:8725, summitElevation:13150, verticalDrop:4425,
-    skiableAcres:2000, averageSnowfall:309, currentBase:48,
+    travelMode:"fly", distanceDenver:333, distanceSLC:475, distanceSeattle:1500, distanceSF:1600,
+    verticalDrop:4425, skiableAcres:2000, averageSnowfall:309, currentBase:48,
     liftTicket:179, avgLodgingPerNight:350,
     crowdScore:30, snowScore:70, valueScore:55, accessScore:44,
     weeklyForecast:[{day:"Thu",icon:"☀️",snow:0},{day:"Fri",icon:"⛅",snow:3},{day:"Sat",icon:"🌨",snow:8},{day:"Sun",icon:"🌨",snow:6},{day:"Mon",icon:"⛅",snow:1}],
     description:"Dramatic San Juan box canyon. One of the most beautiful places in America to ski.",
     pros:"Stunning scenery, thin crowds, free gondola to Mountain Village.",
     cons:"Remote location, small regional airport, most expensive lodging.",
+    openSnowLink:"https://opensnow.com/location/telluride",
+    resortLink:"https://www.tellurideskiresort.com/mountain/snow-report/",
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Telluride Town Rental",pricePerNight:140,note:"Stay in town, free gondola to Mountain Village",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Mountain Village Condos",pricePerNight:350,note:"Ski-in/ski-out from Mountain Village, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Telluride+Colorado"},
@@ -119,35 +106,56 @@ const MOUNTAINS = [
     ],
   },
   {
-    id:"jacksonthole", name:"Jackson Hole", state:"WY", nickname:"The Big One",
-    tags:["all-mountain","powder","advanced"],
-    travelMode:"fly", distanceDenver:540, distanceSLC:280,
-    baseElevation:6311, summitElevation:10450, verticalDrop:4139,
-    skiableAcres:2500, averageSnowfall:459, currentBase:78,
-    liftTicket:239, avgLodgingPerNight:380,
-    crowdScore:52, snowScore:93, valueScore:44, accessScore:66,
-    weeklyForecast:[{day:"Thu",icon:"🌨",snow:6},{day:"Fri",icon:"🌨",snow:14},{day:"Sat",icon:"🌨",snow:20},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
-    description:"The most serious big mountain resort in the US. Experts only on 50% of terrain.",
-    pros:"Massive vert, epic backcountry access, iconic tram, world-class snow.",
-    cons:"Expensive, limited beginner/intermediate terrain, crowded powder days.",
+    id:"vail", name:"Vail", state:"CO", region:"rockies", nickname:"The Beast",
+    tags:["all-mountain","powder","advanced","intermediate","family"],
+    travelMode:"drive", distanceDenver:97, distanceSLC:420, distanceSeattle:1230, distanceSF:1430,
+    verticalDrop:3450, skiableAcres:5317, averageSnowfall:354, currentBase:60,
+    liftTicket:249, avgLodgingPerNight:400,
+    crowdScore:72, snowScore:78, valueScore:38, accessScore:85,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:2},{day:"Fri",icon:"🌨",snow:7},{day:"Sat",icon:"🌨",snow:11},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
+    description:"One of the largest ski resorts in North America. The Back Bowls alone are worth the trip.",
+    pros:"Massive terrain, legendary Back Bowls, world-class amenities.",
+    cons:"Most expensive resort in CO, very crowded, parking nightmare.",
+    openSnowLink:"https://opensnow.com/location/vail",
+    resortLink:"https://www.vail.com/the-mountain/mountain-conditions/snow-report.aspx",
     lodgingTiers:[
-      {tier:"budget",label:"Budget",name:"Hostel X",pricePerNight:75,note:"Legendary ski bum hostel at the base of the tram",link:"https://www.booking.com/searchresults.html?ss=Jackson+Hole%2C+Wyoming"},
-      {tier:"mid",label:"Mid-Range",name:"Teton Village Condo",pricePerNight:380,note:"Ski-in/ski-out, full kitchen, walk to tram",link:"https://www.expedia.com/Hotel-Search?destination=Jackson+Hole+Wyoming"},
-      {tier:"luxury",label:"Luxury",name:"Four Seasons Jackson Hole",pricePerNight:900,note:"Ski-in/ski-out, Forbes 5-star, the best in Wyoming",link:"https://www.booking.com/searchresults.html?ss=Jackson+Hole%2C+Wyoming"},
+      {tier:"budget",label:"Budget",name:"Eagle-Vail Condo",pricePerNight:120,note:"Stay in Eagle-Vail, 10 min bus ride, half the price",link:"https://www.booking.com/searchresults.html?ss=Avon%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Lion Square Lodge",pricePerNight:400,note:"Ski-in/ski-out Lionshead, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Vail+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Four Seasons Vail",pricePerNight:1100,note:"Forbes 5-star, ski-in/ski-out, the best in CO",link:"https://www.booking.com/searchresults.html?ss=Vail%2C+Colorado"},
     ],
   },
   {
-    id:"crested", name:"Crested Butte", state:"CO", nickname:"The Last Great Colorado Ski Town",
+    id:"aspen", name:"Aspen Snowmass", state:"CO", region:"rockies", nickname:"The Four Mountains",
+    tags:["all-mountain","powder","advanced","intermediate","luxury"],
+    travelMode:"fly", distanceDenver:200, distanceSLC:430, distanceSeattle:1400, distanceSF:1500,
+    verticalDrop:4406, skiableAcres:5527, averageSnowfall:300, currentBase:52,
+    liftTicket:229, avgLodgingPerNight:500,
+    crowdScore:45, snowScore:72, valueScore:30, accessScore:62,
+    weeklyForecast:[{day:"Thu",icon:"☀️",snow:0},{day:"Fri",icon:"⛅",snow:4},{day:"Sat",icon:"🌨",snow:9},{day:"Sun",icon:"🌨",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Four distinct mountains, one legendary town. Snowmass alone rivals most full resorts.",
+    pros:"Four mountains on one pass, iconic town, Snowmass is huge and less crowded than Aspen Mountain.",
+    cons:"Most expensive town in skiing, flights to Aspen airport are pricey.",
+    openSnowLink:"https://opensnow.com/location/aspen-snowmass",
+    resortLink:"https://www.aspensnowmass.com/while-you-re-here/mountain-cams-conditions",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Basalt Rental",pricePerNight:130,note:"Stay in Basalt 20 min away, RFTA bus runs to mountain",link:"https://www.booking.com/searchresults.html?ss=Basalt%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Snowmass Club Condos",pricePerNight:500,note:"Ski-in/ski-out at Snowmass, quieter than Aspen town",link:"https://www.expedia.com/Hotel-Search?destination=Snowmass+Village+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"The Little Nell",pricePerNight:1500,note:"Only ski-in/ski-out hotel on Aspen Mountain, legendary",link:"https://www.booking.com/searchresults.html?ss=Aspen%2C+Colorado"},
+    ],
+  },
+  {
+    id:"crested", name:"Crested Butte", state:"CO", region:"rockies", nickname:"The Last Great Colorado Ski Town",
     tags:["all-mountain","powder","advanced","intermediate","value"],
-    travelMode:"fly", distanceDenver:230, distanceSLC:550,
-    baseElevation:9375, summitElevation:12162, verticalDrop:2775,
-    skiableAcres:1547, averageSnowfall:300, currentBase:44,
+    travelMode:"fly", distanceDenver:230, distanceSLC:550, distanceSeattle:1500, distanceSF:1600,
+    verticalDrop:2775, skiableAcres:1547, averageSnowfall:300, currentBase:44,
     liftTicket:129, avgLodgingPerNight:195,
     crowdScore:22, snowScore:74, valueScore:80, accessScore:50,
     weeklyForecast:[{day:"Thu",icon:"☀️",snow:0},{day:"Fri",icon:"⛅",snow:2},{day:"Sat",icon:"🌨",snow:7},{day:"Sun",icon:"🌨",snow:5},{day:"Mon",icon:"☀️",snow:0}],
     description:"Colorado's most extreme terrain with an extremely low-key, authentic ski town vibe.",
     pros:"Wildest extreme terrain in CO, genuine mountain town, not overcrowded.",
     cons:"Remote, lower average snowfall, small regional airport.",
+    openSnowLink:"https://opensnow.com/location/crested-butte",
+    resortLink:"https://www.skicb.com/the-mountain/mountain-conditions/snow-report.aspx",
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"CB Town Rental",pricePerNight:85,note:"Stay in funky Crested Butte town, free bus to mountain",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Elevation Hotel & Spa",pricePerNight:195,note:"Base of mountain, ski-in/ski-out, pool and hot tub",link:"https://www.expedia.com/Hotel-Search?destination=Crested+Butte+Colorado"},
@@ -155,34 +163,496 @@ const MOUNTAINS = [
     ],
   },
   {
-    id:"eldora", name:"Eldora Mountain", state:"CO", nickname:"Boulder's Backyard",
+    id:"eldora", name:"Eldora Mountain", state:"CO", region:"rockies", nickname:"Boulder's Backyard",
     tags:["all-mountain","beginner","intermediate","value","family"],
-    travelMode:"drive", distanceDenver:45, distanceSLC:530,
-    baseElevation:9200, summitElevation:10800, verticalDrop:1600,
-    skiableAcres:680, averageSnowfall:300, currentBase:40,
+    travelMode:"drive", distanceDenver:45, distanceSLC:530, distanceSeattle:1300, distanceSF:1450,
+    verticalDrop:1600, skiableAcres:680, averageSnowfall:300, currentBase:40,
     liftTicket:79, avgLodgingPerNight:130,
     crowdScore:55, snowScore:60, valueScore:90, accessScore:92,
     weeklyForecast:[{day:"Thu",icon:"⛅",snow:1},{day:"Fri",icon:"🌨",snow:5},{day:"Sat",icon:"☁️",snow:2},{day:"Sun",icon:"☀️",snow:0},{day:"Mon",icon:"☀️",snow:0}],
     description:"Closest ski area to Denver and Boulder. Perfect day trip, incredible value.",
     pros:"Closest to Denver/Boulder, cheapest tickets, great for beginners and families.",
     cons:"Smaller vertical, lower snowfall than higher resorts.",
+    openSnowLink:"https://opensnow.com/location/eldora",
+    resortLink:"https://www.eldora.com/mountain/snow-report",
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Day Trip from Denver",pricePerNight:0,note:"45 min from Denver — just drive up and back. No lodging needed.",link:"https://www.google.com/maps/dir/Denver,+CO/Eldora+Mountain+Resort"},
       {tier:"mid",label:"Mid-Range",name:"Nederland B&B",pricePerNight:130,note:"Charming mountain town, 10 min from Eldora",link:"https://www.booking.com/searchresults.html?ss=Nederland%2C+Colorado"},
       {tier:"luxury",label:"Luxury",name:"Boulder Hotel + Drive",pricePerNight:220,note:"Stay in Boulder, 45 min scenic drive. More amenities.",link:"https://www.expedia.com/Hotel-Search?destination=Boulder+Colorado"},
     ],
   },
+  {
+    id:"winterpark", name:"Winter Park", state:"CO", region:"rockies", nickname:"Colorado's Favorite",
+    tags:["all-mountain","intermediate","beginner","family","value"],
+    travelMode:"drive", distanceDenver:67, distanceSLC:480, distanceSeattle:1220, distanceSF:1420,
+    verticalDrop:3060, skiableAcres:3081, averageSnowfall:327, currentBase:50,
+    liftTicket:169, avgLodgingPerNight:200,
+    crowdScore:58, snowScore:72, valueScore:72, accessScore:82,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:2},{day:"Fri",icon:"🌨",snow:7},{day:"Sat",icon:"🌨",snow:9},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Denver's home mountain. Amex Invitational. Mary Jane side is one of Colorado's best kept secrets.",
+    pros:"Amtrak ski train from Denver, affordable, Mary Jane moguls are legendary.",
+    cons:"Weather can be variable, crowded on powder days from Denver day-trippers.",
+    openSnowLink:"https://opensnow.com/location/winter-park",
+    resortLink:"https://www.winterparkresort.com/the-mountain/mountain-conditions",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Fraser Valley Rental",pricePerNight:90,note:"Stay in Fraser, 5 min drive, half the price",link:"https://www.booking.com/searchresults.html?ss=Fraser%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Vintage Hotel",pricePerNight:200,note:"Slope-side, ski-in/ski-out, great location",link:"https://www.expedia.com/Hotel-Search?destination=Winter+Park+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Zephyr Mountain Lodge",pricePerNight:420,note:"Ski-in/ski-out, full kitchen suites, mountain views",link:"https://www.booking.com/searchresults.html?ss=Winter+Park%2C+Colorado"},
+    ],
+  },
+  {
+    id:"keystoneco", name:"Keystone", state:"CO", region:"rockies", nickname:"Night Ski Capital",
+    tags:["all-mountain","intermediate","beginner","family","value"],
+    travelMode:"drive", distanceDenver:75, distanceSLC:460, distanceSeattle:1220, distanceSF:1420,
+    verticalDrop:2900, skiableAcres:3148, averageSnowfall:235, currentBase:44,
+    liftTicket:149, avgLodgingPerNight:190,
+    crowdScore:55, snowScore:62, valueScore:74, accessScore:86,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:1},{day:"Fri",icon:"🌨",snow:5},{day:"Sat",icon:"🌨",snow:8},{day:"Sun",icon:"☁️",snow:2},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Best night skiing in Colorado. Three distinct peaks, surprisingly deep when it does snow.",
+    pros:"Longest night skiing in CO, family-friendly, great for intermediate progression.",
+    cons:"Lower average snowfall than other Summit County resorts, can ice up.",
+    openSnowLink:"https://opensnow.com/location/keystone",
+    resortLink:"https://www.keystoneresort.com/the-mountain/mountain-conditions/snow-report.aspx",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Dillon Budget Hotel",pricePerNight:79,note:"10 min drive, Summit Stage bus runs free",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Keystone Lodge",pricePerNight:190,note:"Slope-side, full resort amenities",link:"https://www.expedia.com/Hotel-Search?destination=Keystone+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Ski Tip Lodge",pricePerNight:380,note:"Historic B&B, intimate, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=Keystone%2C+Colorado"},
+    ],
+  },
+
+  // ── UTAH ──────────────────────────────────────────────────────────────────
+  {
+    id:"snowbird", name:"Snowbird", state:"UT", region:"rockies", nickname:"The Deep",
+    tags:["all-mountain","powder","advanced"],
+    travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceSF:750,
+    verticalDrop:3240, skiableAcres:2500, averageSnowfall:500, currentBase:90,
+    liftTicket:209, avgLodgingPerNight:320,
+    crowdScore:58, snowScore:97, valueScore:52, accessScore:74,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:10},{day:"Fri",icon:"🌨",snow:18},{day:"Sat",icon:"🌨",snow:22},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"500+ inches average. Consistently the deepest snowpack in North America.",
+    pros:"Best snow in NA, aerial tram to summit, long season.",
+    cons:"Minimal beginner terrain, requires flying from Denver.",
+    openSnowLink:"https://opensnow.com/location/snowbird",
+    resortLink:"https://www.snowbird.com/mountain-report/",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"SLC Airport Hotel + Drive",pricePerNight:90,note:"Stay in SLC, 35 min canyon drive. Saves $150+/night",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
+      {tier:"mid",label:"Mid-Range",name:"The Cliff Lodge",pricePerNight:320,note:"Slope-side, rooftop pool, ski locker room on-site",link:"https://www.expedia.com/Hotel-Search?destination=Snowbird+Utah"},
+      {tier:"luxury",label:"Luxury",name:"Snowbird Mountain Suite",pricePerNight:620,note:"Ski-in/ski-out suite, panoramic views, butler service",link:"https://www.booking.com/searchresults.html?ss=Snowbird%2C+Utah"},
+    ],
+  },
+  {
+    id:"alta", name:"Alta", state:"UT", region:"rockies", nickname:"Skiers Only",
+    tags:["all-mountain","powder","advanced","intermediate"],
+    travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceSF:750,
+    verticalDrop:2538, skiableAcres:2614, averageSnowfall:547, currentBase:95,
+    liftTicket:159, avgLodgingPerNight:280,
+    crowdScore:45, snowScore:99, valueScore:62, accessScore:72,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:12},{day:"Fri",icon:"🌨",snow:20},{day:"Sat",icon:"🌨",snow:25},{day:"Sun",icon:"☁️",snow:6},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Skiers only. 547 inches average. The most snow of any resort in the US, period.",
+    pros:"Highest average snowfall in the US, skiers-only keeps crowds down, cheaper than Snowbird.",
+    cons:"No snowboarders, can be icy on groomed runs, limited nightlife.",
+    openSnowLink:"https://opensnow.com/location/alta",
+    resortLink:"https://www.alta.com/mountain/snow-report",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"SLC Hotel + Canyon Drive",pricePerNight:90,note:"Stay in SLC, 35 min up Little Cottonwood Canyon",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
+      {tier:"mid",label:"Mid-Range",name:"Alta Lodge",pricePerNight:280,note:"Classic ski lodge, ski-in/ski-out, meals included",link:"https://www.expedia.com/Hotel-Search?destination=Alta+Utah"},
+      {tier:"luxury",label:"Luxury",name:"Rustler Lodge",pricePerNight:580,note:"Ski-in/ski-out, heated outdoor pool, full service",link:"https://www.booking.com/searchresults.html?ss=Alta%2C+Utah"},
+    ],
+  },
+  {
+    id:"parkcity", name:"Park City Mountain", state:"UT", region:"rockies", nickname:"The Biggest in the US",
+    tags:["all-mountain","intermediate","beginner","family","park"],
+    travelMode:"fly", distanceDenver:520, distanceSLC:32, distanceSeattle:850, distanceSF:750,
+    verticalDrop:3226, skiableAcres:7300, averageSnowfall:355, currentBase:65,
+    liftTicket:219, avgLodgingPerNight:300,
+    crowdScore:68, snowScore:75, valueScore:50, accessScore:82,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:3},{day:"Fri",icon:"🌨",snow:9},{day:"Sat",icon:"🌨",snow:13},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Largest ski resort in the US. 7,300 acres. Historic Main Street is a 5-minute walk from the lifts.",
+    pros:"Largest resort in US, walk to Main Street bars and restaurants, SLC airport is 35 min.",
+    cons:"Can be crowded, some terrain feels spread thin across the acreage.",
+    openSnowLink:"https://opensnow.com/location/park-city-mountain",
+    resortLink:"https://www.parkcitymountain.com/the-mountain/mountain-conditions/snow-report.aspx",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Park City Main Street Rental",pricePerNight:150,note:"Walk to gondola from historic Main Street",link:"https://www.booking.com/searchresults.html?ss=Park+City%2C+Utah"},
+      {tier:"mid",label:"Mid-Range",name:"Marriott Summit Watch",pricePerNight:300,note:"Ski-in/ski-out at Town Lift, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Park+City+Utah"},
+      {tier:"luxury",label:"Luxury",name:"St. Regis Deer Valley",pricePerNight:950,note:"Forbes 5-star, ski-in/ski-out at Deer Valley",link:"https://www.booking.com/searchresults.html?ss=Deer+Valley%2C+Utah"},
+    ],
+  },
+  {
+    id:"deervalley", name:"Deer Valley", state:"UT", region:"rockies", nickname:"The Pampered Mountain",
+    tags:["all-mountain","intermediate","advanced","luxury"],
+    travelMode:"fly", distanceDenver:520, distanceSLC:34, distanceSeattle:850, distanceSF:750,
+    verticalDrop:3000, skiableAcres:2026, averageSnowfall:300, currentBase:62,
+    liftTicket:249, avgLodgingPerNight:450,
+    crowdScore:38, snowScore:74, valueScore:35, accessScore:80,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:4},{day:"Fri",icon:"🌨",snow:10},{day:"Sat",icon:"🌨",snow:14},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Skiers only. Valet ski storage, groomed to perfection, no lift lines on weekdays.",
+    pros:"Best grooming in Utah, ski valet, no snowboards, impeccably run.",
+    cons:"Very expensive, skiers only, can feel exclusionary.",
+    openSnowLink:"https://opensnow.com/location/deer-valley",
+    resortLink:"https://www.deervalley.com/mountain/snow-report",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Park City Budget Hotel",pricePerNight:140,note:"Stay in Park City, 10 min drive or shuttle",link:"https://www.booking.com/searchresults.html?ss=Park+City%2C+Utah"},
+      {tier:"mid",label:"Mid-Range",name:"Snow Park Lodge",pricePerNight:450,note:"Base of Deer Valley, ski-in/ski-out",link:"https://www.expedia.com/Hotel-Search?destination=Deer+Valley+Utah"},
+      {tier:"luxury",label:"Luxury",name:"The Stein Eriksen Lodge",pricePerNight:1100,note:"Mid-mountain, Forbes 5-star, legendary après",link:"https://www.booking.com/searchresults.html?ss=Deer+Valley%2C+Utah"},
+    ],
+  },
+  {
+    id:"brighton", name:"Brighton Resort", state:"UT", region:"rockies", nickname:"The Local's Mountain",
+    tags:["all-mountain","park","intermediate","beginner","value","family"],
+    travelMode:"fly", distanceDenver:525, distanceSLC:28, distanceSeattle:850, distanceSF:750,
+    verticalDrop:1745, skiableAcres:1050, averageSnowfall:500, currentBase:88,
+    liftTicket:119, avgLodgingPerNight:160,
+    crowdScore:40, snowScore:91, valueScore:82, accessScore:76,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:9},{day:"Fri",icon:"🌨",snow:16},{day:"Sat",icon:"🌨",snow:19},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Utah's best kept secret. Same snowpack as Alta/Snowbird at half the price.",
+    pros:"Same Wasatch snow as Alta, cheaper tickets, night skiing, great park.",
+    cons:"Smaller than neighboring resorts, gets crowded with SLC locals on powder days.",
+    openSnowLink:"https://opensnow.com/location/brighton",
+    resortLink:"https://www.brightonresort.com/mountain/snow-report",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"SLC Hotel + Drive",pricePerNight:85,note:"35 min up Big Cottonwood Canyon from SLC",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
+      {tier:"mid",label:"Mid-Range",name:"Brighton Chalets",pricePerNight:160,note:"Ski-in/ski-out chalets at the base",link:"https://www.expedia.com/Hotel-Search?destination=Brighton+Resort+Utah"},
+      {tier:"luxury",label:"Luxury",name:"Solitude Mountain Resort",pricePerNight:320,note:"Neighboring Solitude resort, quieter, full amenities",link:"https://www.booking.com/searchresults.html?ss=Solitude%2C+Utah"},
+    ],
+  },
+  {
+    id:"solitude", name:"Solitude Mountain", state:"UT", region:"rockies", nickname:"Just You and the Snow",
+    tags:["all-mountain","powder","intermediate","advanced","value"],
+    travelMode:"fly", distanceDenver:525, distanceSLC:27, distanceSeattle:850, distanceSF:750,
+    verticalDrop:2047, skiableAcres:1200, averageSnowfall:500, currentBase:90,
+    liftTicket:129, avgLodgingPerNight:200,
+    crowdScore:25, snowScore:93, valueScore:80, accessScore:74,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:10},{day:"Fri",icon:"🌨",snow:17},{day:"Sat",icon:"🌨",snow:21},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Big Cottonwood Canyon's quieter side. Same snowpack as Brighton next door, half the people.",
+    pros:"Least crowded Cottonwood Canyon resort, excellent powder stashes, European village feel.",
+    cons:"Smaller than Park City or Snowbird, limited nightlife.",
+    openSnowLink:"https://opensnow.com/location/solitude",
+    resortLink:"https://www.solitudemountain.com/mountain/snow-report",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"SLC Hotel + Drive",pricePerNight:85,note:"27 min up Big Cottonwood Canyon from SLC",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
+      {tier:"mid",label:"Mid-Range",name:"Inn at Solitude",pricePerNight:200,note:"Ski-in/ski-out, European-style, cozy and quiet",link:"https://www.expedia.com/Hotel-Search?destination=Solitude+Mountain+Utah"},
+      {tier:"luxury",label:"Luxury",name:"The Powderhorn Condos",pricePerNight:380,note:"Slope-side condos, full kitchen, mountain views",link:"https://www.booking.com/searchresults.html?ss=Solitude%2C+Utah"},
+    ],
+  },
+
+  // ── WYOMING ────────────────────────────────────────────────────────────────
+  {
+    id:"jacksonthole", name:"Jackson Hole", state:"WY", region:"rockies", nickname:"The Big One",
+    tags:["all-mountain","powder","advanced"],
+    travelMode:"fly", distanceDenver:540, distanceSLC:280, distanceSeattle:870, distanceSF:900,
+    verticalDrop:4139, skiableAcres:2500, averageSnowfall:459, currentBase:78,
+    liftTicket:239, avgLodgingPerNight:380,
+    crowdScore:52, snowScore:93, valueScore:44, accessScore:66,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:6},{day:"Fri",icon:"🌨",snow:14},{day:"Sat",icon:"🌨",snow:20},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"The most serious big mountain resort in the US. Experts only on 50% of terrain.",
+    pros:"Massive vert, epic backcountry access, iconic tram, world-class snow.",
+    cons:"Expensive, limited beginner/intermediate terrain, crowded powder days.",
+    openSnowLink:"https://opensnow.com/location/jackson-hole",
+    resortLink:"https://www.jacksonhole.com/mountain-report.html",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Hostel X",pricePerNight:75,note:"Legendary ski bum hostel at the base of the tram",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"},
+      {tier:"mid",label:"Mid-Range",name:"Teton Village Condo",pricePerNight:380,note:"Ski-in/ski-out, full kitchen, walk to tram",link:"https://www.expedia.com/Hotel-Search?destination=Jackson+Hole+Wyoming"},
+      {tier:"luxury",label:"Luxury",name:"Four Seasons Jackson Hole",pricePerNight:900,note:"Ski-in/ski-out, Forbes 5-star, the best in Wyoming",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"},
+    ],
+  },
+  {
+    id:"grandtarghee", name:"Grand Targhee", state:"WY", region:"rockies", nickname:"The Hidden Gem",
+    tags:["all-mountain","powder","intermediate","advanced","value"],
+    travelMode:"fly", distanceDenver:560, distanceSLC:290, distanceSeattle:900, distanceSF:950,
+    verticalDrop:2270, skiableAcres:2602, averageSnowfall:500, currentBase:85,
+    liftTicket:139, avgLodgingPerNight:180,
+    crowdScore:18, snowScore:94, valueScore:85, accessScore:55,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:11},{day:"Fri",icon:"🌨",snow:19},{day:"Sat",icon:"🌨",snow:23},{day:"Sun",icon:"☁️",snow:6},{day:"Mon",icon:"☀️",snow:0}],
+    description:"On the Idaho side of the Tetons. Gets MORE snow than Jackson Hole with a fraction of the crowds.",
+    pros:"Same Teton snowpack as JHOLE at half the price, almost no crowds, incredible powder.",
+    cons:"Remote — 45 min from Jackson, limited terrain variety, small resort town.",
+    openSnowLink:"https://opensnow.com/location/grand-targhee",
+    resortLink:"https://www.grandtarghee.com/mountain/snow-report/",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Driggs Idaho Rental",pricePerNight:80,note:"Stay in Driggs ID, 20 min drive, way cheaper",link:"https://www.booking.com/searchresults.html?ss=Driggs%2C+Idaho"},
+      {tier:"mid",label:"Mid-Range",name:"Targhee Lodge",pricePerNight:180,note:"Ski-in/ski-out at base, cozy mountain lodge",link:"https://www.expedia.com/Hotel-Search?destination=Grand+Targhee+Wyoming"},
+      {tier:"luxury",label:"Luxury",name:"Teton Mountain Lodge",pricePerNight:420,note:"Teton Village, 45 min drive, full resort amenities",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"},
+    ],
+  },
+
+  // ── WASHINGTON ────────────────────────────────────────────────────────────
+  {
+    id:"crystalmtn", name:"Crystal Mountain", state:"WA", region:"pnw", nickname:"Washington's Biggest",
+    tags:["all-mountain","powder","advanced","intermediate"],
+    travelMode:"drive", distanceDenver:1300, distanceSLC:900, distanceSeattle:76, distanceSF:1200,
+    verticalDrop:3100, skiableAcres:2600, averageSnowfall:486, currentBase:72,
+    liftTicket:149, avgLodgingPerNight:200,
+    crowdScore:42, snowScore:86, valueScore:72, accessScore:78,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:8},{day:"Fri",icon:"🌨",snow:16},{day:"Sat",icon:"🌨",snow:20},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Mount Rainier views. Washington's largest and best ski resort. Cascade cement mixed with periodic blower.",
+    pros:"Stunning Rainier views, largest resort in WA, excellent summit terrain.",
+    cons:"Cascade snow can be heavy, 76 miles from Seattle, fog/rain at base sometimes.",
+    openSnowLink:"https://opensnow.com/location/crystal-mountain",
+    resortLink:"https://www.crystalmountainresort.com/mountain/conditions",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Enumclaw Hotel",pricePerNight:85,note:"30 min from Crystal, cheap and convenient",link:"https://www.booking.com/searchresults.html?ss=Enumclaw%2C+Washington"},
+      {tier:"mid",label:"Mid-Range",name:"Crystal Mountain Hotels",pricePerNight:200,note:"Slope-side lodging at the base village",link:"https://www.expedia.com/Hotel-Search?destination=Crystal+Mountain+Washington"},
+      {tier:"luxury",label:"Luxury",name:"The Summit House Rental",pricePerNight:420,note:"Private slope-side home rental, sleeps 8+",link:"https://www.booking.com/searchresults.html?ss=Crystal+Mountain%2C+Washington"},
+    ],
+  },
+  {
+    id:"stevenspass", name:"Stevens Pass", state:"WA", region:"pnw", nickname:"The Powder Highway",
+    tags:["all-mountain","powder","intermediate","advanced","value"],
+    travelMode:"drive", distanceDenver:1300, distanceSLC:900, distanceSeattle:65, distanceSF:1200,
+    verticalDrop:1800, skiableAcres:1125, averageSnowfall:450, currentBase:65,
+    liftTicket:119, avgLodgingPerNight:160,
+    crowdScore:55, snowScore:82, valueScore:78, accessScore:82,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:7},{day:"Fri",icon:"🌨",snow:14},{day:"Sat",icon:"🌨",snow:18},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"65 miles from Seattle on US-2. Gets slammed with Cascade snowfall. Best intermediate terrain in WA.",
+    pros:"Closest major resort to Seattle, great intermediate terrain, good value.",
+    cons:"Smaller than Crystal, US-2 can close in storms, no on-mountain lodging.",
+    openSnowLink:"https://opensnow.com/location/stevens-pass",
+    resortLink:"https://www.stevenspass.com/mountain/conditions.aspx",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Leavenworth Rental",pricePerNight:90,note:"35 min east on US-2, Bavarian village, great vibe",link:"https://www.booking.com/searchresults.html?ss=Leavenworth%2C+Washington"},
+      {tier:"mid",label:"Mid-Range",name:"Index Town Wall Rental",pricePerNight:160,note:"30 min west, mountain cabins near the resort",link:"https://www.expedia.com/Hotel-Search?destination=Stevens+Pass+Washington"},
+      {tier:"luxury",label:"Luxury",name:"Sleeping Lady Mountain Resort",pricePerNight:380,note:"Eco-resort in Leavenworth, full amenities",link:"https://www.booking.com/searchresults.html?ss=Leavenworth%2C+Washington"},
+    ],
+  },
+  {
+    id:"mtbaker", name:"Mt. Baker", state:"WA", region:"pnw", nickname:"The World Record Holder",
+    tags:["all-mountain","powder","advanced","intermediate"],
+    travelMode:"drive", distanceDenver:1380, distanceSLC:980, distanceSeattle:90, distanceSF:1280,
+    verticalDrop:1500, skiableAcres:1000, averageSnowfall:641, currentBase:110,
+    liftTicket:89, avgLodgingPerNight:140,
+    crowdScore:35, snowScore:99, valueScore:88, accessScore:68,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:14},{day:"Fri",icon:"🌨",snow:24},{day:"Sat",icon:"🌨",snow:30},{day:"Sun",icon:"☁️",snow:8},{day:"Mon",icon:"☀️",snow:0}],
+    description:"World record snowfall holder. 641 inches average. The snowiest ski area on the planet.",
+    pros:"Most snow on earth, cheap tickets, incredibly deep powder, authentic ski culture.",
+    cons:"Smaller resort, no on-mountain lodging, remote, lifts can close in extreme storms.",
+    openSnowLink:"https://opensnow.com/location/mount-baker",
+    resortLink:"https://www.mtbaker.us/snow-report/",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Glacier WA Cabins",pricePerNight:80,note:"8 miles from the ski area, rustic cabins",link:"https://www.booking.com/searchresults.html?ss=Glacier%2C+Washington"},
+      {tier:"mid",label:"Mid-Range",name:"Bellingham Hotel",pricePerNight:140,note:"55 min drive, college town, full amenities",link:"https://www.expedia.com/Hotel-Search?destination=Bellingham+Washington"},
+      {tier:"luxury",label:"Luxury",name:"Semiahmoo Resort",pricePerNight:360,note:"Coastal resort near Blaine, spa, 75 min from Baker",link:"https://www.booking.com/searchresults.html?ss=Blaine%2C+Washington"},
+    ],
+  },
+  {
+    id:"whitepas", name:"White Pass", state:"WA", region:"pnw", nickname:"The Undiscovered",
+    tags:["all-mountain","powder","intermediate","value","family"],
+    travelMode:"drive", distanceDenver:1350, distanceSLC:950, distanceSeattle:100, distanceSF:1250,
+    verticalDrop:1500, skiableAcres:651, averageSnowfall:400, currentBase:60,
+    liftTicket:89, avgLodgingPerNight:130,
+    crowdScore:20, snowScore:78, valueScore:90, accessScore:65,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:6},{day:"Fri",icon:"🌨",snow:12},{day:"Sat",icon:"🌨",snow:15},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Yakima's backyard. Reliably good snow, almost no crowds, honest prices.",
+    pros:"Least crowded resort in WA, cheap, good snow, family-friendly atmosphere.",
+    cons:"Smaller, remote, limited lodging options on mountain.",
+    openSnowLink:"https://opensnow.com/location/white-pass",
+    resortLink:"https://skiwhitepass.com/conditions/",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"White Pass Village Inn",pricePerNight:85,note:"Base lodge rooms, ski-in/ski-out, simple",link:"https://www.booking.com/searchresults.html?ss=White+Pass%2C+Washington"},
+      {tier:"mid",label:"Mid-Range",name:"Yakima Hotel",pricePerNight:130,note:"50 min east in Yakima, full hotel amenities",link:"https://www.expedia.com/Hotel-Search?destination=Yakima+Washington"},
+      {tier:"luxury",label:"Luxury",name:"Packwood Cabin Rental",pricePerNight:250,note:"20 min west, private cabins near Mt. Rainier NP",link:"https://www.booking.com/searchresults.html?ss=Packwood%2C+Washington"},
+    ],
+  },
+
+  // ── OREGON ────────────────────────────────────────────────────────────────
+  {
+    id:"mthood", name:"Mt. Hood Meadows", state:"OR", region:"pnw", nickname:"Portland's Mountain",
+    tags:["all-mountain","powder","intermediate","advanced","value"],
+    travelMode:"drive", distanceDenver:1300, distanceSLC:920, distanceSeattle:168, distanceSF:700,
+    verticalDrop:2777, skiableAcres:2150, averageSnowfall:430, currentBase:68,
+    liftTicket:109, avgLodgingPerNight:160,
+    crowdScore:48, snowScore:80, valueScore:80, accessScore:80,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:7},{day:"Fri",icon:"🌨",snow:13},{day:"Sat",icon:"🌨",snow:17},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Hood River valley, volcanic terrain, year-round skiing on Palmer snowfield.",
+    pros:"Year-round skiing possible, 60 min from Portland, good snow, affordable.",
+    cons:"Cascade cement snow on warm days, fog can sock in the base.",
+    openSnowLink:"https://opensnow.com/location/mt-hood-meadows",
+    resortLink:"https://www.skihood.com/conditions",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Government Camp Hostel",pricePerNight:55,note:"8 min from Meadows, cheap and convenient",link:"https://www.booking.com/searchresults.html?ss=Government+Camp%2C+Oregon"},
+      {tier:"mid",label:"Mid-Range",name:"Timberline Lodge",pricePerNight:160,note:"Historic 1937 WPA lodge, stunning, ski-in/ski-out",link:"https://www.expedia.com/Hotel-Search?destination=Timberline+Lodge+Oregon"},
+      {tier:"luxury",label:"Luxury",name:"Hood River Hotel",pricePerNight:280,note:"Charming Hood River town, Columbia Gorge views",link:"https://www.booking.com/searchresults.html?ss=Hood+River%2C+Oregon"},
+    ],
+  },
+  {
+    id:"mtbachelor", name:"Mt. Bachelor", state:"OR", region:"pnw", nickname:"Oregon's Volcano",
+    tags:["all-mountain","powder","advanced","intermediate"],
+    travelMode:"fly", distanceDenver:1200, distanceSLC:880, distanceSeattle:270, distanceSF:540,
+    verticalDrop:3365, skiableAcres:4318, averageSnowfall:462, currentBase:75,
+    liftTicket:119, avgLodgingPerNight:180,
+    crowdScore:38, snowScore:85, valueScore:78, accessScore:72,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:8},{day:"Fri",icon:"🌨",snow:15},{day:"Sat",icon:"🌨",snow:19},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Volcanic crater skiing. 360-degree summit access. Oregon's premier resort by a mile.",
+    pros:"Massive terrain, Bend is a world-class outdoor town, great snow, affordable.",
+    cons:"Wind can shut down the summit, Bend flights can be pricey.",
+    openSnowLink:"https://opensnow.com/location/mount-bachelor",
+    resortLink:"https://www.mtbachelor.com/the-mountain/conditions/",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Bend Hostel",pricePerNight:45,note:"30 min from Bachelor, Bend has tons of options",link:"https://www.booking.com/searchresults.html?ss=Bend%2C+Oregon"},
+      {tier:"mid",label:"Mid-Range",name:"Seventh Mountain Resort",pricePerNight:180,note:"9 miles from Bachelor, full resort, affordable",link:"https://www.expedia.com/Hotel-Search?destination=Bend+Oregon"},
+      {tier:"luxury",label:"Luxury",name:"Oxford Hotel Bend",pricePerNight:340,note:"Boutique hotel in downtown Bend, spa, walking distance to everything",link:"https://www.booking.com/searchresults.html?ss=Bend%2C+Oregon"},
+    ],
+  },
+
+  // ── CALIFORNIA / SIERRA ───────────────────────────────────────────────────
+  {
+    id:"mammoth", name:"Mammoth Mountain", state:"CA", region:"sierra", nickname:"The Longest Season",
+    tags:["all-mountain","powder","advanced","intermediate","park"],
+    travelMode:"fly", distanceDenver:1000, distanceSLC:650, distanceSeattle:900, distanceSF:315,
+    verticalDrop:3100, skiableAcres:3500, averageSnowfall:400, currentBase:80,
+    liftTicket:189, avgLodgingPerNight:250,
+    crowdScore:62, snowScore:82, valueScore:58, accessScore:72,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:8},{day:"Fri",icon:"🌨",snow:15},{day:"Sat",icon:"🌨",snow:18},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Open into July or August most years. Sierra Nevada at its most reliable.",
+    pros:"Longest season in California, massive terrain, great park, strong snowpack.",
+    cons:"LA weekend crowds are brutal, expensive lodging, long drive from Bay Area.",
+    openSnowLink:"https://opensnow.com/location/mammoth-mountain",
+    resortLink:"https://www.mammothmountain.com/mountain/weather-and-conditions/snow-report",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Mammoth Hostel",pricePerNight:60,note:"Walk to Village gondola, budget rooms",link:"https://www.booking.com/searchresults.html?ss=Mammoth+Lakes%2C+California"},
+      {tier:"mid",label:"Mid-Range",name:"1849 Condominiums",pricePerNight:250,note:"Ski-in/ski-out at Canyon Lodge, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Mammoth+Lakes+California"},
+      {tier:"luxury",label:"Luxury",name:"The Westin Monache",pricePerNight:480,note:"Village gondola steps away, full service hotel",link:"https://www.booking.com/searchresults.html?ss=Mammoth+Lakes%2C+California"},
+    ],
+  },
+  {
+    id:"tahoenorth", name:"Palisades Tahoe", state:"CA", region:"sierra", nickname:"America's Ski Area",
+    tags:["all-mountain","powder","advanced","intermediate"],
+    travelMode:"fly", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:196,
+    verticalDrop:2850, skiableAcres:6000, averageSnowfall:450, currentBase:72,
+    liftTicket:219, avgLodgingPerNight:300,
+    crowdScore:65, snowScore:80, valueScore:48, accessScore:78,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:7},{day:"Fri",icon:"🌨",snow:14},{day:"Sat",icon:"🌨",snow:18},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Home of the 1960 Winter Olympics. KT-22 is one of the best lift-served runs on the planet.",
+    pros:"Iconic terrain, massive combined acreage with Alpine Meadows, Lake Tahoe is stunning.",
+    cons:"Bay Area crowds, pricey, I-80 can close in big storms.",
+    openSnowLink:"https://opensnow.com/location/palisades-tahoe",
+    resortLink:"https://www.palisadestahoe.com/conditions",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Tahoe City Rental",pricePerNight:120,note:"10 min from Palisades, cheaper than Olympic Valley",link:"https://www.booking.com/searchresults.html?ss=Tahoe+City%2C+California"},
+      {tier:"mid",label:"Mid-Range",name:"PlumpJack Inn",pricePerNight:300,note:"Ski-in/ski-out in Olympic Valley, classic Tahoe",link:"https://www.expedia.com/Hotel-Search?destination=Lake+Tahoe+California"},
+      {tier:"luxury",label:"Luxury",name:"Resort at Squaw Creek",pricePerNight:580,note:"Ski-in/ski-out, full resort, spa, Olympic Valley",link:"https://www.booking.com/searchresults.html?ss=Olympic+Valley%2C+California"},
+    ],
+  },
+  {
+    id:"heavenly", name:"Heavenly", state:"CA/NV", region:"sierra", nickname:"Lake Views for Days",
+    tags:["all-mountain","intermediate","beginner","family"],
+    travelMode:"fly", distanceDenver:1150, distanceSLC:700, distanceSeattle:890, distanceSF:199,
+    verticalDrop:3500, skiableAcres:4800, averageSnowfall:360, currentBase:65,
+    liftTicket:219, avgLodgingPerNight:280,
+    crowdScore:70, snowScore:72, valueScore:50, accessScore:82,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:3},{day:"Fri",icon:"🌨",snow:9},{day:"Sat",icon:"🌨",snow:12},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Straddles CA/NV border. Gondola from South Lake Tahoe. Best lake views in skiing.",
+    pros:"Gondola from town, Lake Tahoe views are unreal, casinos for après.",
+    cons:"South Shore crowds, lower snowfall than north shore, expensive.",
+    openSnowLink:"https://opensnow.com/location/heavenly",
+    resortLink:"https://www.skiheavenly.com/the-mountain/mountain-conditions/snow-report.aspx",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"South Lake Tahoe Motel",pricePerNight:90,note:"Walk to gondola, tons of budget options in SLT",link:"https://www.booking.com/searchresults.html?ss=South+Lake+Tahoe%2C+California"},
+      {tier:"mid",label:"Mid-Range",name:"Marriott Grand Residence",pricePerNight:280,note:"Ski-in/ski-out at Heavenly Village, full amenities",link:"https://www.expedia.com/Hotel-Search?destination=South+Lake+Tahoe+California"},
+      {tier:"luxury",label:"Luxury",name:"Edgewood Tahoe Resort",pricePerNight:620,note:"Forbes 4-star on the lake, stunning, 10 min to gondola",link:"https://www.booking.com/searchresults.html?ss=Stateline%2C+Nevada"},
+    ],
+  },
+  {
+    id:"kirkwood", name:"Kirkwood", state:"CA", region:"sierra", nickname:"The Sierra's Best Kept Secret",
+    tags:["all-mountain","powder","advanced","intermediate","value"],
+    travelMode:"fly", distanceDenver:1150, distanceSLC:700, distanceSeattle:890, distanceSF:210,
+    verticalDrop:2000, skiableAcres:2300, averageSnowfall:500, currentBase:85,
+    liftTicket:159, avgLodgingPerNight:200,
+    crowdScore:28, snowScore:90, valueScore:78, accessScore:58,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:9},{day:"Fri",icon:"🌨",snow:17},{day:"Sat",icon:"🌨",snow:22},{day:"Sun",icon:"☁️",snow:6},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Highest base elevation in Tahoe. Gets more snow than Heavenly or Northstar. Almost no crowds.",
+    pros:"Best snow in Tahoe, genuinely thin crowds, great advanced terrain, cheaper than Palisades.",
+    cons:"Remote — 30 min from South Lake Tahoe, limited lodging, small base village.",
+    openSnowLink:"https://opensnow.com/location/kirkwood",
+    resortLink:"https://www.kirkwood.com/the-mountain/mountain-conditions/snow-report.aspx",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"South Lake Tahoe Rental",pricePerNight:100,note:"30 min drive, way more options than Kirkwood itself",link:"https://www.booking.com/searchresults.html?ss=South+Lake+Tahoe%2C+California"},
+      {tier:"mid",label:"Mid-Range",name:"Kirkwood Inn",pricePerNight:200,note:"Ski-in/ski-out at the base, cozy mountain lodge",link:"https://www.expedia.com/Hotel-Search?destination=Kirkwood+California"},
+      {tier:"luxury",label:"Luxury",name:"Kirkwood Mountain Condos",pricePerNight:380,note:"Slope-side condos, full kitchen, quiet and remote",link:"https://www.booking.com/searchresults.html?ss=Kirkwood%2C+California"},
+    ],
+  },
+  {
+    id:"northstar", name:"Northstar California", state:"CA", region:"sierra", nickname:"The Ritzy One",
+    tags:["all-mountain","intermediate","beginner","family","luxury"],
+    travelMode:"fly", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:197,
+    verticalDrop:2280, skiableAcres:3170, averageSnowfall:350, currentBase:60,
+    liftTicket:209, avgLodgingPerNight:320,
+    crowdScore:60, snowScore:70, valueScore:45, accessScore:82,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:4},{day:"Fri",icon:"🌨",snow:10},{day:"Sat",icon:"🌨",snow:13},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
+    description:"The most polished resort in Tahoe. Village is stunning. Great for families and non-skiers.",
+    pros:"Beautifully maintained, great village, ski-in/ski-out lodging, family-friendly.",
+    cons:"Lower snowfall than Kirkwood, very expensive, runs can feel short.",
+    openSnowLink:"https://opensnow.com/location/northstar-california",
+    resortLink:"https://www.northstarcalifornia.com/the-mountain/mountain-conditions/snow-report.aspx",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Truckee Budget Hotel",pricePerNight:100,note:"5 min from Northstar, Truckee is a great base town",link:"https://www.booking.com/searchresults.html?ss=Truckee%2C+California"},
+      {tier:"mid",label:"Mid-Range",name:"Northstar Lodge",pricePerNight:320,note:"Ski-in/ski-out, village location, full amenities",link:"https://www.expedia.com/Hotel-Search?destination=Northstar+California"},
+      {tier:"luxury",label:"Luxury",name:"Ritz-Carlton Lake Tahoe",pricePerNight:850,note:"Mid-mountain, Forbes 5-star, private ski concierge",link:"https://www.booking.com/searchresults.html?ss=Northstar%2C+California"},
+    ],
+  },
+  {
+    id:"sugarbowl", name:"Sugar Bowl", state:"CA", region:"sierra", nickname:"The Original Tahoe",
+    tags:["all-mountain","powder","intermediate","advanced","value"],
+    travelMode:"drive", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:190,
+    verticalDrop:1500, skiableAcres:1650, averageSnowfall:500, currentBase:82,
+    liftTicket:119, avgLodgingPerNight:180,
+    crowdScore:32, snowScore:88, valueScore:82, accessScore:76,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:8},{day:"Fri",icon:"🌨",snow:16},{day:"Sat",icon:"🌨",snow:20},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"California's first chairlift. Donner Summit snowpack is the deepest in Tahoe. No one talks about it.",
+    pros:"Consistently deep Sierra snow, no crowds, old-school mountain feel, cheap by Tahoe standards.",
+    cons:"Smaller terrain, gondola to base can have lines, no big resort amenities.",
+    openSnowLink:"https://opensnow.com/location/sugar-bowl",
+    resortLink:"https://www.sugarbowl.com/conditions",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Truckee Hostel",pricePerNight:55,note:"10 min from Sugar Bowl, Truckee has cheap options",link:"https://www.booking.com/searchresults.html?ss=Truckee%2C+California"},
+      {tier:"mid",label:"Mid-Range",name:"Sugar Bowl Lodge",pricePerNight:180,note:"Ski-in/ski-out, historic lodge at the base",link:"https://www.expedia.com/Hotel-Search?destination=Norden+California"},
+      {tier:"luxury",label:"Luxury",name:"Northstar Village Rental",pricePerNight:350,note:"Luxury condo at Northstar, 20 min drive to Sugar Bowl",link:"https://www.booking.com/searchresults.html?ss=Northstar%2C+California"},
+    ],
+  },
+
+  // ── NEVADA ─────────────────────────────────────────────────────────────────
+  {
+    id:"mtrose", name:"Mt. Rose", state:"NV", region:"sierra", nickname:"Reno's Backyard",
+    tags:["all-mountain","intermediate","advanced","value"],
+    travelMode:"fly", distanceDenver:1200, distanceSLC:750, distanceSeattle:900, distanceSF:220,
+    verticalDrop:1800, skiableAcres:1200, averageSnowfall:400, currentBase:68,
+    liftTicket:99, avgLodgingPerNight:120,
+    crowdScore:30, snowScore:76, valueScore:88, accessScore:80,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:6},{day:"Fri",icon:"🌨",snow:12},{day:"Sat",icon:"🌨",snow:15},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Highest base elevation in the Tahoe region at 8,260 ft. Gets cold dry snow. 25 min from Reno.",
+    pros:"Highest base in Tahoe area means drier snow, cheap tickets, close to Reno, rarely crowded.",
+    cons:"Smaller resort, Reno is not Tahoe, can be windy at the top.",
+    openSnowLink:"https://opensnow.com/location/mt-rose",
+    resortLink:"https://www.skirose.com/mountain/conditions/",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Reno Budget Hotel",pricePerNight:60,note:"25 min from Mt. Rose, Reno has tons of cheap hotels",link:"https://www.booking.com/searchresults.html?ss=Reno%2C+Nevada"},
+      {tier:"mid",label:"Mid-Range",name:"Incline Village Rental",pricePerNight:180,note:"10 min from Mt. Rose, Lake Tahoe views",link:"https://www.expedia.com/Hotel-Search?destination=Incline+Village+Nevada"},
+      {tier:"luxury",label:"Luxury",name:"Hyatt Regency Lake Tahoe",pricePerNight:380,note:"Lakeside luxury in Incline Village, 15 min to Mt. Rose",link:"https://www.booking.com/searchresults.html?ss=Incline+Village%2C+Nevada"},
+    ],
+  },
 ];
+
+// ─── SCORING ENGINE ───────────────────────────────────────────────────────────
+function getDistance(m, origin) {
+  switch(origin) {
+    case "slc": return m.distanceSLC;
+    case "seattle": return m.distanceSeattle;
+    case "sf": return m.distanceSF;
+    case "la": return m.distanceSF + 380; // approx
+    case "portland": return m.distanceSeattle + 180;
+    default: return m.distanceDenver;
+  }
+}
 
 function calcTripCost(m, nights, groupSize, origin) {
   const lodging = m.avgLodgingPerNight * nights;
   const tickets = m.liftTicket * nights * groupSize;
-  const dist = origin === "slc" ? m.distanceSLC : m.distanceDenver;
+  const dist = getDistance(m, origin);
   let travel = 0;
   if (m.travelMode === "drive" || (m.travelMode === "either" && dist < 200)) {
     travel = Math.round(dist * 0.18 * 2);
   } else {
-    travel = groupSize * 260;
+    travel = groupSize * 280;
   }
   return lodging + tickets + travel;
 }
@@ -190,9 +660,10 @@ function calcTripCost(m, nights, groupSize, origin) {
 function scoreResult(m, params) {
   const { budget, nights, groupSize, origin, style, skill, travel } = params;
   const cost = calcTripCost(m, nights, groupSize, origin);
-  const budgetFit = cost <= budget ? 1 : cost <= budget * 1.2 ? 0.6 : 0.2;
-  if (travel === "drive" && m.travelMode === "fly") return -1;
-  if (travel === "fly" && m.travelMode === "drive" && (origin === "slc" ? m.distanceSLC : m.distanceDenver) < 150) return -1;
+  const budgetFit = cost <= budget ? 1 : cost <= budget * 1.2 ? 0.6 : 0.1;
+  const dist = getDistance(m, origin);
+  if (travel === "drive" && dist > 300) return -1;
+  if (travel === "fly" && dist < 100) return -1;
   const snow = m.snowScore * 0.35;
   const value = m.valueScore * budgetFit * 0.25;
   const crowd = (100 - m.crowdScore) * 0.18;
@@ -202,11 +673,12 @@ function scoreResult(m, params) {
   return Math.round(snow + value + crowd + access + styleBonus + skillBonus);
 }
 
+// ─── AI RECOMMENDATION ────────────────────────────────────────────────────────
 async function getAIRecommendation(topMountain, params, allResults) {
   const top3Names = allResults.slice(0, 3).map(m => m.name).join(", ");
   const totalSnow = topMountain.weeklyForecast.reduce((s, d) => s + d.snow, 0);
   const cost = calcTripCost(topMountain, params.nights, params.groupSize, params.origin);
-  const originLabel = params.origin === "slc" ? "Salt Lake City" : params.origin === "denver" ? "Denver" : params.origin;
+  const originLabels = {denver:"Denver",slc:"Salt Lake City",seattle:"Seattle",sf:"San Francisco",la:"Los Angeles",portland:"Portland"};
 
   const prompt = `You are a ski-obsessed local who's skied every resort in the western US. You talk like a knowledgeable friend, not a customer service rep. No fluff, no corporate language, no phrases like "I'd be happy to" or "This is a great choice." Just straight talk.
 
@@ -214,7 +686,7 @@ Someone is planning a ski trip:
 - Budget: $${params.budget} total for ${params.groupSize} skier(s), ${params.nights} nights
 - How they're getting there: ${params.travel}
 - What they're after: ${params.style} skiing, ${params.skill} level
-- Leaving from: ${originLabel}
+- Leaving from: ${originLabels[params.origin] || params.origin}
 
 You ran the numbers. Top pick is ${topMountain.name}, ${topMountain.state}.
 - Trip cost estimate: $${cost.toLocaleString()}
@@ -225,7 +697,7 @@ You ran the numbers. Top pick is ${topMountain.name}, ${topMountain.state}.
 
 Other decent options: ${top3Names}
 
-Write 3 sentences MAX explaining why ${topMountain.name} makes sense for this specific person. Sound like a ski buddy texting them a recommendation, not a travel agent writing a brochure. Use real specifics — snow numbers, cost, why it fits their style. End with one blunt honest tip. Under 75 words. No bullet points. No hedging. No "it's worth noting that."`;
+Write 3 sentences MAX explaining why ${topMountain.name} makes sense for this specific person. Sound like a ski buddy texting them a recommendation, not a travel agent. Use real specifics — snow numbers, cost, why it fits their style. End with one blunt honest tip. Under 75 words. No bullet points. No hedging. No "it's worth noting that."`;
 
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -240,6 +712,7 @@ Write 3 sentences MAX explaining why ${topMountain.name} makes sense for this sp
   return data.content?.[0]?.text || "";
 }
 
+// ─── COMPONENTS ───────────────────────────────────────────────────────────────
 function ScoreBar({ label, value, color }) {
   return (
     <div style={{display:"flex",flexDirection:"column",gap:3}}>
@@ -301,12 +774,20 @@ function ResultCard({ mountain, rank, params, isExpanded, onToggle }) {
       {isExpanded && (
         <div style={{marginTop:"1.25rem",paddingTop:"1.25rem",borderTop:"1px solid #e8e4de",animation:"fadeUp 0.25s ease"}}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.875rem"}}>
+            {/* Forecast */}
             <div style={{background:"#f8f7f4",borderRadius:10,padding:"1rem"}}>
               <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:10}}>5-Day Forecast</div>
-              <div style={{display:"flex",gap:4}}>
+              <div style={{display:"flex",gap:4,marginBottom:12}}>
                 {mountain.weeklyForecast.map(d=><ForecastDay key={d.day} {...d}/>)}
               </div>
+              <a href={mountain.openSnowLink} target="_blank" rel="noopener noreferrer"
+                onClick={e=>e.stopPropagation()}
+                style={{display:"flex",alignItems:"center",gap:6,textDecoration:"none",background:"#1a6b7c",color:"#fff",borderRadius:7,padding:"8px 12px",fontSize:"0.75rem",fontWeight:700}}>
+                <span>❄️</span> Full Forecast on OpenSnow
+              </a>
             </div>
+
+            {/* Cost + Lodging */}
             <div style={{background:"#f8f7f4",borderRadius:10,padding:"1rem"}}>
               <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:8}}>Trip Cost</div>
               <div style={{fontSize:"0.82rem",color:"#4a4540",lineHeight:1.8,marginBottom:10}}>
@@ -331,12 +812,19 @@ function ResultCard({ mountain, rank, params, isExpanded, onToggle }) {
                 ))}
               </div>
             </div>
+
+            {/* Local Intel */}
             <div style={{background:"#f8f7f4",borderRadius:10,padding:"1rem"}}>
               <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:10}}>Local Intel</div>
               <div style={{fontSize:"0.8rem",color:"#4a4540",lineHeight:1.7}}>
                 <div><strong>↑</strong> {mountain.pros}</div>
                 <div style={{marginTop:6}}><strong>↓</strong> {mountain.cons}</div>
               </div>
+              <a href={mountain.resortLink} target="_blank" rel="noopener noreferrer"
+                onClick={e=>e.stopPropagation()}
+                style={{display:"inline-flex",alignItems:"center",gap:6,textDecoration:"none",background:"#f0ede8",color:"#0d0f0f",borderRadius:7,padding:"7px 12px",fontSize:"0.72rem",fontWeight:700,marginTop:12}}>
+                🏔 Official Snow Report
+              </a>
             </div>
           </div>
         </div>
@@ -345,6 +833,7 @@ function ResultCard({ mountain, rank, params, isExpanded, onToggle }) {
   );
 }
 
+// ─── MAIN APP ─────────────────────────────────────────────────────────────────
 function App() {
   const [params, setParams] = useState({budget:2000,nights:4,groupSize:2,origin:"denver",travel:"either",style:"all-mountain",skill:"intermediate"});
   const [results, setResults] = useState([]);
@@ -353,12 +842,13 @@ function App() {
   const [aiLoading, setAiLoading] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
+  const [showCount, setShowCount] = useState(6);
   const resultsRef = useRef(null);
   const set = (k,v) => setParams(p=>({...p,[k]:v}));
 
   async function runSearch() {
-    setLoading(true); setHasSearched(false); setAiRec(""); setExpandedId(null);
-    await new Promise(r=>setTimeout(r,800));
+    setLoading(true); setHasSearched(false); setAiRec(""); setExpandedId(null); setShowCount(6);
+    await new Promise(r=>setTimeout(r,900));
     const scored = MOUNTAINS
       .map(m=>({...m,score:scoreResult(m,params),estimatedCost:calcTripCost(m,params.nights,params.groupSize,params.origin)}))
       .filter(m=>m.score>0).sort((a,b)=>b.score-a.score);
@@ -384,7 +874,7 @@ function App() {
           <span style={{fontFamily:"'DM Serif Display',serif",fontSize:"1.2rem"}}>SummitSync</span>
         </div>
         <div style={{display:"flex",gap:6}}>
-          {["AI-Powered","8 Resorts","Live Scoring"].map(t=>(
+          {["AI-Powered",`${MOUNTAINS.length} Resorts`,"Live Forecast Links"].map(t=>(
             <span key={t} style={{fontSize:"0.65rem",fontWeight:600,letterSpacing:"0.07em",textTransform:"uppercase",color:"#8a8480",background:"#f0ede8",border:"1px solid #e8e4de",borderRadius:99,padding:"3px 10px"}}>{t}</span>
           ))}
         </div>
@@ -399,8 +889,8 @@ function App() {
         <h1 style={{fontFamily:"'DM Serif Display',serif",fontSize:"clamp(2rem,5vw,3.2rem)",lineHeight:1.1,letterSpacing:"-0.02em",margin:"0 0 1rem"}}>
           Find the <em style={{color:"#1a6b7c"}}>right mountain</em><br/>for your trip
         </h1>
-        <p style={{fontSize:"1rem",color:"#6b6560",lineHeight:1.7,maxWidth:500,margin:"0 auto"}}>
-          Tell us your budget, dates, and style. Our AI compares 8 western resorts on snow quality, cost, crowds, and access — then explains exactly why one is right for you.
+        <p style={{fontSize:"1rem",color:"#6b6560",lineHeight:1.7,maxWidth:520,margin:"0 auto"}}>
+          {MOUNTAINS.length} resorts across the Rockies, Pacific Northwest, and Sierra Nevada. Scored on snow, cost, crowds, and access. AI tells you exactly which one to book.
         </p>
       </div>
 
@@ -413,31 +903,41 @@ function App() {
             <div><label style={lbl}>Group Size</label><input type="number" value={params.groupSize} onChange={e=>set("groupSize",+e.target.value)} min={1} max={20} style={inp}/></div>
           </div>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"1rem",marginBottom:"1.25rem"}}>
-            <div><label style={lbl}>From</label>
+            <div><label style={lbl}>Departing From</label>
               <select value={params.origin} onChange={e=>set("origin",e.target.value)} style={inp}>
-                <option value="denver">Denver, CO</option><option value="slc">Salt Lake City, UT</option>
-                <option value="la">Los Angeles, CA</option><option value="seattle">Seattle, WA</option><option value="nyc">New York, NY</option>
+                <option value="denver">Denver, CO</option>
+                <option value="slc">Salt Lake City, UT</option>
+                <option value="seattle">Seattle, WA</option>
+                <option value="portland">Portland, OR</option>
+                <option value="sf">San Francisco, CA</option>
+                <option value="la">Los Angeles, CA</option>
               </select>
             </div>
             <div><label style={lbl}>Travel Mode</label>
               <select value={params.travel} onChange={e=>set("travel",e.target.value)} style={inp}>
-                <option value="either">Either</option><option value="drive">Drive</option><option value="fly">Fly</option>
+                <option value="either">Either</option><option value="drive">Drive Only</option><option value="fly">Fly Only</option>
               </select>
             </div>
             <div><label style={lbl}>Ski Style</label>
               <select value={params.style} onChange={e=>set("style",e.target.value)} style={inp}>
-                <option value="all-mountain">All-Mountain</option><option value="powder">Powder Chase</option>
-                <option value="park">Park / Freestyle</option><option value="family">Family-Friendly</option><option value="value">Best Value</option>
+                <option value="all-mountain">All-Mountain</option>
+                <option value="powder">Powder Chase</option>
+                <option value="park">Park / Freestyle</option>
+                <option value="family">Family-Friendly</option>
+                <option value="value">Best Value</option>
+                <option value="luxury">Luxury</option>
               </select>
             </div>
             <div><label style={lbl}>Skill Level</label>
               <select value={params.skill} onChange={e=>set("skill",e.target.value)} style={inp}>
-                <option value="intermediate">Intermediate</option><option value="beginner">Beginner</option><option value="advanced">Advanced</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="beginner">Beginner</option>
+                <option value="advanced">Advanced</option>
               </select>
             </div>
           </div>
           <button onClick={runSearch} disabled={loading} style={{width:"100%",height:52,background:loading?"#6b6560":"#0d0f0f",color:"#fff",border:"none",borderRadius:10,fontFamily:"'DM Sans',sans-serif",fontSize:"0.95rem",fontWeight:700,letterSpacing:"0.03em",cursor:loading?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background 0.15s"}}>
-            {loading?<><div style={{width:18,height:18,border:"2px solid rgba(255,255,255,0.3)",borderTopColor:"#fff",borderRadius:"50%",animation:"spin 0.7s linear infinite"}}/>Scoring mountains…</>:"Search Mountains →"}
+            {loading?<><div style={{width:18,height:18,border:"2px solid rgba(255,255,255,0.3)",borderTopColor:"#fff",borderRadius:"50%",animation:"spin 0.7s linear infinite"}}/>Scoring {MOUNTAINS.length} mountains…</>:`Search ${MOUNTAINS.length} Mountains →`}
           </button>
         </div>
       </div>
@@ -445,6 +945,8 @@ function App() {
       {/* RESULTS */}
       {hasSearched && (
         <div ref={resultsRef} style={{maxWidth:860,margin:"3rem auto 0",padding:"0 2rem",animation:"fadeUp 0.4s ease"}}>
+
+          {/* AI Banner */}
           <div style={{background:"#0d0f0f",borderRadius:14,padding:"1.5rem",marginBottom:"2rem",position:"relative",overflow:"hidden"}}>
             <div style={{position:"absolute",top:0,right:0,width:200,height:"100%",background:"linear-gradient(90deg,transparent,rgba(26,107,124,0.15))",pointerEvents:"none"}}/>
             <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
@@ -462,14 +964,22 @@ function App() {
 
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"1.25rem"}}>
             <div style={{fontFamily:"'DM Serif Display',serif",fontSize:"1.5rem"}}>{results.length} Matches</div>
-            <div style={{fontSize:"0.75rem",color:"#a09b92"}}>Ranked by SummitScore · click to expand</div>
+            <div style={{fontSize:"0.75rem",color:"#a09b92"}}>Ranked by SummitScore · click any card to expand</div>
           </div>
 
-          {results.map((m,i)=>(
+          {results.slice(0,showCount).map((m,i)=>(
             <ResultCard key={m.id} mountain={m} rank={i+1} params={params}
               isExpanded={expandedId===m.id} onToggle={()=>setExpandedId(expandedId===m.id?null:m.id)}/>
           ))}
 
+          {results.length > showCount && (
+            <button onClick={()=>setShowCount(c=>c+6)}
+              style={{width:"100%",padding:"14px",background:"#fff",border:"1.5px solid #e8e4de",borderRadius:10,fontFamily:"'DM Sans',sans-serif",fontSize:"0.88rem",fontWeight:600,color:"#6b6560",cursor:"pointer",marginBottom:"1rem"}}>
+              Show more resorts ({results.length - showCount} remaining)
+            </button>
+          )}
+
+          {/* Weather Snapshot */}
           <div style={{marginTop:"2.5rem",marginBottom:"4rem"}}>
             <div style={{fontFamily:"'DM Serif Display',serif",fontSize:"1.5rem",marginBottom:"1.25rem"}}>Weather Snapshot</div>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.875rem"}}>
@@ -483,6 +993,10 @@ function App() {
                     <div style={{fontSize:"0.75rem",color:"#a09b92",marginTop:2,marginBottom:8}}>current base depth</div>
                     <div style={{display:"inline-flex",alignItems:"center",gap:4,fontSize:"0.72rem",fontWeight:700,background:trend.bg,color:trend.color,borderRadius:99,padding:"3px 10px"}}>{trend.label}</div>
                     <div style={{fontSize:"0.75rem",color:"#6b6560",marginTop:8}}>{total}" forecast · {m.averageSnowfall}" season avg</div>
+                    <a href={m.openSnowLink} target="_blank" rel="noopener noreferrer"
+                      style={{display:"inline-flex",alignItems:"center",gap:4,marginTop:10,fontSize:"0.7rem",fontWeight:700,color:"#1a6b7c",textDecoration:"none"}}>
+                      ❄️ OpenSnow Forecast →
+                    </a>
                   </div>
                 );
               })}
@@ -498,7 +1012,7 @@ function App() {
       )}
 
       <footer style={{borderTop:"1px solid #e8e4de",padding:"1.5rem 2rem",textAlign:"center",fontSize:"0.72rem",color:"#a09b92"}}>
-        © 2025 SummitSync · AI powered by Claude · Not affiliated with any resort or booking platform
+        © 2025 SummitSync · {MOUNTAINS.length} resorts · AI powered by Claude · Forecast links via OpenSnow · Not affiliated with any resort or booking platform
       </footer>
     </div>
   );
@@ -508,8 +1022,3 @@ ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>
-Done
-That's everything — copy from <!DOCTYPE html> at the top all the way down to </html> at the bottom. Paste that into GitHub's editor replacing the existing index.html, commit, then hit Import on Vercel.
-
-
-
