@@ -1,107 +1,515 @@
-<!doctype html>
+Output
+
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SummitSync | Plan Your Ski Trip</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header class="top-header">
-      <div class="wrap nav-row">
-        <div class="brand-box">
-          <div class="logo-mark">S</div>
-          <div>
-            <p class="brand-title">SummitSync</p>
-            <p class="brand-sub">Ski trip intelligence</p>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SummitSync — Ski Trip Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f8f7f4; font-family: 'DM Sans', sans-serif; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.75);} }
+  @keyframes shimmer { 0%{background-position:-400px 0;}100%{background-position:400px 0;} }
+  select { cursor:pointer; appearance:none; }
+  a:hover { opacity:0.85; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useRef } = React;
+
+const MOUNTAINS = [
+  {
+    id:"abasin", name:"Arapahoe Basin", state:"CO", nickname:"The Legend",
+    tags:["all-mountain","powder","advanced","intermediate","value"],
+    travelMode:"drive", distanceDenver:68, distanceSLC:450,
+    baseElevation:10780, summitElevation:13050, verticalDrop:2270,
+    skiableAcres:1428, averageSnowfall:350, currentBase:62,
+    liftTicket:99, avgLodgingPerNight:160,
+    crowdScore:28, snowScore:84, valueScore:92, accessScore:75,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:2},{day:"Fri",icon:"🌨",snow:8},{day:"Sat",icon:"🌨",snow:12},{day:"Sun",icon:"☁️",snow:3},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Colorado's highest ski area. No resort lodging keeps crowds thin. Famous for skiing into June.",
+    pros:"Highest base in CO, thin crowds, incredible late-season skiing, free parking.",
+    cons:"Limited on-mountain lodging, can be very windy at summit.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Dillon Inn",pricePerNight:59,note:"10 min drive, basic rooms, free parking",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Keystone Condos",pricePerNight:160,note:"Full kitchen, slope views, easy A-Basin drive",link:"https://www.expedia.com/Hotel-Search?destination=Keystone+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Keystone Lodge & Spa",pricePerNight:390,note:"Full resort, spa, ski concierge",link:"https://www.booking.com/searchresults.html?ss=Keystone%2C+Colorado"},
+    ],
+  },
+  {
+    id:"steamboat", name:"Steamboat Springs", state:"CO", nickname:"Ski Town USA",
+    tags:["all-mountain","family","intermediate","powder","beginner"],
+    travelMode:"either", distanceDenver:157, distanceSLC:380,
+    baseElevation:6900, summitElevation:10568, verticalDrop:3668,
+    skiableAcres:2965, averageSnowfall:349, currentBase:55,
+    liftTicket:159, avgLodgingPerNight:240,
+    crowdScore:48, snowScore:80, valueScore:65, accessScore:70,
+    weeklyForecast:[{day:"Thu",icon:"☀️",snow:0},{day:"Fri",icon:"⛅",snow:4},{day:"Sat",icon:"🌨",snow:14},{day:"Sun",icon:"🌨",snow:9},{day:"Mon",icon:"⛅",snow:2}],
+    description:"Home of Champagne Powder™. Lively western town with great restaurants and après.",
+    pros:"World-famous snow quality, great town scene, excellent beginner terrain.",
+    cons:"Further from Denver, pricier on weekends.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Steamboat Hostel",pricePerNight:65,note:"Walk to gondola, free breakfast, great social scene",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Storm Meadows Condos",pricePerNight:240,note:"Ski-in/ski-out, full kitchen, great for groups",link:"https://www.expedia.com/Hotel-Search?destination=Steamboat+Springs+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"One Steamboat Place",pricePerNight:560,note:"Slope-side, rooftop hot tub, concierge service",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"},
+    ],
+  },
+  {
+    id:"snowbird", name:"Snowbird", state:"UT", nickname:"The Deep",
+    tags:["all-mountain","powder","advanced"],
+    travelMode:"fly", distanceDenver:525, distanceSLC:25,
+    baseElevation:7760, summitElevation:11000, verticalDrop:3240,
+    skiableAcres:2500, averageSnowfall:500, currentBase:90,
+    liftTicket:209, avgLodgingPerNight:320,
+    crowdScore:58, snowScore:97, valueScore:52, accessScore:74,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:10},{day:"Fri",icon:"🌨",snow:18},{day:"Sat",icon:"🌨",snow:22},{day:"Sun",icon:"☁️",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"500+ inches average. Consistently the deepest snowpack in North America.",
+    pros:"Best snow in NA, aerial tram to summit, long season.",
+    cons:"Minimal beginner terrain, requires flying from Denver.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"SLC Airport Hotel + Drive",pricePerNight:90,note:"Stay in SLC, 35 min canyon drive. Saves $150+/night",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
+      {tier:"mid",label:"Mid-Range",name:"The Cliff Lodge",pricePerNight:320,note:"Slope-side, rooftop pool, ski locker room on-site",link:"https://www.expedia.com/Hotel-Search?destination=Snowbird+Utah"},
+      {tier:"luxury",label:"Luxury",name:"Snowbird Mountain Suite",pricePerNight:620,note:"Ski-in/ski-out suite, panoramic views, butler service",link:"https://www.booking.com/searchresults.html?ss=Snowbird%2C+Utah"},
+    ],
+  },
+  {
+    id:"breckenridge", name:"Breckenridge", state:"CO", nickname:"Breck",
+    tags:["all-mountain","park","intermediate","beginner","family"],
+    travelMode:"drive", distanceDenver:85, distanceSLC:500,
+    baseElevation:9600, summitElevation:12998, verticalDrop:3398,
+    skiableAcres:2908, averageSnowfall:360, currentBase:58,
+    liftTicket:199, avgLodgingPerNight:280,
+    crowdScore:80, snowScore:74, valueScore:46, accessScore:88,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:1},{day:"Fri",icon:"🌨",snow:6},{day:"Sat",icon:"🌨",snow:10},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Colorado's most visited resort. Victorian town, great nightlife, best park terrain in the state.",
+    pros:"Easy I-70 access, charming town, world-class park, Epic Pass compatible.",
+    cons:"Very crowded weekends, expensive lodging.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Frisco Inn on Galena",pricePerNight:89,note:"Stay in Frisco, 15 min free bus to Breck. Way cheaper.",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Village at Breckenridge",pricePerNight:280,note:"Ski-in/ski-out, full kitchen, walk to Main St",link:"https://www.expedia.com/Hotel-Search?destination=Breckenridge+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Grand Colorado on Peak 8",pricePerNight:580,note:"Top of Peak 8, indoor pool, slope-side access",link:"https://www.booking.com/searchresults.html?ss=Breckenridge%2C+Colorado"},
+    ],
+  },
+  {
+    id:"telluride", name:"Telluride", state:"CO", nickname:"The Box Canyon",
+    tags:["all-mountain","powder","advanced","intermediate"],
+    travelMode:"fly", distanceDenver:333, distanceSLC:475,
+    baseElevation:8725, summitElevation:13150, verticalDrop:4425,
+    skiableAcres:2000, averageSnowfall:309, currentBase:48,
+    liftTicket:179, avgLodgingPerNight:350,
+    crowdScore:30, snowScore:70, valueScore:55, accessScore:44,
+    weeklyForecast:[{day:"Thu",icon:"☀️",snow:0},{day:"Fri",icon:"⛅",snow:3},{day:"Sat",icon:"🌨",snow:8},{day:"Sun",icon:"🌨",snow:6},{day:"Mon",icon:"⛅",snow:1}],
+    description:"Dramatic San Juan box canyon. One of the most beautiful places in America to ski.",
+    pros:"Stunning scenery, thin crowds, free gondola to Mountain Village.",
+    cons:"Remote location, small regional airport, most expensive lodging.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Telluride Town Rental",pricePerNight:140,note:"Stay in town, free gondola to Mountain Village",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Mountain Village Condos",pricePerNight:350,note:"Ski-in/ski-out from Mountain Village, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Telluride+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Madeline Hotel",pricePerNight:750,note:"Forbes 4-star, gondola steps away, world-class spa",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"},
+    ],
+  },
+  {
+    id:"jacksonthole", name:"Jackson Hole", state:"WY", nickname:"The Big One",
+    tags:["all-mountain","powder","advanced"],
+    travelMode:"fly", distanceDenver:540, distanceSLC:280,
+    baseElevation:6311, summitElevation:10450, verticalDrop:4139,
+    skiableAcres:2500, averageSnowfall:459, currentBase:78,
+    liftTicket:239, avgLodgingPerNight:380,
+    crowdScore:52, snowScore:93, valueScore:44, accessScore:66,
+    weeklyForecast:[{day:"Thu",icon:"🌨",snow:6},{day:"Fri",icon:"🌨",snow:14},{day:"Sat",icon:"🌨",snow:20},{day:"Sun",icon:"☁️",snow:4},{day:"Mon",icon:"☀️",snow:0}],
+    description:"The most serious big mountain resort in the US. Experts only on 50% of terrain.",
+    pros:"Massive vert, epic backcountry access, iconic tram, world-class snow.",
+    cons:"Expensive, limited beginner/intermediate terrain, crowded powder days.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Hostel X",pricePerNight:75,note:"Legendary ski bum hostel at the base of the tram",link:"https://www.booking.com/searchresults.html?ss=Jackson+Hole%2C+Wyoming"},
+      {tier:"mid",label:"Mid-Range",name:"Teton Village Condo",pricePerNight:380,note:"Ski-in/ski-out, full kitchen, walk to tram",link:"https://www.expedia.com/Hotel-Search?destination=Jackson+Hole+Wyoming"},
+      {tier:"luxury",label:"Luxury",name:"Four Seasons Jackson Hole",pricePerNight:900,note:"Ski-in/ski-out, Forbes 5-star, the best in Wyoming",link:"https://www.booking.com/searchresults.html?ss=Jackson+Hole%2C+Wyoming"},
+    ],
+  },
+  {
+    id:"crested", name:"Crested Butte", state:"CO", nickname:"The Last Great Colorado Ski Town",
+    tags:["all-mountain","powder","advanced","intermediate","value"],
+    travelMode:"fly", distanceDenver:230, distanceSLC:550,
+    baseElevation:9375, summitElevation:12162, verticalDrop:2775,
+    skiableAcres:1547, averageSnowfall:300, currentBase:44,
+    liftTicket:129, avgLodgingPerNight:195,
+    crowdScore:22, snowScore:74, valueScore:80, accessScore:50,
+    weeklyForecast:[{day:"Thu",icon:"☀️",snow:0},{day:"Fri",icon:"⛅",snow:2},{day:"Sat",icon:"🌨",snow:7},{day:"Sun",icon:"🌨",snow:5},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Colorado's most extreme terrain with an extremely low-key, authentic ski town vibe.",
+    pros:"Wildest extreme terrain in CO, genuine mountain town, not overcrowded.",
+    cons:"Remote, lower average snowfall, small regional airport.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"CB Town Rental",pricePerNight:85,note:"Stay in funky Crested Butte town, free bus to mountain",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"},
+      {tier:"mid",label:"Mid-Range",name:"Elevation Hotel & Spa",pricePerNight:195,note:"Base of mountain, ski-in/ski-out, pool and hot tub",link:"https://www.expedia.com/Hotel-Search?destination=Crested+Butte+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Club Med Crested Butte",pricePerNight:420,note:"All-inclusive, ski-in/ski-out, meals included",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"},
+    ],
+  },
+  {
+    id:"eldora", name:"Eldora Mountain", state:"CO", nickname:"Boulder's Backyard",
+    tags:["all-mountain","beginner","intermediate","value","family"],
+    travelMode:"drive", distanceDenver:45, distanceSLC:530,
+    baseElevation:9200, summitElevation:10800, verticalDrop:1600,
+    skiableAcres:680, averageSnowfall:300, currentBase:40,
+    liftTicket:79, avgLodgingPerNight:130,
+    crowdScore:55, snowScore:60, valueScore:90, accessScore:92,
+    weeklyForecast:[{day:"Thu",icon:"⛅",snow:1},{day:"Fri",icon:"🌨",snow:5},{day:"Sat",icon:"☁️",snow:2},{day:"Sun",icon:"☀️",snow:0},{day:"Mon",icon:"☀️",snow:0}],
+    description:"Closest ski area to Denver and Boulder. Perfect day trip, incredible value.",
+    pros:"Closest to Denver/Boulder, cheapest tickets, great for beginners and families.",
+    cons:"Smaller vertical, lower snowfall than higher resorts.",
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Day Trip from Denver",pricePerNight:0,note:"45 min from Denver — just drive up and back. No lodging needed.",link:"https://www.google.com/maps/dir/Denver,+CO/Eldora+Mountain+Resort"},
+      {tier:"mid",label:"Mid-Range",name:"Nederland B&B",pricePerNight:130,note:"Charming mountain town, 10 min from Eldora",link:"https://www.booking.com/searchresults.html?ss=Nederland%2C+Colorado"},
+      {tier:"luxury",label:"Luxury",name:"Boulder Hotel + Drive",pricePerNight:220,note:"Stay in Boulder, 45 min scenic drive. More amenities.",link:"https://www.expedia.com/Hotel-Search?destination=Boulder+Colorado"},
+    ],
+  },
+];
+
+function calcTripCost(m, nights, groupSize, origin) {
+  const lodging = m.avgLodgingPerNight * nights;
+  const tickets = m.liftTicket * nights * groupSize;
+  const dist = origin === "slc" ? m.distanceSLC : m.distanceDenver;
+  let travel = 0;
+  if (m.travelMode === "drive" || (m.travelMode === "either" && dist < 200)) {
+    travel = Math.round(dist * 0.18 * 2);
+  } else {
+    travel = groupSize * 260;
+  }
+  return lodging + tickets + travel;
+}
+
+function scoreResult(m, params) {
+  const { budget, nights, groupSize, origin, style, skill, travel } = params;
+  const cost = calcTripCost(m, nights, groupSize, origin);
+  const budgetFit = cost <= budget ? 1 : cost <= budget * 1.2 ? 0.6 : 0.2;
+  if (travel === "drive" && m.travelMode === "fly") return -1;
+  if (travel === "fly" && m.travelMode === "drive" && (origin === "slc" ? m.distanceSLC : m.distanceDenver) < 150) return -1;
+  const snow = m.snowScore * 0.35;
+  const value = m.valueScore * budgetFit * 0.25;
+  const crowd = (100 - m.crowdScore) * 0.18;
+  const access = m.accessScore * 0.1;
+  const styleBonus = m.tags.includes(style) ? 9 : 0;
+  const skillBonus = m.tags.includes(skill) ? 5 : 0;
+  return Math.round(snow + value + crowd + access + styleBonus + skillBonus);
+}
+
+async function getAIRecommendation(topMountain, params, allResults) {
+  const top3Names = allResults.slice(0, 3).map(m => m.name).join(", ");
+  const totalSnow = topMountain.weeklyForecast.reduce((s, d) => s + d.snow, 0);
+  const cost = calcTripCost(topMountain, params.nights, params.groupSize, params.origin);
+  const originLabel = params.origin === "slc" ? "Salt Lake City" : params.origin === "denver" ? "Denver" : params.origin;
+
+  const prompt = `You are a ski-obsessed local who's skied every resort in the western US. You talk like a knowledgeable friend, not a customer service rep. No fluff, no corporate language, no phrases like "I'd be happy to" or "This is a great choice." Just straight talk.
+
+Someone is planning a ski trip:
+- Budget: $${params.budget} total for ${params.groupSize} skier(s), ${params.nights} nights
+- How they're getting there: ${params.travel}
+- What they're after: ${params.style} skiing, ${params.skill} level
+- Leaving from: ${originLabel}
+
+You ran the numbers. Top pick is ${topMountain.name}, ${topMountain.state}.
+- Trip cost estimate: $${cost.toLocaleString()}
+- Snow on the ground right now: ${topMountain.currentBase} inches
+- What's coming in the next 5 days: ${totalSnow} inches
+- Crowd situation: ${topMountain.crowdScore}/100 (lower = more empty)
+- ${topMountain.description}
+
+Other decent options: ${top3Names}
+
+Write 3 sentences MAX explaining why ${topMountain.name} makes sense for this specific person. Sound like a ski buddy texting them a recommendation, not a travel agent writing a brochure. Use real specifics — snow numbers, cost, why it fits their style. End with one blunt honest tip. Under 75 words. No bullet points. No hedging. No "it's worth noting that."`;
+
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 1000,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  const data = await response.json();
+  return data.content?.[0]?.text || "";
+}
+
+function ScoreBar({ label, value, color }) {
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:3}}>
+      <div style={{fontSize:"0.62rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"#8a8480"}}>{label}</div>
+      <div style={{width:56,height:4,background:"#e8e4de",borderRadius:99,overflow:"hidden"}}>
+        <div style={{width:`${value}%`,height:"100%",background:color,borderRadius:99,transition:"width 0.8s ease"}}/>
+      </div>
+    </div>
+  );
+}
+
+function ForecastDay({ day, icon, snow }) {
+  return (
+    <div style={{flex:1,background:"#f5f3ef",borderRadius:8,padding:"8px 4px",textAlign:"center"}}>
+      <div style={{fontSize:"0.65rem",color:"#8a8480",marginBottom:2}}>{day}</div>
+      <div style={{fontSize:"1.1rem",marginBottom:2}}>{icon}</div>
+      <div style={{fontWeight:700,fontSize:"0.8rem",color:snow>0?"#1a6b7c":"#c0bbb4"}}>{snow>0?`${snow}"`:"—"}</div>
+    </div>
+  );
+}
+
+function ResultCard({ mountain, rank, params, isExpanded, onToggle }) {
+  const cost = calcTripCost(mountain, params.nights, params.groupSize, params.origin);
+  const withinBudget = cost <= params.budget * 1.15;
+  const totalSnow = mountain.weeklyForecast.reduce((s,d)=>s+d.snow,0);
+  const rankBg = rank===1?"#0d0f0f":rank===2?"#6b6560":rank===3?"#c0bbb4":"#e8e4de";
+  const rankColor = rank<=2?"#fff":"#8a8480";
+
+  return (
+    <div onClick={onToggle} style={{background:"#fff",border:`1.5px solid ${rank===1?"#1a6b7c":"#e8e4de"}`,borderRadius:14,padding:"1.4rem",marginBottom:"0.75rem",cursor:"pointer",transition:"box-shadow 0.2s",boxShadow:isExpanded?"0 8px 40px rgba(13,15,15,0.1)":"0 2px 8px rgba(13,15,15,0.04)"}}>
+      <div style={{display:"grid",gridTemplateColumns:"40px 1fr auto",gap:"1rem",alignItems:"flex-start"}}>
+        <div style={{width:36,height:36,borderRadius:"50%",background:rankBg,color:rankColor,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.85rem",fontWeight:700,flexShrink:0}}>{rank}</div>
+        <div>
+          {rank===1&&<div style={{display:"inline-block",fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.12em",textTransform:"uppercase",background:"#0d0f0f",color:"#fff",borderRadius:99,padding:"3px 10px",marginBottom:6}}>Top Pick</div>}
+          <div style={{fontFamily:"'DM Serif Display',serif",fontSize:"1.15rem",marginBottom:2}}>{mountain.name}, {mountain.state}</div>
+          <div style={{fontSize:"0.72rem",color:"#8a8480",fontStyle:"italic",marginBottom:8}}>"{mountain.nickname}"</div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"10px",fontSize:"0.78rem",color:"#6b6560",marginBottom:10}}>
+            <span>⛰ {mountain.verticalDrop.toLocaleString()} ft</span>
+            <span>🎿 {mountain.skiableAcres.toLocaleString()} acres</span>
+            <span>❄️ {mountain.currentBase}" base</span>
+            <span>🎟 ${mountain.liftTicket}/day</span>
+            <span>🌨 {totalSnow}" forecast</span>
+          </div>
+          <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+            <ScoreBar label="Snow" value={mountain.snowScore} color="#2a8fa5"/>
+            <ScoreBar label="Value" value={mountain.valueScore} color="#1e7a4a"/>
+            <ScoreBar label="Quiet" value={100-mountain.crowdScore} color="#b8860b"/>
+            <ScoreBar label="Access" value={mountain.accessScore} color="#7c5cbf"/>
           </div>
         </div>
-        <div class="nav-pills">
-          <span>Live Forecast Scoring</span>
-          <span>Transparent Ranking</span>
+        <div style={{textAlign:"right",flexShrink:0}}>
+          <div style={{fontSize:"0.6rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#a09b92",marginBottom:4}}>SummitScore</div>
+          <div style={{fontFamily:"'DM Serif Display',serif",fontSize:"2.2rem",lineHeight:1,color:"#0d0f0f"}}>{mountain.score}</div>
+          <div style={{fontSize:"0.8rem",fontWeight:600,color:withinBudget?"#1e7a4a":"#c0392b",marginTop:6}}>${cost.toLocaleString()} est.</div>
+          <div style={{fontSize:"0.68rem",color:"#a09b92",marginTop:2}}>{withinBudget?"✓ in budget":"⚠ over budget"}</div>
         </div>
       </div>
-      <div class="wrap hero-row">
-        <h1>Find the best ski trip for your dates and budget</h1>
-        <p>
-          Compare mountain options by snow pattern quality, total trip cost, travel time, and crowd
-          pressure. Then book lodging, flights, and lift tickets.
+
+      {isExpanded && (
+        <div style={{marginTop:"1.25rem",paddingTop:"1.25rem",borderTop:"1px solid #e8e4de",animation:"fadeUp 0.25s ease"}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.875rem"}}>
+            <div style={{background:"#f8f7f4",borderRadius:10,padding:"1rem"}}>
+              <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:10}}>5-Day Forecast</div>
+              <div style={{display:"flex",gap:4}}>
+                {mountain.weeklyForecast.map(d=><ForecastDay key={d.day} {...d}/>)}
+              </div>
+            </div>
+            <div style={{background:"#f8f7f4",borderRadius:10,padding:"1rem"}}>
+              <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:8}}>Trip Cost</div>
+              <div style={{fontSize:"0.82rem",color:"#4a4540",lineHeight:1.8,marginBottom:10}}>
+                <div>Lift tickets: <strong>${(mountain.liftTicket*params.nights*params.groupSize).toLocaleString()}</strong></div>
+                <div style={{paddingTop:4,borderTop:"1px solid #e8e4de",marginTop:4,fontSize:"0.75rem",color:"#8a8480"}}>
+                  + lodging below · <strong style={{color:withinBudget?"#1e7a4a":"#c0392b"}}>{withinBudget?"within budget":"over budget"}</strong>
+                </div>
+              </div>
+              <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:8}}>Where to Stay</div>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {mountain.lodgingTiers.map(t=>(
+                  <a key={t.tier} href={t.link} target="_blank" rel="noopener noreferrer"
+                    onClick={e=>e.stopPropagation()}
+                    style={{display:"block",textDecoration:"none",background:"#fff",border:"1px solid #e8e4de",borderRadius:8,padding:"8px 10px"}}>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:2}}>
+                      <span style={{fontSize:"0.72rem",fontWeight:700,color:"#0d0f0f"}}>{t.label}</span>
+                      <span style={{fontSize:"0.78rem",fontWeight:700,color:"#1a6b7c"}}>{t.pricePerNight===0?"Free":`$${t.pricePerNight}/night`}</span>
+                    </div>
+                    <div style={{fontSize:"0.72rem",fontWeight:600,color:"#4a4540"}}>{t.name}</div>
+                    <div style={{fontSize:"0.68rem",color:"#8a8480",marginTop:1}}>{t.note}</div>
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div style={{background:"#f8f7f4",borderRadius:10,padding:"1rem"}}>
+              <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:10}}>Local Intel</div>
+              <div style={{fontSize:"0.8rem",color:"#4a4540",lineHeight:1.7}}>
+                <div><strong>↑</strong> {mountain.pros}</div>
+                <div style={{marginTop:6}}><strong>↓</strong> {mountain.cons}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function App() {
+  const [params, setParams] = useState({budget:2000,nights:4,groupSize:2,origin:"denver",travel:"either",style:"all-mountain",skill:"intermediate"});
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [aiRec, setAiRec] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
+  const resultsRef = useRef(null);
+  const set = (k,v) => setParams(p=>({...p,[k]:v}));
+
+  async function runSearch() {
+    setLoading(true); setHasSearched(false); setAiRec(""); setExpandedId(null);
+    await new Promise(r=>setTimeout(r,800));
+    const scored = MOUNTAINS
+      .map(m=>({...m,score:scoreResult(m,params),estimatedCost:calcTripCost(m,params.nights,params.groupSize,params.origin)}))
+      .filter(m=>m.score>0).sort((a,b)=>b.score-a.score);
+    setResults(scored); setLoading(false); setHasSearched(true);
+    setTimeout(()=>resultsRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),100);
+    if (scored.length>0) {
+      setAiLoading(true);
+      try { const rec = await getAIRecommendation(scored[0],params,scored); setAiRec(rec); }
+      catch(e) { setAiRec("Couldn't load recommendation — try again."); }
+      setAiLoading(false);
+    }
+  }
+
+  const inp = {height:44,border:"1.5px solid #e8e4de",borderRadius:8,padding:"0 12px",fontFamily:"'DM Sans',sans-serif",fontSize:"0.9rem",color:"#0d0f0f",background:"#f5f3ef",outline:"none",width:"100%"};
+  const lbl = {fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:5,display:"block"};
+
+  return (
+    <div style={{fontFamily:"'DM Sans',sans-serif",background:"#f8f7f4",minHeight:"100vh",color:"#0d0f0f"}}>
+      {/* NAV */}
+      <nav style={{position:"sticky",top:0,zIndex:100,background:"rgba(248,247,244,0.92)",backdropFilter:"blur(14px)",borderBottom:"1px solid #e8e4de",padding:"0 2rem",height:58,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{display:"flex",alignItems:"center",gap:10}}>
+          <div style={{width:32,height:32,background:"#0d0f0f",borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontFamily:"'DM Serif Display',serif",fontSize:"1rem"}}>S</div>
+          <span style={{fontFamily:"'DM Serif Display',serif",fontSize:"1.2rem"}}>SummitSync</span>
+        </div>
+        <div style={{display:"flex",gap:6}}>
+          {["AI-Powered","8 Resorts","Live Scoring"].map(t=>(
+            <span key={t} style={{fontSize:"0.65rem",fontWeight:600,letterSpacing:"0.07em",textTransform:"uppercase",color:"#8a8480",background:"#f0ede8",border:"1px solid #e8e4de",borderRadius:99,padding:"3px 10px"}}>{t}</span>
+          ))}
+        </div>
+      </nav>
+
+      {/* HERO */}
+      <div style={{maxWidth:760,margin:"0 auto",padding:"4.5rem 2rem 2.5rem",textAlign:"center"}}>
+        <div style={{display:"inline-flex",alignItems:"center",gap:7,fontSize:"0.68rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:"#1a6b7c",background:"#eef6f9",border:"1px solid #c5dfe8",borderRadius:99,padding:"5px 14px",marginBottom:"1.5rem"}}>
+          <span style={{width:6,height:6,background:"#2a8fa5",borderRadius:"50%",animation:"pulse 2s infinite",display:"inline-block"}}/>
+          Ski Trip Intelligence · Powered by AI
+        </div>
+        <h1 style={{fontFamily:"'DM Serif Display',serif",fontSize:"clamp(2rem,5vw,3.2rem)",lineHeight:1.1,letterSpacing:"-0.02em",margin:"0 0 1rem"}}>
+          Find the <em style={{color:"#1a6b7c"}}>right mountain</em><br/>for your trip
+        </h1>
+        <p style={{fontSize:"1rem",color:"#6b6560",lineHeight:1.7,maxWidth:500,margin:"0 auto"}}>
+          Tell us your budget, dates, and style. Our AI compares 8 western resorts on snow quality, cost, crowds, and access — then explains exactly why one is right for you.
         </p>
-        <p id="catalogMeta" class="catalog-meta"></p>
       </div>
-    </header>
 
-    <main class="wrap main-area">
-      <section class="search-card" aria-labelledby="plannerHeading">
-        <h2 id="plannerHeading">Trip Search</h2>
-        <form id="tripForm" class="search-grid">
-          <label>
-            Budget (USD)
-            <input id="budgetInput" type="number" min="300" step="50" value="1800" />
-          </label>
-          <label>
-            Nights
-            <input id="nightsInput" type="number" min="1" max="14" value="3" />
-          </label>
-          <label>
-            Group size
-            <input id="groupSizeInput" type="number" min="1" max="10" value="2" />
-          </label>
-          <label>
-            Travel mode
-            <select id="travelModeSelect">
-              <option value="drive">Drive</option>
-              <option value="fly">Fly</option>
-              <option value="either">Either</option>
-            </select>
-          </label>
-          <label>
-            Ski style
-            <select id="styleSelect">
-              <option value="all-mountain">All-mountain</option>
-              <option value="powder" selected>Powder chase</option>
-              <option value="park">Park / freestyle</option>
-              <option value="family">Family-friendly</option>
-              <option value="budget">Best value</option>
-            </select>
-          </label>
-          <label>
-            Skill level
-            <select id="skillSelect">
-              <option value="intermediate">Intermediate</option>
-              <option value="beginner">Beginner</option>
-              <option value="advanced" selected>Advanced</option>
-            </select>
-          </label>
-          <button class="search-btn" type="submit">Search Mountains</button>
-        </form>
-      </section>
-
-      <section class="content-grid">
-        <div class="panel" aria-labelledby="resultsHeading">
-          <div class="panel-head">
-            <h2 id="resultsHeading">Top Matches</h2>
-            <p id="summaryText" class="muted"></p>
+      {/* SEARCH */}
+      <div style={{maxWidth:860,margin:"0 auto",padding:"0 2rem"}}>
+        <div style={{background:"#fff",border:"1px solid #e8e4de",borderRadius:16,padding:"2rem",boxShadow:"0 8px 40px rgba(13,15,15,0.08)"}}>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
+            <div><label style={lbl}>Budget (USD)</label><input type="number" value={params.budget} onChange={e=>set("budget",+e.target.value)} min={500} step={100} style={inp}/></div>
+            <div><label style={lbl}>Nights</label><input type="number" value={params.nights} onChange={e=>set("nights",+e.target.value)} min={1} max={14} style={inp}/></div>
+            <div><label style={lbl}>Group Size</label><input type="number" value={params.groupSize} onChange={e=>set("groupSize",+e.target.value)} min={1} max={20} style={inp}/></div>
           </div>
-          <div id="resultsList" class="result-list"></div>
-        </div>
-
-        <div class="panel" aria-labelledby="forecastHeading">
-          <div class="panel-head">
-            <h2 id="forecastHeading">Weather Pattern Breakdown</h2>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"1rem",marginBottom:"1.25rem"}}>
+            <div><label style={lbl}>From</label>
+              <select value={params.origin} onChange={e=>set("origin",e.target.value)} style={inp}>
+                <option value="denver">Denver, CO</option><option value="slc">Salt Lake City, UT</option>
+                <option value="la">Los Angeles, CA</option><option value="seattle">Seattle, WA</option><option value="nyc">New York, NY</option>
+              </select>
+            </div>
+            <div><label style={lbl}>Travel Mode</label>
+              <select value={params.travel} onChange={e=>set("travel",e.target.value)} style={inp}>
+                <option value="either">Either</option><option value="drive">Drive</option><option value="fly">Fly</option>
+              </select>
+            </div>
+            <div><label style={lbl}>Ski Style</label>
+              <select value={params.style} onChange={e=>set("style",e.target.value)} style={inp}>
+                <option value="all-mountain">All-Mountain</option><option value="powder">Powder Chase</option>
+                <option value="park">Park / Freestyle</option><option value="family">Family-Friendly</option><option value="value">Best Value</option>
+              </select>
+            </div>
+            <div><label style={lbl}>Skill Level</label>
+              <select value={params.skill} onChange={e=>set("skill",e.target.value)} style={inp}>
+                <option value="intermediate">Intermediate</option><option value="beginner">Beginner</option><option value="advanced">Advanced</option>
+              </select>
+            </div>
           </div>
-          <p id="forecastIntro" class="muted"></p>
-          <div id="forecastPanel" class="forecast-panel"></div>
+          <button onClick={runSearch} disabled={loading} style={{width:"100%",height:52,background:loading?"#6b6560":"#0d0f0f",color:"#fff",border:"none",borderRadius:10,fontFamily:"'DM Sans',sans-serif",fontSize:"0.95rem",fontWeight:700,letterSpacing:"0.03em",cursor:loading?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:8,transition:"background 0.15s"}}>
+            {loading?<><div style={{width:18,height:18,border:"2px solid rgba(255,255,255,0.3)",borderTopColor:"#fff",borderRadius:"50%",animation:"spin 0.7s linear infinite"}}/>Scoring mountains…</>:"Search Mountains →"}
+          </button>
         </div>
-      </section>
-    </main>
+      </div>
 
-    <script src="app.js"></script>
-  </body>
+      {/* RESULTS */}
+      {hasSearched && (
+        <div ref={resultsRef} style={{maxWidth:860,margin:"3rem auto 0",padding:"0 2rem",animation:"fadeUp 0.4s ease"}}>
+          <div style={{background:"#0d0f0f",borderRadius:14,padding:"1.5rem",marginBottom:"2rem",position:"relative",overflow:"hidden"}}>
+            <div style={{position:"absolute",top:0,right:0,width:200,height:"100%",background:"linear-gradient(90deg,transparent,rgba(26,107,124,0.15))",pointerEvents:"none"}}/>
+            <div style={{display:"flex",gap:12,alignItems:"flex-start"}}>
+              <div style={{width:36,height:36,background:"#1a6b7c",borderRadius:8,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem"}}>✦</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#2a8fa5",marginBottom:6}}>SummitSync Pick</div>
+                {aiLoading?(
+                  <div style={{height:16,borderRadius:4,marginBottom:6,background:"linear-gradient(90deg,#2a2a2a 25%,#3a3a3a 50%,#2a2a2a 75%)",backgroundSize:"400px 100%",animation:"shimmer 1.2s infinite"}}/>
+                ):(
+                  <p style={{color:"#f0ede8",fontSize:"0.92rem",lineHeight:1.7,margin:0}}>{aiRec}</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"1.25rem"}}>
+            <div style={{fontFamily:"'DM Serif Display',serif",fontSize:"1.5rem"}}>{results.length} Matches</div>
+            <div style={{fontSize:"0.75rem",color:"#a09b92"}}>Ranked by SummitScore · click to expand</div>
+          </div>
+
+          {results.map((m,i)=>(
+            <ResultCard key={m.id} mountain={m} rank={i+1} params={params}
+              isExpanded={expandedId===m.id} onToggle={()=>setExpandedId(expandedId===m.id?null:m.id)}/>
+          ))}
+
+          <div style={{marginTop:"2.5rem",marginBottom:"4rem"}}>
+            <div style={{fontFamily:"'DM Serif Display',serif",fontSize:"1.5rem",marginBottom:"1.25rem"}}>Weather Snapshot</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.875rem"}}>
+              {results.slice(0,3).map(m=>{
+                const total = m.weeklyForecast.reduce((s,d)=>s+d.snow,0);
+                const trend = total>20?{label:"↑ Active pattern",bg:"#e8f5ee",color:"#1e7a4a"}:total>6?{label:"→ Mixed outlook",bg:"#fef9e7",color:"#b8860b"}:{label:"↓ Dry stretch",bg:"#fdecea",color:"#c0392b"};
+                return (
+                  <div key={m.id} style={{background:"#fff",border:"1px solid #e8e4de",borderRadius:12,padding:"1.25rem"}}>
+                    <div style={{fontSize:"0.68rem",fontWeight:700,letterSpacing:"0.08em",textTransform:"uppercase",color:"#8a8480",marginBottom:6}}>{m.name}</div>
+                    <div style={{fontFamily:"'DM Serif Display',serif",fontSize:"2rem",lineHeight:1}}>{m.currentBase}"</div>
+                    <div style={{fontSize:"0.75rem",color:"#a09b92",marginTop:2,marginBottom:8}}>current base depth</div>
+                    <div style={{display:"inline-flex",alignItems:"center",gap:4,fontSize:"0.72rem",fontWeight:700,background:trend.bg,color:trend.color,borderRadius:99,padding:"3px 10px"}}>{trend.label}</div>
+                    <div style={{fontSize:"0.75rem",color:"#6b6560",marginTop:8}}>{total}" forecast · {m.averageSnowfall}" season avg</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!hasSearched&&!loading&&(
+        <div style={{textAlign:"center",padding:"4rem 2rem",color:"#a09b92",fontSize:"0.9rem"}}>
+          Set your preferences above and hit Search Mountains
+        </div>
+      )}
+
+      <footer style={{borderTop:"1px solid #e8e4de",padding:"1.5rem 2rem",textAlign:"center",fontSize:"0.72rem",color:"#a09b92"}}>
+        © 2025 SummitSync · AI powered by Claude · Not affiliated with any resort or booking platform
+      </footer>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
 </html>
+Done
+That's everything — copy from <!DOCTYPE html> at the top all the way down to </html> at the bottom. Paste that into GitHub's editor replacing the existing index.html, commit, then hit Import on Vercel.
+
+
+
