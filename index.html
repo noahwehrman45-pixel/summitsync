@@ -37,6 +37,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate","value"],
     lat:39.6426, lon:-105.8719,
     travelMode:"drive", distanceDenver:68, distanceSLC:450, distanceSeattle:1200, distanceSF:1400, distanceLA:1380, distancePortland:1350,
+    distanceBZN:620,
     verticalDrop:2270, skiableAcres:1428, averageSnowfall:350,
     liftTicket:99, avgLodgingPerNight:160,
     crowdScore:28, snowScore:84, valueScore:92, accessScore:75,
@@ -45,6 +46,7 @@ const MOUNTAINS = [
     cons:"Limited on-mountain lodging, very windy at summit.",
     openSnowLink:"https://opensnow.com/location/arapahoe-basin",
     resortLink:"https://www.arapahoebasin.com/the-mountain/mountain-conditions/",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best fares, most flights — easiest choice"}, {code:"EGE",name:"Eagle County",drive:"45 min",note:"Closer drive but fewer flights, costs more"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Dillon Inn",pricePerNight:59,note:"10 min drive, basic rooms, free parking",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Keystone Condos",pricePerNight:160,note:"Full kitchen, slope views, easy A-Basin drive",link:"https://www.expedia.com/Hotel-Search?destination=Keystone+Colorado"},
@@ -54,6 +56,7 @@ const MOUNTAINS = [
     tags:["all-mountain","family","intermediate","powder","beginner"],
     lat:40.4572, lon:-106.8045,
     travelMode:"either", distanceDenver:157, distanceSLC:380, distanceSeattle:1300, distanceSF:1500, distanceLA:1480, distancePortland:1400,
+    distanceBZN:500,
     verticalDrop:3668, skiableAcres:2965, averageSnowfall:349,
     liftTicket:159, avgLodgingPerNight:240,
     crowdScore:48, snowScore:80, valueScore:65, accessScore:70,
@@ -62,6 +65,7 @@ const MOUNTAINS = [
     cons:"Further from Denver, pricier on weekends.",
     openSnowLink:"https://opensnow.com/location/steamboat",
     resortLink:"https://www.steamboat.com/the-mountain/mountain-report",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"3 hrs",note:"Most flights, cheapest fares"}, {code:"SLC",name:"Salt Lake City Intl",drive:"3.5 hrs",note:"Good Southwest options"}, {code:"HDN",name:"Yampa Valley (Hayden)",drive:"40 min",note:"Closest but limited seasonal service"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Steamboat Hostel",pricePerNight:65,note:"Walk to gondola, free breakfast",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Storm Meadows Condos",pricePerNight:240,note:"Ski-in/ski-out, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Steamboat+Springs+Colorado"},
@@ -71,6 +75,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate","family"],
     lat:39.6433, lon:-106.3781,
     travelMode:"drive", distanceDenver:97, distanceSLC:420, distanceSeattle:1230, distanceSF:1430, distanceLA:1410, distancePortland:1380,
+    distanceBZN:600,
     verticalDrop:3450, skiableAcres:5317, averageSnowfall:354,
     liftTicket:249, avgLodgingPerNight:400,
     crowdScore:72, snowScore:78, valueScore:38, accessScore:85,
@@ -79,6 +84,7 @@ const MOUNTAINS = [
     cons:"Most expensive resort in CO, very crowded, parking nightmare.",
     openSnowLink:"https://opensnow.com/location/vail",
     resortLink:"https://www.vail.com/the-mountain/mountain-conditions/snow-report.aspx",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"2 hrs",note:"Most flights, cheapest fares"}, {code:"EGE",name:"Eagle County",drive:"35 min",note:"Closest but pricier, seasonal only"}, {code:"ASE",name:"Aspen/Pitkin County",drive:"1.5 hrs",note:"Small, expensive, weather-dependent"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Eagle-Vail Condo",pricePerNight:120,note:"10 min bus ride, half the price",link:"https://www.booking.com/searchresults.html?ss=Avon%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Lion Square Lodge",pricePerNight:400,note:"Ski-in/ski-out Lionshead, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Vail+Colorado"},
@@ -88,6 +94,7 @@ const MOUNTAINS = [
     tags:["all-mountain","park","intermediate","beginner","family"],
     lat:39.4800, lon:-106.0667,
     travelMode:"drive", distanceDenver:85, distanceSLC:500, distanceSeattle:1250, distanceSF:1450, distanceLA:1430, distancePortland:1400,
+    distanceBZN:620,
     verticalDrop:3398, skiableAcres:2908, averageSnowfall:360,
     liftTicket:199, avgLodgingPerNight:280,
     crowdScore:80, snowScore:74, valueScore:46, accessScore:88,
@@ -96,6 +103,7 @@ const MOUNTAINS = [
     cons:"Very crowded weekends, expensive lodging.",
     openSnowLink:"https://opensnow.com/location/breckenridge",
     resortLink:"https://www.breckenridge.com/mountain/snow-and-weather-report.aspx",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best option by far — tons of flights"}, {code:"EGE",name:"Eagle County",drive:"1.5 hrs",note:"Seasonal, fewer options"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Frisco Inn on Galena",pricePerNight:89,note:"15 min free bus to Breck. Way cheaper.",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Village at Breckenridge",pricePerNight:280,note:"Ski-in/ski-out, full kitchen, walk to Main St",link:"https://www.expedia.com/Hotel-Search?destination=Breckenridge+Colorado"},
@@ -105,6 +113,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate"],
     lat:37.9375, lon:-107.8123,
     travelMode:"fly", distanceDenver:333, distanceSLC:475, distanceSeattle:1500, distanceSF:1600, distanceLA:1400, distancePortland:1550,
+    distanceBZN:700,
     verticalDrop:4425, skiableAcres:2000, averageSnowfall:309,
     liftTicket:179, avgLodgingPerNight:350,
     crowdScore:30, snowScore:70, valueScore:55, accessScore:44,
@@ -113,6 +122,7 @@ const MOUNTAINS = [
     cons:"Remote, small regional airport, most expensive lodging in CO.",
     openSnowLink:"https://opensnow.com/location/telluride",
     resortLink:"https://www.tellurideskiresort.com/mountain/snow-report/",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"5.5 hrs drive",note:"Best fares — connect to TEX or just drive"}, {code:"GJT",name:"Grand Junction",drive:"2 hrs",note:"More reliable than TEX, cheaper fares"}, {code:"TEX",name:"Telluride Regional",drive:"15 min",note:"Closest but tiny, pricey, weather-dependent"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Telluride Town Rental",pricePerNight:140,note:"Stay in town, free gondola up",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Mountain Village Condos",pricePerNight:350,note:"Ski-in/ski-out, full kitchen",link:"https://www.expedia.com/Hotel-Search?destination=Telluride+Colorado"},
@@ -122,6 +132,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate","luxury"],
     lat:39.2084, lon:-106.9490,
     travelMode:"fly", distanceDenver:200, distanceSLC:430, distanceSeattle:1400, distanceSF:1500, distanceLA:1350, distancePortland:1450,
+    distanceBZN:650,
     verticalDrop:4406, skiableAcres:5527, averageSnowfall:300,
     liftTicket:229, avgLodgingPerNight:500,
     crowdScore:45, snowScore:72, valueScore:30, accessScore:62,
@@ -130,6 +141,7 @@ const MOUNTAINS = [
     cons:"Most expensive town in skiing, flights to Aspen airport are pricey.",
     openSnowLink:"https://opensnow.com/location/aspen-snowmass",
     resortLink:"https://www.aspensnowmass.com/while-you-re-here/mountain-cams-conditions",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"4 hrs",note:"Best fares — drive via I-70 + Hwy 82"}, {code:"EGE",name:"Eagle County",drive:"70 min",note:"More reliable than ASE, seasonal"}, {code:"ASE",name:"Aspen/Pitkin County",drive:"10 min",note:"Closest but expensive and weather-dependent"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Basalt Rental",pricePerNight:130,note:"20 min away, RFTA bus to mountain",link:"https://www.booking.com/searchresults.html?ss=Basalt%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Snowmass Club Condos",pricePerNight:500,note:"Ski-in/ski-out at Snowmass",link:"https://www.expedia.com/Hotel-Search?destination=Snowmass+Village+Colorado"},
@@ -139,6 +151,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate","value"],
     lat:38.8997, lon:-106.9650,
     travelMode:"fly", distanceDenver:230, distanceSLC:550, distanceSeattle:1500, distanceSF:1600, distanceLA:1500, distancePortland:1550,
+    distanceBZN:680,
     verticalDrop:2775, skiableAcres:1547, averageSnowfall:300,
     liftTicket:129, avgLodgingPerNight:195,
     crowdScore:22, snowScore:74, valueScore:80, accessScore:50,
@@ -147,6 +160,7 @@ const MOUNTAINS = [
     cons:"Remote, lower average snowfall, small regional airport.",
     openSnowLink:"https://opensnow.com/location/crested-butte",
     resortLink:"https://www.skicb.com/the-mountain/mountain-conditions/snow-report.aspx",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"4 hrs",note:"Best fares — drive via Monarch Pass"}, {code:"GUC",name:"Gunnison–Crested Butte",drive:"30 min",note:"Closest but small, limited flights"}, {code:"ASE",name:"Aspen/Pitkin County",drive:"2.5 hrs",note:"Only if already connecting through Aspen"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"CB Town Rental",pricePerNight:85,note:"Funky town, free bus to mountain",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Elevation Hotel & Spa",pricePerNight:195,note:"Base of mountain, ski-in/ski-out",link:"https://www.expedia.com/Hotel-Search?destination=Crested+Butte+Colorado"},
@@ -156,6 +170,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","beginner","family","value"],
     lat:39.8868, lon:-105.7625,
     travelMode:"drive", distanceDenver:67, distanceSLC:480, distanceSeattle:1220, distanceSF:1420, distanceLA:1400, distancePortland:1370,
+    distanceBZN:600,
     verticalDrop:3060, skiableAcres:3081, averageSnowfall:327,
     liftTicket:169, avgLodgingPerNight:200,
     crowdScore:58, snowScore:72, valueScore:72, accessScore:82,
@@ -164,6 +179,7 @@ const MOUNTAINS = [
     cons:"Weather variable, crowded on powder days from Denver day-trippers.",
     openSnowLink:"https://opensnow.com/location/winter-park",
     resortLink:"https://www.winterparkresort.com/the-mountain/mountain-conditions",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best and really only option — or take the ski train"}, {code:"EGE",name:"Eagle County",drive:"2 hrs",note:"Seasonal only, not worth it over DEN"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Fraser Valley Rental",pricePerNight:90,note:"5 min drive, Summit Stage bus",link:"https://www.booking.com/searchresults.html?ss=Fraser%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Vintage Hotel",pricePerNight:200,note:"Slope-side, ski-in/ski-out",link:"https://www.expedia.com/Hotel-Search?destination=Winter+Park+Colorado"},
@@ -173,6 +189,7 @@ const MOUNTAINS = [
     tags:["all-mountain","beginner","intermediate","value","family"],
     lat:39.9373, lon:-105.5820,
     travelMode:"drive", distanceDenver:45, distanceSLC:530, distanceSeattle:1300, distanceSF:1450, distanceLA:1430, distancePortland:1370,
+    distanceBZN:620,
     verticalDrop:1600, skiableAcres:680, averageSnowfall:300,
     liftTicket:79, avgLodgingPerNight:130,
     crowdScore:55, snowScore:60, valueScore:90, accessScore:92,
@@ -181,6 +198,7 @@ const MOUNTAINS = [
     cons:"Smaller vertical, lower snowfall than higher resorts.",
     openSnowLink:"https://opensnow.com/location/eldora",
     resortLink:"https://www.eldora.com/mountain/snow-report",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1 hr",note:"Only real option — it's basically a day trip"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Day Trip from Denver",pricePerNight:0,note:"45 min drive — no lodging needed",link:"https://www.google.com/maps/dir/Denver,+CO/Eldora+Mountain+Resort"},
       {tier:"mid",label:"Mid-Range",name:"Nederland B&B",pricePerNight:130,note:"Charming mountain town, 10 min away",link:"https://www.booking.com/searchresults.html?ss=Nederland%2C+Colorado"},
@@ -190,6 +208,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","beginner","family","value"],
     lat:39.6042, lon:-105.9378,
     travelMode:"drive", distanceDenver:75, distanceSLC:460, distanceSeattle:1220, distanceSF:1420, distanceLA:1400, distancePortland:1370,
+    distanceBZN:620,
     verticalDrop:2900, skiableAcres:3148, averageSnowfall:235,
     liftTicket:149, avgLodgingPerNight:190,
     crowdScore:55, snowScore:62, valueScore:74, accessScore:86,
@@ -198,6 +217,7 @@ const MOUNTAINS = [
     cons:"Lower average snowfall, can ice up.",
     openSnowLink:"https://opensnow.com/location/keystone",
     resortLink:"https://www.keystoneresort.com/the-mountain/mountain-conditions/snow-report.aspx",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best option"}, {code:"EGE",name:"Eagle County",drive:"1 hr",note:"Seasonal, pricier"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Dillon Budget Hotel",pricePerNight:79,note:"10 min drive, Summit Stage bus free",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Keystone Lodge",pricePerNight:190,note:"Slope-side, full resort amenities",link:"https://www.expedia.com/Hotel-Search?destination=Keystone+Colorado"},
@@ -207,6 +227,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","advanced","park","value"],
     lat:39.5022, lon:-106.1505,
     travelMode:"drive", distanceDenver:75, distanceSLC:460, distanceSeattle:1220, distanceSF:1420, distanceLA:1400, distancePortland:1370,
+    distanceBZN:620,
     verticalDrop:2601, skiableAcres:2465, averageSnowfall:305,
     liftTicket:149, avgLodgingPerNight:210,
     crowdScore:50, snowScore:68, valueScore:72, accessScore:86,
@@ -215,6 +236,7 @@ const MOUNTAINS = [
     cons:"Base village can feel sterile, lower snowfall.",
     openSnowLink:"https://opensnow.com/location/copper-mountain",
     resortLink:"https://www.coppercolorado.com/the-mountain/conditions",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best option"}, {code:"EGE",name:"Eagle County",drive:"1 hr",note:"Seasonal, closer but fewer flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Frisco Budget Hotel",pricePerNight:85,note:"10 min east in Frisco",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Copper Station Condos",pricePerNight:210,note:"Ski-in/ski-out, base village",link:"https://www.expedia.com/Hotel-Search?destination=Copper+Mountain+Colorado"},
@@ -224,6 +246,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","advanced","value"],
     lat:39.6797, lon:-105.8977,
     travelMode:"drive", distanceDenver:56, distanceSLC:460, distanceSeattle:1210, distanceSF:1410, distanceLA:1390, distancePortland:1360,
+    distanceBZN:620,
     verticalDrop:2410, skiableAcres:1800, averageSnowfall:422,
     liftTicket:99, avgLodgingPerNight:150,
     crowdScore:30, snowScore:80, valueScore:90, accessScore:88,
@@ -232,6 +255,7 @@ const MOUNTAINS = [
     cons:"No on-mountain lodging, can be windy, no resort town.",
     openSnowLink:"https://opensnow.com/location/loveland",
     resortLink:"https://skiloveland.com/mountain-report/",
+    flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1 hr",note:"Only real option"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Georgetown Hotel",pricePerNight:70,note:"10 min east on I-70, historic town",link:"https://www.booking.com/searchresults.html?ss=Georgetown%2C+Colorado"},
       {tier:"mid",label:"Mid-Range",name:"Dillon Condo",pricePerNight:150,note:"20 min, Summit County hub",link:"https://www.expedia.com/Hotel-Search?destination=Dillon+Colorado"},
@@ -243,6 +267,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced"],
     lat:40.5831, lon:-111.6558,
     travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
+    distanceBZN:430,
     verticalDrop:3240, skiableAcres:2500, averageSnowfall:500,
     liftTicket:209, avgLodgingPerNight:320,
     crowdScore:58, snowScore:97, valueScore:52, accessScore:74,
@@ -251,6 +276,7 @@ const MOUNTAINS = [
     cons:"Minimal beginner terrain, requires flying from most cities.",
     openSnowLink:"https://opensnow.com/location/snowbird",
     resortLink:"https://www.snowbird.com/mountain-report/",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"35 min",note:"One of the best airport-to-ski ratios anywhere"}, {code:"OGD",name:"Ogden-Hinckley",drive:"50 min",note:"Very limited flights — stick with SLC"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"SLC Airport Hotel + Drive",pricePerNight:90,note:"35 min canyon drive. Saves $150+/night",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"The Cliff Lodge",pricePerNight:320,note:"Slope-side, rooftop pool, ski locker",link:"https://www.expedia.com/Hotel-Search?destination=Snowbird+Utah"},
@@ -260,6 +286,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate"],
     lat:40.5883, lon:-111.6372,
     travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
+    distanceBZN:430,
     verticalDrop:2538, skiableAcres:2614, averageSnowfall:547,
     liftTicket:159, avgLodgingPerNight:280,
     crowdScore:45, snowScore:99, valueScore:62, accessScore:72,
@@ -268,6 +295,7 @@ const MOUNTAINS = [
     cons:"No snowboarders, limited nightlife.",
     openSnowLink:"https://opensnow.com/location/alta",
     resortLink:"https://www.alta.com/mountain/snow-report",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"35 min",note:"35 min up Little Cottonwood Canyon — easy"}, {code:"OGD",name:"Ogden-Hinckley",drive:"50 min",note:"Very limited flights — stick with SLC"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"SLC Hotel + Canyon Drive",pricePerNight:90,note:"35 min up Little Cottonwood Canyon",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"Alta Lodge",pricePerNight:280,note:"Classic ski lodge, ski-in/ski-out, meals included",link:"https://www.expedia.com/Hotel-Search?destination=Alta+Utah"},
@@ -277,6 +305,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","beginner","family","park"],
     lat:40.6514, lon:-111.5080,
     travelMode:"fly", distanceDenver:520, distanceSLC:32, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
+    distanceBZN:420,
     verticalDrop:3226, skiableAcres:7300, averageSnowfall:355,
     liftTicket:219, avgLodgingPerNight:300,
     crowdScore:68, snowScore:75, valueScore:50, accessScore:82,
@@ -285,6 +314,7 @@ const MOUNTAINS = [
     cons:"Can be crowded, some terrain feels spread thin.",
     openSnowLink:"https://opensnow.com/location/park-city-mountain",
     resortLink:"https://www.parkcitymountain.com/the-mountain/mountain-conditions/snow-report.aspx",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"35 min",note:"35 min on I-80 — incredible airport access"}, {code:"OGD",name:"Ogden-Hinckley",drive:"55 min",note:"Budget flights but very limited service"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Park City Main St Rental",pricePerNight:150,note:"Walk to gondola from historic Main Street",link:"https://www.booking.com/searchresults.html?ss=Park+City%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"Marriott Summit Watch",pricePerNight:300,note:"Ski-in/ski-out at Town Lift",link:"https://www.expedia.com/Hotel-Search?destination=Park+City+Utah"},
@@ -294,6 +324,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","advanced","luxury"],
     lat:40.6374, lon:-111.4783,
     travelMode:"fly", distanceDenver:520, distanceSLC:34, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
+    distanceBZN:420,
     verticalDrop:3000, skiableAcres:2026, averageSnowfall:300,
     liftTicket:249, avgLodgingPerNight:450,
     crowdScore:38, snowScore:74, valueScore:35, accessScore:80,
@@ -302,6 +333,7 @@ const MOUNTAINS = [
     cons:"Very expensive, skiers only.",
     openSnowLink:"https://opensnow.com/location/deer-valley",
     resortLink:"https://www.deervalley.com/mountain/snow-report",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"40 min",note:"Best option by far"}, {code:"OGD",name:"Ogden-Hinckley",drive:"55 min",note:"Budget option, very limited flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Park City Budget Hotel",pricePerNight:140,note:"10 min drive or shuttle",link:"https://www.booking.com/searchresults.html?ss=Park+City%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"Snow Park Lodge",pricePerNight:450,note:"Base of Deer Valley, ski-in/ski-out",link:"https://www.expedia.com/Hotel-Search?destination=Deer+Valley+Utah"},
@@ -311,6 +343,7 @@ const MOUNTAINS = [
     tags:["all-mountain","park","intermediate","beginner","value","family"],
     lat:40.5986, lon:-111.5836,
     travelMode:"fly", distanceDenver:525, distanceSLC:28, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
+    distanceBZN:430,
     verticalDrop:1745, skiableAcres:1050, averageSnowfall:500,
     liftTicket:119, avgLodgingPerNight:160,
     crowdScore:40, snowScore:91, valueScore:82, accessScore:76,
@@ -319,6 +352,7 @@ const MOUNTAINS = [
     cons:"Smaller than neighbors, crowds on powder days.",
     openSnowLink:"https://opensnow.com/location/brighton",
     resortLink:"https://www.brightonresort.com/mountain/snow-report",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"35 min",note:"Best and only real option"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"SLC Hotel + Drive",pricePerNight:85,note:"35 min up Big Cottonwood Canyon",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"Brighton Chalets",pricePerNight:160,note:"Ski-in/ski-out chalets at the base",link:"https://www.expedia.com/Hotel-Search?destination=Brighton+Resort+Utah"},
@@ -328,6 +362,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","intermediate","advanced","value"],
     lat:40.6197, lon:-111.5919,
     travelMode:"fly", distanceDenver:525, distanceSLC:27, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
+    distanceBZN:430,
     verticalDrop:2047, skiableAcres:1200, averageSnowfall:500,
     liftTicket:129, avgLodgingPerNight:200,
     crowdScore:25, snowScore:93, valueScore:80, accessScore:74,
@@ -336,6 +371,7 @@ const MOUNTAINS = [
     cons:"Smaller than Park City or Snowbird, limited nightlife.",
     openSnowLink:"https://opensnow.com/location/solitude",
     resortLink:"https://www.solitudemountain.com/mountain/snow-report",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"35 min",note:"Best and only real option"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"SLC Hotel + Drive",pricePerNight:85,note:"27 min up Big Cottonwood Canyon",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"Inn at Solitude",pricePerNight:200,note:"Ski-in/ski-out, European-style, quiet",link:"https://www.expedia.com/Hotel-Search?destination=Solitude+Mountain+Utah"},
@@ -345,6 +381,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate"],
     lat:41.2161, lon:-111.8569,
     travelMode:"fly", distanceDenver:540, distanceSLC:40, distanceSeattle:860, distanceSF:760, distanceLA:700, distancePortland:830,
+    distanceBZN:400,
     verticalDrop:2959, skiableAcres:3000, averageSnowfall:400,
     liftTicket:139, avgLodgingPerNight:160,
     crowdScore:25, snowScore:82, valueScore:80, accessScore:72,
@@ -353,6 +390,7 @@ const MOUNTAINS = [
     cons:"No ski-in/ski-out lodging at mountain, limited base village.",
     openSnowLink:"https://opensnow.com/location/snowbasin",
     resortLink:"https://www.snowbasin.com/mountain/snow-report/",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"50 min",note:"Best option, easy I-15 drive"}, {code:"OGD",name:"Ogden-Hinckley",drive:"25 min",note:"Closest airport — very limited flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Ogden Hotel",pricePerNight:80,note:"40 min drive, Ogden is underrated",link:"https://www.booking.com/searchresults.html?ss=Ogden%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"Huntsville Rental",pricePerNight:160,note:"15 min from Snowbasin, quiet valley",link:"https://www.expedia.com/Hotel-Search?destination=Huntsville+Utah"},
@@ -362,6 +400,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","intermediate","advanced","value"],
     lat:41.3797, lon:-111.7803,
     travelMode:"fly", distanceDenver:545, distanceSLC:50, distanceSeattle:860, distanceSF:770, distanceLA:710, distancePortland:835,
+    distanceBZN:400,
     verticalDrop:2205, skiableAcres:8464, averageSnowfall:500,
     liftTicket:109, avgLodgingPerNight:170,
     crowdScore:15, snowScore:88, valueScore:88, accessScore:68,
@@ -370,6 +409,7 @@ const MOUNTAINS = [
     cons:"Limited lifts by design (you hike some terrain), remote from SLC.",
     openSnowLink:"https://opensnow.com/location/powder-mountain",
     resortLink:"https://www.powdermountain.com/mountain/snow-report",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"55 min",note:"Best option"}, {code:"OGD",name:"Ogden-Hinckley",drive:"30 min",note:"Closest but very limited flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Ogden Budget Hotel",pricePerNight:75,note:"45 min drive from Powder Mtn",link:"https://www.booking.com/searchresults.html?ss=Ogden%2C+Utah"},
       {tier:"mid",label:"Mid-Range",name:"Eden Valley Rental",pricePerNight:170,note:"15 min from mountain, valley cabins",link:"https://www.expedia.com/Hotel-Search?destination=Eden+Utah"},
@@ -381,6 +421,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced"],
     lat:43.5875, lon:-110.8280,
     travelMode:"fly", distanceDenver:540, distanceSLC:280, distanceSeattle:870, distanceSF:900, distanceLA:920, distancePortland:900,
+    distanceBZN:150,
     verticalDrop:4139, skiableAcres:2500, averageSnowfall:459,
     liftTicket:239, avgLodgingPerNight:380,
     crowdScore:52, snowScore:93, valueScore:44, accessScore:66,
@@ -389,6 +430,7 @@ const MOUNTAINS = [
     cons:"Expensive, limited beginner terrain, crowded powder days.",
     openSnowLink:"https://opensnow.com/location/jackson-hole",
     resortLink:"https://www.jacksonhole.com/mountain-report.html",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"4.5 hrs",note:"Cheapest fares — scenic drive through Star Valley"}, {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"3 hrs",note:"Good Delta/Southwest options, great drive"}, {code:"JAC",name:"Jackson Hole Airport",drive:"20 min",note:"Closest — beautiful approach but book early, it's pricey"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Hostel X",pricePerNight:75,note:"Legendary ski bum hostel at base of tram",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"},
       {tier:"mid",label:"Mid-Range",name:"Teton Village Condo",pricePerNight:380,note:"Ski-in/ski-out, full kitchen, walk to tram",link:"https://www.expedia.com/Hotel-Search?destination=Jackson+Hole+Wyoming"},
@@ -398,6 +440,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","intermediate","advanced","value"],
     lat:43.7880, lon:-110.9472,
     travelMode:"fly", distanceDenver:560, distanceSLC:290, distanceSeattle:900, distanceSF:950, distanceLA:970, distancePortland:930,
+    distanceBZN:170,
     verticalDrop:2270, skiableAcres:2602, averageSnowfall:500,
     liftTicket:139, avgLodgingPerNight:180,
     crowdScore:18, snowScore:94, valueScore:85, accessScore:55,
@@ -406,10 +449,81 @@ const MOUNTAINS = [
     cons:"Remote — 45 min from Jackson, small resort.",
     openSnowLink:"https://opensnow.com/location/grand-targhee",
     resortLink:"https://www.grandtarghee.com/mountain/snow-report/",
+    flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"5 hrs",note:"Cheapest fares, long but doable"}, {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"3.5 hrs",note:"Solid option with good fares"}, {code:"JAC",name:"Jackson Hole Airport",drive:"45 min",note:"Closest — pricey but spectacular Teton Pass drive"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Driggs Idaho Rental",pricePerNight:80,note:"20 min drive, way cheaper",link:"https://www.booking.com/searchresults.html?ss=Driggs%2C+Idaho"},
       {tier:"mid",label:"Mid-Range",name:"Targhee Lodge",pricePerNight:180,note:"Ski-in/ski-out at base, cozy",link:"https://www.expedia.com/Hotel-Search?destination=Grand+Targhee+Wyoming"},
       {tier:"luxury",label:"Luxury",name:"Teton Mountain Lodge",pricePerNight:420,note:"Teton Village, 45 min, full resort",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"},
+    ]},
+
+  // MONTANA (3)
+  { id:"bigsky", name:"Big Sky", state:"MT", region:"rockies", nickname:"The Biggest Skiing in America",
+    tags:["all-mountain","powder","advanced","intermediate","value"],
+    lat:45.2868, lon:-111.4015,
+    travelMode:"fly", distanceDenver:600, distanceSLC:400, distanceSeattle:800, distanceSF:1100, distanceLA:1200, distancePortland:850,
+    distanceBZN:60,
+    verticalDrop:4350, skiableAcres:5850, averageSnowfall:400,
+    liftTicket:169, avgLodgingPerNight:280,
+    crowdScore:30, snowScore:85, valueScore:78, accessScore:68,
+    description:"5,850 acres and a 4,350 ft vertical — the biggest skiing in the US by most measures. Connected to Moonlight Basin.",
+    pros:"Massive terrain, uncrowded by western standards, Lone Peak tram is iconic, great town.",
+    cons:"Remote, BZN flights book up fast, cold in January.",
+    openSnowLink:"https://opensnow.com/location/big-sky",
+    resortLink:"https://www.bigskymontana.com/mountain/snow-report",
+    flyInOptions:[
+      {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"1 hr",note:"Best option — direct flights on Delta, United, Southwest"},
+      {code:"SLC",name:"Salt Lake City Intl",drive:"4.5 hrs",note:"Cheaper fares, longer drive north through ID"},
+      {code:"MSO",name:"Missoula Intl",drive:"2.5 hrs",note:"Regional option with limited service"},
+    ],
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Bozeman Hotel",pricePerNight:100,note:"1 hr drive, Bozeman is a great town to base from",link:"https://www.booking.com/searchresults.html?ss=Bozeman%2C+Montana"},
+      {tier:"mid",label:"Mid-Range",name:"Big Sky Resort Condos",pricePerNight:280,note:"Ski-in/ski-out in Mountain Village",link:"https://www.expedia.com/Hotel-Search?destination=Big+Sky+Montana"},
+      {tier:"luxury",label:"Luxury",name:"Montage Big Sky",pricePerNight:900,note:"Forbes 5-star, ski-in/ski-out, stunning",link:"https://www.booking.com/searchresults.html?ss=Big+Sky%2C+Montana"},
+    ]},
+  { id:"bridgerbowl", name:"Bridger Bowl", state:"MT", region:"rockies", nickname:"The Coldsmoke Capital",
+    tags:["all-mountain","powder","advanced","intermediate","value"],
+    lat:45.8097, lon:-110.9050,
+    travelMode:"fly", distanceDenver:620, distanceSLC:420, distanceSeattle:820, distanceSF:1120, distanceLA:1220, distancePortland:870,
+    distanceBZN:25,
+    verticalDrop:2600, skiableAcres:2000, averageSnowfall:350,
+    liftTicket:75, avgLodgingPerNight:130,
+    crowdScore:20, snowScore:86, valueScore:94, accessScore:72,
+    description:"Bozeman's community ski hill. Coldsmoke powder is legendary — the driest, lightest snow in Montana. Non-profit, no corporate ownership.",
+    pros:"Cheapest tickets in the Rockies, Coldsmoke powder days are world-class, zero pretension, 16 miles from Bozeman.",
+    cons:"Smaller than Big Sky, no on-mountain lodging, no snowboarders on The Ridge.",
+    openSnowLink:"https://opensnow.com/location/bridger-bowl",
+    resortLink:"https://www.bridgerbowl.com/snow-report",
+    flyInOptions:[
+      {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"25 min",note:"Best option — 16 miles from Bridger, tons of direct flights"},
+      {code:"SLC",name:"Salt Lake City Intl",drive:"5 hrs",note:"Cheaper fares if BZN is booked up"},
+    ],
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Bozeman Hostel",pricePerNight:45,note:"25 min drive, Bozeman has tons of cheap options",link:"https://www.booking.com/searchresults.html?ss=Bozeman%2C+Montana"},
+      {tier:"mid",label:"Mid-Range",name:"Bozeman Hotel",pricePerNight:130,note:"Stay in Bozeman, 25 min drive to Bridger",link:"https://www.expedia.com/Hotel-Search?destination=Bozeman+Montana"},
+      {tier:"luxury",label:"Luxury",name:"Kimpton Armory Hotel",pricePerNight:320,note:"Boutique luxury in downtown Bozeman",link:"https://www.booking.com/searchresults.html?ss=Bozeman%2C+Montana"},
+    ]},
+  { id:"whitefish", name:"Whitefish Mountain", state:"MT", region:"rockies", nickname:"Big Mountain",
+    tags:["all-mountain","powder","intermediate","advanced","value","family"],
+    lat:48.4856, lon:-114.3544,
+    travelMode:"fly", distanceDenver:850, distanceSLC:650, distanceSeattle:500, distanceSF:1200, distanceLA:1350, distancePortland:600,
+    distanceBZN:220,
+    verticalDrop:2353, skiableAcres:3000, averageSnowfall:300,
+    liftTicket:99, avgLodgingPerNight:160,
+    crowdScore:22, snowScore:76, valueScore:88, accessScore:62,
+    description:"Northwestern Montana near Glacier National Park. Locals still call it Big Mountain. Glacier views from the lifts.",
+    pros:"Glacier NP views, nearly empty on weekdays, cheap tickets, charming Whitefish town.",
+    cons:"Remote, cold in January, limited direct flight options.",
+    openSnowLink:"https://opensnow.com/location/whitefish-mountain",
+    resortLink:"https://skiwhitefish.com/snow-report/",
+    flyInOptions:[
+      {code:"FCA",name:"Glacier Park Intl (Kalispell)",drive:"25 min",note:"Closest — direct flights from SEA, SLC, DEN seasonally"},
+      {code:"GEG",name:"Spokane Intl",drive:"3.5 hrs",note:"More flights than FCA, longer drive through stunning country"},
+      {code:"SEA",name:"Seattle-Tacoma Intl",drive:"6 hrs",note:"Most flights — drive across WA on US-2 or Hwy 20"},
+    ],
+    lodgingTiers:[
+      {tier:"budget",label:"Budget",name:"Whitefish Hostel",pricePerNight:55,note:"In town, 10 min from mountain, ski shuttle runs",link:"https://www.booking.com/searchresults.html?ss=Whitefish%2C+Montana"},
+      {tier:"mid",label:"Mid-Range",name:"Grouse Mountain Lodge",pricePerNight:160,note:"In Whitefish, shuttle to mountain, great mountain feel",link:"https://www.expedia.com/Hotel-Search?destination=Whitefish+Montana"},
+      {tier:"luxury",label:"Luxury",name:"The Lodge at Whitefish Lake",pricePerNight:380,note:"Lakeside, full spa, mountain shuttle",link:"https://www.booking.com/searchresults.html?ss=Whitefish%2C+Montana"},
     ]},
 
   // WASHINGTON (5)
@@ -417,6 +531,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate"],
     lat:46.9282, lon:-121.4747,
     travelMode:"drive", distanceDenver:1300, distanceSLC:900, distanceSeattle:76, distanceSF:1200, distanceLA:1350, distancePortland:155,
+    distanceBZN:700,
     verticalDrop:3100, skiableAcres:2600, averageSnowfall:486,
     liftTicket:149, avgLodgingPerNight:200,
     crowdScore:42, snowScore:86, valueScore:72, accessScore:78,
@@ -425,6 +540,7 @@ const MOUNTAINS = [
     cons:"Cascade snow can be heavy, fog/rain at base sometimes.",
     openSnowLink:"https://opensnow.com/location/crystal-mountain",
     resortLink:"https://www.crystalmountainresort.com/mountain/conditions",
+    flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"1.5 hrs",note:"Best option, tons of flights"}, {code:"PDX",name:"Portland Intl",drive:"3 hrs",note:"Good if flying Southwest from south"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Enumclaw Hotel",pricePerNight:85,note:"30 min from Crystal, cheap and convenient",link:"https://www.booking.com/searchresults.html?ss=Enumclaw%2C+Washington"},
       {tier:"mid",label:"Mid-Range",name:"Crystal Mountain Hotels",pricePerNight:200,note:"Slope-side at the base village",link:"https://www.expedia.com/Hotel-Search?destination=Crystal+Mountain+Washington"},
@@ -434,6 +550,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","intermediate","advanced","value"],
     lat:47.7445, lon:-121.0891,
     travelMode:"drive", distanceDenver:1300, distanceSLC:900, distanceSeattle:65, distanceSF:1200, distanceLA:1350, distancePortland:220,
+    distanceBZN:650,
     verticalDrop:1800, skiableAcres:1125, averageSnowfall:450,
     liftTicket:119, avgLodgingPerNight:160,
     crowdScore:55, snowScore:82, valueScore:78, accessScore:82,
@@ -442,6 +559,7 @@ const MOUNTAINS = [
     cons:"No on-mountain lodging, US-2 can close in big storms.",
     openSnowLink:"https://opensnow.com/location/stevens-pass",
     resortLink:"https://www.stevenspass.com/mountain/conditions.aspx",
+    flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"1.5 hrs",note:"Best and really only option"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Leavenworth Rental",pricePerNight:90,note:"35 min east, Bavarian village",link:"https://www.booking.com/searchresults.html?ss=Leavenworth%2C+Washington"},
       {tier:"mid",label:"Mid-Range",name:"Index Town Cabins",pricePerNight:160,note:"30 min west, mountain cabins",link:"https://www.expedia.com/Hotel-Search?destination=Stevens+Pass+Washington"},
@@ -451,6 +569,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate"],
     lat:48.8600, lon:-121.6717,
     travelMode:"drive", distanceDenver:1380, distanceSLC:980, distanceSeattle:90, distanceSF:1280, distanceLA:1430, distancePortland:260,
+    distanceBZN:680,
     verticalDrop:1500, skiableAcres:1000, averageSnowfall:641,
     liftTicket:89, avgLodgingPerNight:140,
     crowdScore:35, snowScore:99, valueScore:88, accessScore:68,
@@ -459,6 +578,7 @@ const MOUNTAINS = [
     cons:"Smaller resort, no on-mountain lodging, lifts close in extreme storms.",
     openSnowLink:"https://opensnow.com/location/mount-baker",
     resortLink:"https://www.mtbaker.us/snow-report/",
+    flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"2 hrs",note:"Best option — drive north on I-5"}, {code:"PDX",name:"Portland Intl",drive:"3.5 hrs",note:"Only if you can't get into SEA"}, {code:"BLI",name:"Bellingham Intl",drive:"1 hr",note:"Closest but very limited flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Glacier WA Cabins",pricePerNight:80,note:"8 miles from the ski area",link:"https://www.booking.com/searchresults.html?ss=Glacier%2C+Washington"},
       {tier:"mid",label:"Mid-Range",name:"Bellingham Hotel",pricePerNight:140,note:"55 min drive, college town",link:"https://www.expedia.com/Hotel-Search?destination=Bellingham+Washington"},
@@ -468,6 +588,7 @@ const MOUNTAINS = [
     tags:["all-mountain","beginner","intermediate","family","value"],
     lat:47.4047, lon:-121.4233,
     travelMode:"drive", distanceDenver:1280, distanceSLC:880, distanceSeattle:52, distanceSF:1180, distanceLA:1330, distancePortland:200,
+    distanceBZN:680,
     verticalDrop:2280, skiableAcres:1916, averageSnowfall:400,
     liftTicket:79, avgLodgingPerNight:130,
     crowdScore:62, snowScore:72, valueScore:88, accessScore:92,
@@ -476,6 +597,7 @@ const MOUNTAINS = [
     cons:"Cascade wet snow, can be icy, crowded with Seattle day-trippers.",
     openSnowLink:"https://opensnow.com/location/summit-at-snoqualmie",
     resortLink:"https://www.summitatsnoqualmie.com/mountain/snow-report",
+    flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"1 hr",note:"Only option — right off I-90"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"North Bend Hotel",pricePerNight:85,note:"15 min from Summit, I-90 corridor",link:"https://www.booking.com/searchresults.html?ss=North+Bend%2C+Washington"},
       {tier:"mid",label:"Mid-Range",name:"Snoqualmie Summit Inn",pricePerNight:130,note:"At the summit, ski-in/ski-out",link:"https://www.expedia.com/Hotel-Search?destination=Snoqualmie+Pass+Washington"},
@@ -485,6 +607,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","intermediate","value","family"],
     lat:46.6381, lon:-121.3928,
     travelMode:"drive", distanceDenver:1350, distanceSLC:950, distanceSeattle:100, distanceSF:1250, distanceLA:1350, distancePortland:145,
+    distanceBZN:720,
     verticalDrop:1500, skiableAcres:651, averageSnowfall:400,
     liftTicket:89, avgLodgingPerNight:130,
     crowdScore:20, snowScore:78, valueScore:90, accessScore:65,
@@ -493,6 +616,7 @@ const MOUNTAINS = [
     cons:"Smaller, remote, limited lodging on mountain.",
     openSnowLink:"https://opensnow.com/location/white-pass",
     resortLink:"https://skiwhitepass.com/conditions/",
+    flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"2 hrs",note:"Best option"}, {code:"PDX",name:"Portland Intl",drive:"2.5 hrs",note:"Good option from the south"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"White Pass Village Inn",pricePerNight:85,note:"Base lodge rooms, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=White+Pass%2C+Washington"},
       {tier:"mid",label:"Mid-Range",name:"Yakima Hotel",pricePerNight:130,note:"50 min east in Yakima",link:"https://www.expedia.com/Hotel-Search?destination=Yakima+Washington"},
@@ -504,6 +628,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","intermediate","advanced","value"],
     lat:45.3317, lon:-121.6681,
     travelMode:"drive", distanceDenver:1300, distanceSLC:920, distanceSeattle:168, distanceSF:700, distanceLA:1060, distancePortland:62,
+    distanceBZN:850,
     verticalDrop:2777, skiableAcres:2150, averageSnowfall:430,
     liftTicket:109, avgLodgingPerNight:160,
     crowdScore:48, snowScore:80, valueScore:80, accessScore:80,
@@ -512,6 +637,7 @@ const MOUNTAINS = [
     cons:"Cascade cement on warm days, fog can sock in the base.",
     openSnowLink:"https://opensnow.com/location/mt-hood-meadows",
     resortLink:"https://www.skihood.com/conditions",
+    flyInOptions:[{code:"PDX",name:"Portland Intl",drive:"1.5 hrs",note:"60 min to Government Camp — easy"}, {code:"SEA",name:"Seattle-Tacoma Intl",drive:"3.5 hrs",note:"Drive down I-5 if no PDX flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Government Camp Hostel",pricePerNight:55,note:"8 min from Meadows",link:"https://www.booking.com/searchresults.html?ss=Government+Camp%2C+Oregon"},
       {tier:"mid",label:"Mid-Range",name:"Timberline Lodge",pricePerNight:160,note:"Historic 1937 WPA lodge, ski-in/ski-out",link:"https://www.expedia.com/Hotel-Search?destination=Timberline+Lodge+Oregon"},
@@ -521,6 +647,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate"],
     lat:43.9791, lon:-121.6880,
     travelMode:"fly", distanceDenver:1200, distanceSLC:880, distanceSeattle:270, distanceSF:540, distanceLA:880, distancePortland:155,
+    distanceBZN:900,
     verticalDrop:3365, skiableAcres:4318, averageSnowfall:462,
     liftTicket:119, avgLodgingPerNight:180,
     crowdScore:38, snowScore:85, valueScore:78, accessScore:72,
@@ -529,6 +656,7 @@ const MOUNTAINS = [
     cons:"Wind can shut summit, Bend flights can be pricey.",
     openSnowLink:"https://opensnow.com/location/mount-bachelor",
     resortLink:"https://www.mtbachelor.com/the-mountain/conditions/",
+    flyInOptions:[{code:"PDX",name:"Portland Intl",drive:"3 hrs",note:"Most flights, bigger airport"}, {code:"SFO",name:"San Francisco Intl",drive:"5.5 hrs",note:"Long drive but solid West Coast option"}, {code:"RDM",name:"Redmond–Roberts Field",drive:"30 min",note:"Closest but very limited flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Bend Hostel",pricePerNight:45,note:"30 min from Bachelor, tons of options",link:"https://www.booking.com/searchresults.html?ss=Bend%2C+Oregon"},
       {tier:"mid",label:"Mid-Range",name:"Seventh Mountain Resort",pricePerNight:180,note:"9 miles from Bachelor, full resort",link:"https://www.expedia.com/Hotel-Search?destination=Bend+Oregon"},
@@ -538,6 +666,7 @@ const MOUNTAINS = [
     tags:["all-mountain","beginner","intermediate","value","family"],
     lat:44.4058, lon:-121.8669,
     travelMode:"drive", distanceDenver:1250, distanceSLC:900, distanceSeattle:290, distanceSF:560, distanceLA:900, distancePortland:175,
+    distanceBZN:880,
     verticalDrop:1035, skiableAcres:807, averageSnowfall:300,
     liftTicket:69, avgLodgingPerNight:110,
     crowdScore:22, snowScore:64, valueScore:92, accessScore:78,
@@ -546,6 +675,7 @@ const MOUNTAINS = [
     cons:"Smaller vertical, lower elevation means mixed snow quality.",
     openSnowLink:"https://opensnow.com/location/hoodoo",
     resortLink:"https://www.hoodoo.com/snow-report/",
+    flyInOptions:[{code:"PDX",name:"Portland Intl",drive:"2.5 hrs",note:"Most flights"}, {code:"EUG",name:"Eugene Airport",drive:"1.5 hrs",note:"Closer, good southern Oregon option"}, {code:"RDM",name:"Redmond–Roberts Field",drive:"1 hr",note:"Closest, very limited service"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Sisters OR Rental",pricePerNight:70,note:"30 min east, charming western town",link:"https://www.booking.com/searchresults.html?ss=Sisters%2C+Oregon"},
       {tier:"mid",label:"Mid-Range",name:"Black Butte Ranch",pricePerNight:180,note:"35 min east, full resort, stunning setting",link:"https://www.expedia.com/Hotel-Search?destination=Sisters+Oregon"},
@@ -557,6 +687,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate","park"],
     lat:37.6308, lon:-119.0326,
     travelMode:"fly", distanceDenver:1000, distanceSLC:650, distanceSeattle:900, distanceSF:315, distanceLA:325, distancePortland:790,
+    distanceBZN:950,
     verticalDrop:3100, skiableAcres:3500, averageSnowfall:400,
     liftTicket:189, avgLodgingPerNight:250,
     crowdScore:62, snowScore:82, valueScore:58, accessScore:72,
@@ -565,6 +696,7 @@ const MOUNTAINS = [
     cons:"LA weekend crowds are brutal, expensive lodging.",
     openSnowLink:"https://opensnow.com/location/mammoth-mountain",
     resortLink:"https://www.mammothmountain.com/mountain/weather-and-conditions/snow-report",
+    flyInOptions:[{code:"LAX",name:"Los Angeles Intl",drive:"5 hrs drive",note:"Straight shot up US-395 — skip the flight"}, {code:"SFO",name:"San Francisco Intl",drive:"5 hrs drive",note:"Drive via I-80 + US-395"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"3.5 hrs",note:"Good fares, drive south on US-395"}, {code:"MMH",name:"Mammoth Yosemite Airport",drive:"10 min",note:"Direct seasonal flights from LA/SF — pricey"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Mammoth Hostel",pricePerNight:60,note:"Walk to Village gondola",link:"https://www.booking.com/searchresults.html?ss=Mammoth+Lakes%2C+California"},
       {tier:"mid",label:"Mid-Range",name:"1849 Condominiums",pricePerNight:250,note:"Ski-in/ski-out at Canyon Lodge",link:"https://www.expedia.com/Hotel-Search?destination=Mammoth+Lakes+California"},
@@ -574,6 +706,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate"],
     lat:39.1969, lon:-120.2358,
     travelMode:"fly", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:196, distanceLA:520, distancePortland:730,
+    distanceBZN:850,
     verticalDrop:2850, skiableAcres:6000, averageSnowfall:450,
     liftTicket:219, avgLodgingPerNight:300,
     crowdScore:65, snowScore:80, valueScore:48, accessScore:78,
@@ -582,6 +715,7 @@ const MOUNTAINS = [
     cons:"Bay Area crowds, pricey, I-80 can close in big storms.",
     openSnowLink:"https://opensnow.com/location/palisades-tahoe",
     resortLink:"https://www.palisadestahoe.com/conditions",
+    flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Drive I-80 over Donner Pass"}, {code:"SMF",name:"Sacramento Intl",drive:"2 hrs",note:"Budget fares, easy drive"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"2 hrs",note:"Best overall — cheap fares, easy drive"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Tahoe City Rental",pricePerNight:120,note:"10 min from Palisades, cheaper",link:"https://www.booking.com/searchresults.html?ss=Tahoe+City%2C+California"},
       {tier:"mid",label:"Mid-Range",name:"PlumpJack Inn",pricePerNight:300,note:"Ski-in/ski-out in Olympic Valley",link:"https://www.expedia.com/Hotel-Search?destination=Lake+Tahoe+California"},
@@ -591,6 +725,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","beginner","family"],
     lat:38.9353, lon:-119.9400,
     travelMode:"fly", distanceDenver:1150, distanceSLC:700, distanceSeattle:890, distanceSF:199, distanceLA:520, distancePortland:770,
+    distanceBZN:860,
     verticalDrop:3500, skiableAcres:4800, averageSnowfall:360,
     liftTicket:219, avgLodgingPerNight:280,
     crowdScore:70, snowScore:72, valueScore:50, accessScore:82,
@@ -599,6 +734,7 @@ const MOUNTAINS = [
     cons:"South Shore crowds, lower snowfall than north shore.",
     openSnowLink:"https://opensnow.com/location/heavenly",
     resortLink:"https://www.skiheavenly.com/the-mountain/mountain-conditions/snow-report.aspx",
+    flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Drive south on US-50"}, {code:"SMF",name:"Sacramento Intl",drive:"2.5 hrs",note:"Budget fares, easy drive"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"1.5 hrs",note:"Closest major airport, good fares"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"South Lake Tahoe Motel",pricePerNight:90,note:"Walk to gondola, tons of budget options",link:"https://www.booking.com/searchresults.html?ss=South+Lake+Tahoe%2C+California"},
       {tier:"mid",label:"Mid-Range",name:"Marriott Grand Residence",pricePerNight:280,note:"Ski-in/ski-out at Heavenly Village",link:"https://www.expedia.com/Hotel-Search?destination=South+Lake+Tahoe+California"},
@@ -608,6 +744,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","advanced","intermediate","value"],
     lat:38.6844, lon:-120.0655,
     travelMode:"fly", distanceDenver:1150, distanceSLC:700, distanceSeattle:890, distanceSF:210, distanceLA:540, distancePortland:790,
+    distanceBZN:870,
     verticalDrop:2000, skiableAcres:2300, averageSnowfall:500,
     liftTicket:159, avgLodgingPerNight:200,
     crowdScore:28, snowScore:90, valueScore:78, accessScore:58,
@@ -616,6 +753,7 @@ const MOUNTAINS = [
     cons:"Remote — 30 min from South Lake Tahoe, limited lodging.",
     openSnowLink:"https://opensnow.com/location/kirkwood",
     resortLink:"https://www.kirkwood.com/the-mountain/mountain-conditions/snow-report.aspx",
+    flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Most flights from Bay Area"}, {code:"SMF",name:"Sacramento Intl",drive:"2.5 hrs",note:"Budget option"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"2 hrs",note:"Good fares, drive over Luther Pass"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"South Lake Tahoe Rental",pricePerNight:100,note:"30 min drive, way more options",link:"https://www.booking.com/searchresults.html?ss=South+Lake+Tahoe%2C+California"},
       {tier:"mid",label:"Mid-Range",name:"Kirkwood Inn",pricePerNight:200,note:"Ski-in/ski-out at the base",link:"https://www.expedia.com/Hotel-Search?destination=Kirkwood+California"},
@@ -625,6 +763,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","beginner","family","luxury"],
     lat:39.2736, lon:-120.1211,
     travelMode:"fly", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:197, distanceLA:520, distancePortland:730,
+    distanceBZN:850,
     verticalDrop:2280, skiableAcres:3170, averageSnowfall:350,
     liftTicket:209, avgLodgingPerNight:320,
     crowdScore:60, snowScore:70, valueScore:45, accessScore:82,
@@ -633,6 +772,7 @@ const MOUNTAINS = [
     cons:"Lower snowfall than Kirkwood, expensive, runs feel short.",
     openSnowLink:"https://opensnow.com/location/northstar-california",
     resortLink:"https://www.northstarcalifornia.com/the-mountain/mountain-conditions/snow-report.aspx",
+    flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Most Bay Area flights"}, {code:"SMF",name:"Sacramento Intl",drive:"2 hrs",note:"Budget option"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"1.5 hrs",note:"Best overall — cheapest fares, easy I-80 drive"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Truckee Budget Hotel",pricePerNight:100,note:"5 min from Northstar, great base town",link:"https://www.booking.com/searchresults.html?ss=Truckee%2C+California"},
       {tier:"mid",label:"Mid-Range",name:"Northstar Lodge",pricePerNight:320,note:"Ski-in/ski-out, village location",link:"https://www.expedia.com/Hotel-Search?destination=Northstar+California"},
@@ -642,6 +782,7 @@ const MOUNTAINS = [
     tags:["all-mountain","powder","intermediate","advanced","value"],
     lat:39.3028, lon:-120.3489,
     travelMode:"drive", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:190, distanceLA:520, distancePortland:730,
+    distanceBZN:850,
     verticalDrop:1500, skiableAcres:1650, averageSnowfall:500,
     liftTicket:119, avgLodgingPerNight:180,
     crowdScore:32, snowScore:88, valueScore:82, accessScore:76,
@@ -650,6 +791,7 @@ const MOUNTAINS = [
     cons:"Smaller terrain, no big resort amenities.",
     openSnowLink:"https://opensnow.com/location/sugar-bowl",
     resortLink:"https://www.sugarbowl.com/conditions",
+    flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Most flights"}, {code:"SMF",name:"Sacramento Intl",drive:"2 hrs",note:"Budget option"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"1.5 hrs",note:"Cheapest fares, right off I-80"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Truckee Hostel",pricePerNight:55,note:"10 min from Sugar Bowl",link:"https://www.booking.com/searchresults.html?ss=Truckee%2C+California"},
       {tier:"mid",label:"Mid-Range",name:"Sugar Bowl Lodge",pricePerNight:180,note:"Ski-in/ski-out, historic lodge",link:"https://www.expedia.com/Hotel-Search?destination=Norden+California"},
@@ -659,6 +801,7 @@ const MOUNTAINS = [
     tags:["all-mountain","beginner","intermediate","park","value"],
     lat:39.3508, lon:-120.3508,
     travelMode:"drive", distanceDenver:1100, distanceSLC:685, distanceSeattle:855, distanceSF:188, distanceLA:515, distancePortland:728,
+    distanceBZN:855,
     verticalDrop:500, skiableAcres:380, averageSnowfall:400,
     liftTicket:59, avgLodgingPerNight:130,
     crowdScore:45, snowScore:78, valueScore:94, accessScore:90,
@@ -667,6 +810,7 @@ const MOUNTAINS = [
     cons:"Small vertical, limited advanced terrain.",
     openSnowLink:"https://opensnow.com/location/boreal",
     resortLink:"https://www.borealski.com/conditions",
+    flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Most flights — Boreal is literally off I-80"}, {code:"SMF",name:"Sacramento Intl",drive:"2 hrs",note:"Budget option, easy I-80 drive"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"1 hr",note:"Closest major airport"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Truckee Budget Hotel",pricePerNight:85,note:"10 min from Boreal, many options",link:"https://www.booking.com/searchresults.html?ss=Truckee%2C+California"},
       {tier:"mid",label:"Mid-Range",name:"Clair Tappaan Lodge",pricePerNight:130,note:"Historic Sierra Club lodge, Donner Summit",link:"https://www.expedia.com/Hotel-Search?destination=Norden+California"},
@@ -678,6 +822,7 @@ const MOUNTAINS = [
     tags:["all-mountain","intermediate","advanced","value"],
     lat:39.3133, lon:-119.8900,
     travelMode:"fly", distanceDenver:1200, distanceSLC:750, distanceSeattle:900, distanceSF:220, distanceLA:570, distancePortland:780,
+    distanceBZN:840,
     verticalDrop:1800, skiableAcres:1200, averageSnowfall:400,
     liftTicket:99, avgLodgingPerNight:120,
     crowdScore:30, snowScore:76, valueScore:88, accessScore:80,
@@ -686,6 +831,7 @@ const MOUNTAINS = [
     cons:"Smaller resort, Reno is not Tahoe, can be windy.",
     openSnowLink:"https://opensnow.com/location/mt-rose",
     resortLink:"https://www.skirose.com/mountain/conditions/",
+    flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"4 hrs",note:"Drive I-80 to Reno"}, {code:"LAX",name:"Los Angeles Intl",drive:"7 hrs drive",note:"Long but doable with a big group"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"30 min",note:"25 min from downtown Reno — best if flying"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Reno Budget Hotel",pricePerNight:60,note:"25 min from Mt. Rose, tons of cheap hotels",link:"https://www.booking.com/searchresults.html?ss=Reno%2C+Nevada"},
       {tier:"mid",label:"Mid-Range",name:"Incline Village Rental",pricePerNight:180,note:"10 min, Lake Tahoe views",link:"https://www.expedia.com/Hotel-Search?destination=Incline+Village+Nevada"},
@@ -732,9 +878,21 @@ async function fetchForecasts(mountains) {
   return results;
 }
 
+// ─── FLIGHT LINK HELPER ───────────────────────────────────────────────────────
+const ORIGIN_AIRPORT = { denver:"DEN", slc:"SLC", seattle:"SEA", portland:"PDX", sf:"SFO", la:"LAX", bzn:"BZN" };
+
+function getFlightLink(mountain, origin) {
+  const dest = mountain.nearestAirport?.code;
+  const orig = ORIGIN_AIRPORT[origin] || "DEN";
+  if (!dest) return null;
+  return `https://www.google.com/travel/flights/search?tfs=CBwQAhoeEgoyMDI1LTEyLTEwagcIARIDDEN` +
+    `&q=Flights+from+${orig}+to+${dest}` +
+    `#flt=${orig}.${dest}`;
+}
+
 // ─── SCORING ENGINE ───────────────────────────────────────────────────────────
 function getDistance(m, origin) {
-  const map = { denver: m.distanceDenver, slc: m.distanceSLC, seattle: m.distanceSeattle, sf: m.distanceSF, la: m.distanceLA, portland: m.distancePortland };
+  const map = { denver: m.distanceDenver, slc: m.distanceSLC, seattle: m.distanceSeattle, sf: m.distanceSF, la: m.distanceLA, portland: m.distancePortland, bzn: m.distanceBZN || 999 };
   return map[origin] || m.distanceDenver;
 }
 
@@ -834,7 +992,7 @@ function WhySummitSyncModal({ onClose }) {
           <div style={{marginBottom:"1.75rem"}}>
             <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:8}}>The Fix</div>
             <p style={{fontSize:"0.95rem",color:"#4a4540",lineHeight:1.75,marginBottom:"1rem"}}>
-              SummitSync scores every resort against <em>your specific trip</em> — your budget, your origin city, your skill level, how you want to ski. Not a generic ranking. Not "10 Best Ski Resorts in Colorado." A recommendation that accounts for the fact that a $2,000 budget for 2 people flying from SLC means something completely different than a $2,000 budget for 1 person driving from Denver.
+              SummitSync is a one-stop shop for forecasts, flights, and hotels. Tell it your budget, where you're coming from, and how you ski — it handles the rest. Not a generic rankings list. A real recommendation built around your specific trip, with live snow forecasts, tiered lodging options, and an AI that explains the pick in plain language.
             </p>
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.75rem"}}>
               {[
@@ -981,6 +1139,33 @@ function ResultCard({ mountain, rank, params, isExpanded, onToggle, liveData }) 
                 style={{display:"inline-flex",alignItems:"center",gap:6,textDecoration:"none",background:"#f0ede8",color:"#0d0f0f",borderRadius:7,padding:"7px 12px",fontSize:"0.72rem",fontWeight:700,marginTop:12}}>
                 🏔 Official Snow Report
               </a>
+              {mountain.flyInOptions && mountain.flyInOptions.length > 0 && (
+                <div style={{marginTop:12}}>
+                  <div style={{fontSize:"0.65rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"#8a8480",marginBottom:6}}>Fly-In Options</div>
+                  <div style={{display:"flex",flexDirection:"column",gap:5}}>
+                    {mountain.flyInOptions.map((apt,i) => {
+                      const orig = ORIGIN_AIRPORT[params.origin] || "DEN";
+                      const flightUrl = `https://www.google.com/travel/flights#flt=${orig}.${apt.code}.;c:USD;e:1;sd:1;t:f`;
+                      const majorCodes = ["DEN","SLC","SEA","PDX","SFO","LAX","SMF","BZN","RNO","FCA","GEG","MSP"];
+                      const isMajor = majorCodes.includes(apt.code);
+                      return (
+                        <a key={apt.code} href={flightUrl} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}
+                          style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",textDecoration:"none",background:i===0?"#0d0f0f":isMajor?"#f0ede8":"#fef9e7",color:i===0?"#fff":"#0d0f0f",borderRadius:7,padding:"8px 10px",border:`1px solid ${i===0?"transparent":isMajor?"#e8e4de":"#f0d080"}`}}>
+                          <div style={{flex:1}}>
+                            <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:2}}>
+                              <span style={{fontSize:"0.75rem",fontWeight:700}}>✈️ {apt.code} · {apt.name}</span>
+                              {i===0 && <span style={{fontSize:"0.58rem",fontWeight:800,letterSpacing:"0.08em",textTransform:"uppercase",background:"#2a8fa5",color:"#fff",borderRadius:99,padding:"1px 6px"}}>Best Value</span>}
+                              {!isMajor && i!==0 && <span style={{fontSize:"0.58rem",fontWeight:800,letterSpacing:"0.08em",textTransform:"uppercase",background:"#b8860b",color:"#fff",borderRadius:99,padding:"1px 6px"}}>Regional</span>}
+                            </div>
+                            <div style={{fontSize:"0.65rem",opacity:i===0?0.75:0.65,lineHeight:1.4}}>{apt.note}</div>
+                          </div>
+                          <div style={{fontSize:"0.7rem",fontWeight:700,opacity:0.8,whiteSpace:"nowrap",marginLeft:10,paddingTop:2}}>🚗 {apt.drive}</div>
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -1083,6 +1268,7 @@ function App() {
                 <option value="portland">Portland, OR</option>
                 <option value="sf">San Francisco, CA</option>
                 <option value="la">Los Angeles, CA</option>
+                <option value="bzn">Bozeman, MT</option>
               </select>
             </div>
             <div><label style={lbl}>Travel Mode</label>
