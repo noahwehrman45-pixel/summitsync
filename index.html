@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SummitSync | Mountain Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style-v4.css" />
+  </head>
+  <body>
+    <div class="mesh" aria-hidden="true"></div>
+
+    <main class="platform">
+      <header class="platform-bar">
+        <div class="brand-wrap">
+          <div class="brand-mark">S</div>
+          <div>
+            <p class="brand">SummitSync</p>
+            <p class="brand-sub">Mountain Intelligence Platform</p>
+          </div>
+        </div>
+        <div class="bar-chips">
+          <span>Live Decision Model</span>
+          <span>Transparent Scoring</span>
+        </div>
+      </header>
+
+      <section class="hero panel">
+        <div>
+          <p class="eyebrow">MODERN PLATFORM UI</p>
+          <h1>Build Smarter Ski Trips With Data, Not Guesswork.</h1>
+          <p class="hero-copy">
+            Compare destinations using forecast patterns, total trip cost, travel friction, and
+            crowd pressure in one trusted workspace.
+          </p>
+        </div>
+        <div class="hero-stats">
+          <article>
+            <strong>Forecast</strong>
+            <span>Storm cycle, wind, and freeze-thaw pattern tracking</span>
+          </article>
+          <article>
+            <strong>Value</strong>
+            <span>Total trip estimate with per-person visibility</span>
+          </article>
+          <article>
+            <strong>Decision</strong>
+            <span>One score with explainable ranking logic</span>
+          </article>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel planner" aria-labelledby="plannerHeading">
+          <div class="section-head">
+            <h2 id="plannerHeading">Trip Inputs</h2>
+            <span class="head-tag">Scenario</span>
+          </div>
+          <form id="tripForm" class="form-grid">
+            <label>
+              Budget (USD)
+              <input id="budgetInput" type="number" min="300" step="50" value="1800" />
+            </label>
+            <label>
+              Nights
+              <input id="nightsInput" type="number" min="1" max="14" value="3" />
+            </label>
+            <label>
+              Group Size
+              <input id="groupSizeInput" type="number" min="1" max="10" value="2" />
+            </label>
+            <label>
+              Travel Mode
+              <select id="travelModeSelect">
+                <option value="drive">Drive</option>
+                <option value="fly">Fly</option>
+                <option value="either">Either</option>
+              </select>
+            </label>
+            <label>
+              Ski Style
+              <select id="styleSelect">
+                <option value="all-mountain">All-mountain</option>
+                <option value="powder">Powder chase</option>
+                <option value="park">Park / freestyle</option>
+                <option value="family">Family-friendly</option>
+                <option value="budget">Best value</option>
+              </select>
+            </label>
+            <label>
+              Skill Level
+              <select id="skillSelect">
+                <option value="intermediate">Intermediate</option>
+                <option value="beginner">Beginner</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </label>
+            <button class="btn-primary" type="submit">Recalculate Ranking</button>
+          </form>
+        </aside>
+
+        <div class="main-stack">
+          <section class="panel" aria-labelledby="resultsHeading">
+            <div class="section-head results-head">
+              <h2 id="resultsHeading">Destination Rankings</h2>
+              <p id="summaryText" class="muted"></p>
+            </div>
+            <div id="resultsList" class="result-list"></div>
+          </section>
+
+          <section class="panel" aria-labelledby="forecastHeading">
+            <div class="section-head">
+              <h2 id="forecastHeading">Weather Pattern Breakdown</h2>
+              <span class="head-tag">Forecast Lens</span>
+            </div>
+            <p id="forecastIntro" class="muted"></p>
+            <div id="forecastPanel" class="forecast-panel"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
