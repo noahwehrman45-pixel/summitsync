@@ -130,6 +130,17 @@ const summaryText = document.getElementById("summaryText");
 const forecastPanel = document.getElementById("forecastPanel");
 const forecastIntro = document.getElementById("forecastIntro");
 
+function bookingLinksForResort(resort) {
+  const destination = encodeURIComponent(`${resort.name} ${resort.state}`);
+  const searchQuery = encodeURIComponent(`${resort.name} lift tickets`);
+
+  return {
+    lodging: `https://www.google.com/travel/hotels/${destination}`,
+    flights: "https://www.google.com/travel/flights",
+    liftTickets: `https://www.google.com/search?q=${searchQuery}`
+  };
+}
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -284,6 +295,7 @@ function renderRankings(options, filters) {
   options.forEach((option, index) => {
     const card = document.createElement("article");
     card.className = "result-card";
+    const booking = bookingLinksForResort(option.resort);
 
     const reasons = reasonsFor(option, filters)
       .map((reason) => `<li>${reason}</li>`)
@@ -305,7 +317,12 @@ function renderRankings(options, filters) {
         <span class="metric">Crowd risk ${option.components.crowdRisk}</span>
       </div>
       <ul class="reasons">${reasons}</ul>
-      <button class="link-btn" data-id="${option.id}">View Weather Pattern Breakdown</button>
+      <div class="action-row">
+        <button class="link-btn" data-id="${option.id}">View Weather Pattern Breakdown</button>
+        <a class="book-btn" href="${booking.lodging}" target="_blank" rel="noopener noreferrer">Book Lodging</a>
+        <a class="book-btn" href="${booking.flights}" target="_blank" rel="noopener noreferrer">Book Flights</a>
+        <a class="book-btn" href="${booking.liftTickets}" target="_blank" rel="noopener noreferrer">Find Lift Tickets</a>
+      </div>
     `;
 
     resultsList.appendChild(card);
