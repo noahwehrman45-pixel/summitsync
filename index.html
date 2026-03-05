@@ -164,9 +164,9 @@ select,input,button{font-family:inherit;}
   <div class="hero-inner">
     <h1>Find your <em>mountain.</em></h1>
     <p>60 western resorts scored on snow, value, access, and crowds — real data, no sponsored results.</p>
-    <div class="filters">
+    <div class="filters" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">
       <div class="filter-group">
-        <label class="filter-label">Flying from</label>
+        <label class="filter-label">Starting from</label>
         <select class="filter-select" id="f-origin">
           <option value="DEN">Denver (DEN)</option>
           <option value="SLC">Salt Lake City (SLC)</option>
@@ -176,16 +176,40 @@ select,input,button{font-family:inherit;}
           <option value="SFO">San Francisco (SFO)</option>
           <option value="PDX">Portland (PDX)</option>
           <option value="PHX">Phoenix (PHX)</option>
-          <option value="drive">Driving (no flights)</option>
+          <option value="drive">Driving only</option>
         </select>
       </div>
       <div class="filter-group">
-        <label class="filter-label">Budget / night</label>
+        <label class="filter-label">Trip length</label>
+        <select class="filter-select" id="f-days">
+          <option value="">Any length</option>
+          <option value="2">2 days / 1 night</option>
+          <option value="3">3 days / 2 nights</option>
+          <option value="4">4 days / 3 nights</option>
+          <option value="5">5 days / 4 nights</option>
+          <option value="7">7 days / 6 nights</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Total budget ($)</label>
         <select class="filter-select" id="f-budget">
           <option value="0">Any budget</option>
-          <option value="100">Under $100</option>
-          <option value="200">Under $200</option>
-          <option value="400">Under $400</option>
+          <option value="300">Under $300</option>
+          <option value="500">Under $500</option>
+          <option value="750">Under $750</option>
+          <option value="1000">Under $1,000</option>
+          <option value="1500">Under $1,500</option>
+          <option value="2500">Under $2,500</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">I have a pass</label>
+        <select class="filter-select" id="f-pass">
+          <option value="">No pass</option>
+          <option value="epic">Epic Pass</option>
+          <option value="ikon">Ikon Pass</option>
+          <option value="mountain_collective">Mountain Collective</option>
+          <option value="indy">Indy Pass</option>
         </select>
       </div>
       <div class="filter-group">
@@ -197,28 +221,8 @@ select,input,button{font-family:inherit;}
           <option value="advanced">Advanced / Expert</option>
         </select>
       </div>
-      <div class="filter-group">
-        <label class="filter-label">Ski pass</label>
-        <select class="filter-select" id="f-pass">
-          <option value="">Any / No pass</option>
-          <option value="epic">Epic Pass</option>
-          <option value="ikon">Ikon Pass</option>
-          <option value="mountain_collective">Mountain Collective</option>
-          <option value="indy">Indy Pass</option>
-        </select>
-      </div>
-      <div class="filter-group">
-        <label class="filter-label">Prioritize</label>
-        <select class="filter-select" id="f-sort">
-          <option value="overall">Overall score</option>
-          <option value="snow">Snow quality</option>
-          <option value="value">Best value</option>
-          <option value="crowds">Fewest crowds</option>
-          <option value="access">Easiest access</option>
-        </select>
-      </div>
       <div class="filter-group" style="display:flex;align-items:flex-end;">
-        <button class="search-btn" onclick="runSearch()">Search Mountains</button>
+        <button class="search-btn" onclick="runSearch()">Find My Mountain</button>
       </div>
     </div>
   </div>
@@ -340,33 +344,237 @@ var BEST_OF = [
   {title:"Best Road Trips",emoji:"🚗",desc:"Drive-to classics worth the miles",resorts:["Arapahoe Basin","Loveland Ski Area","Eldora Mountain","Bridger Bowl","Bogus Basin Mountain Recreation Area"]},
 ];
 var state = {results:MOUNTAINS.slice(),expanded:null,mapInit:false,map:null,markers:[]};
-function scoreResort(m,origin){
-  var accessBonus=0;
-  if(origin&&origin!=='drive'){var hasDirectFlight=m.flyInOptions&&m.flyInOptions.some(function(f){return f.code===origin;});accessBonus=hasDirectFlight?15:0;}
-  if(origin==='drive'&&m.travelMode==='drive')accessBonus=10;
-  return Math.round(m.snowScore*0.35+m.valueScore*0.30+(100-m.crowdScore)*0.20+(m.accessScore+accessBonus)*0.15);
+
+// ── FLIGHT COST ESTIMATES by origin → destination airport ───────────────────
+// Based on typical advance-purchase economy fares, round-trip per person
+var FLIGHT_ESTIMATES = {
+  DEN:{DEN:0,EGE:180,HDN:160,GJT:200,ASE:280,GUC:320,DRO:260,COS:80,
+       SLC:180,BZN:240,JAC:280,BOI:220,SUN:320,GEG:280,MSO:260,FCA:300,
+       SEA:220,PDX:240,LAX:280,SFO:280,RNO:260,SMF:240,MMH:320,RDM:280,
+       ABQ:160,SAF:200,PHX:160,BLI:280,OGD:200,BIL:220,TEX:380,DRO:260},
+  SLC:{DEN:180,EGE:220,SLC:0,BZN:200,JAC:180,BOI:160,GEG:240,MSO:240,
+       FCA:280,SEA:200,PDX:220,LAX:200,SFO:200,RNO:160,SMF:180,MMH:240,
+       RDM:260,ABQ:200,SAF:220,PHX:160,BZN:200,BIL:220,HDN:200,ASE:260},
+  SEA:{DEN:220,SLC:200,SEA:0,PDX:120,BZN:200,JAC:260,BOI:160,GEG:100,
+       MSO:160,FCA:180,LAX:160,SFO:140,RNO:180,SMF:180,RDM:80,BLI:60,
+       ABQ:260,PHX:200,MMH:300,EGE:280,BIL:200},
+  BZN:{DEN:240,SLC:200,SEA:200,BZN:0,JAC:180,BOI:200,GEG:200,MSO:120,
+       FCA:160,LAX:280,SFO:280,RNO:280,PDX:220,EGE:280,ABQ:300,PHX:280,
+       BIL:80,HDN:260},
+  LAX:{DEN:200,SLC:180,SEA:160,BZN:280,JAC:320,BOI:200,GEG:240,MSO:280,
+       FCA:300,LAX:0,SFO:120,RNO:140,SMF:120,MMH:180,RDM:200,ABQ:160,
+       SAF:180,PHX:100,EGE:300,ASE:340,BIL:280,PDX:140,BZN:280},
+  SFO:{DEN:200,SLC:180,SEA:140,BZN:280,JAC:300,BOI:180,GEG:220,MSO:260,
+       FCA:300,LAX:120,SFO:0,RNO:80,SMF:80,MMH:160,RDM:160,ABQ:180,
+       SAF:200,PHX:140,EGE:280,PDX:120,BZN:280},
+  PDX:{DEN:240,SLC:220,SEA:120,BZN:220,JAC:260,BOI:140,GEG:140,MSO:180,
+       FCA:200,LAX:140,SFO:120,RNO:160,SMF:140,RDM:80,BLI:100,ABQ:220,
+       PHX:180,EGE:300,PDX:0,BZN:220},
+  PHX:{DEN:140,SLC:140,SEA:200,BZN:280,JAC:300,BOI:200,LAX:100,SFO:140,
+       RNO:180,SMF:160,ABQ:120,SAF:140,PHX:0,FLG:0,EGE:280,PDX:180,
+       BZN:280,MSO:300,GEG:220},
+  drive:{},
+};
+
+// Flight tier: 0=drive, 1=regional short (<200mi), 2=regional long, 3=major hub
+function getFlightCost(origin, resort) {
+  if(origin==='drive') return {cost:0, isDrive:true};
+  // Check if any of the resort's fly-in airports match origin (driveable)
+  var driveThresh = {
+    DEN:{DEN:true}, SLC:{SLC:true}, SEA:{SEA:true}, BZN:{BZN:true},
+    LAX:{LAX:true}, SFO:{SFO:true}, PDX:{PDX:true}, PHX:{PHX:true}
+  };
+  // Determine best airport for this resort from this origin
+  var bestAirport = null;
+  var bestCost = 99999;
+  if(resort.flyInOptions && resort.flyInOptions.length > 0) {
+    resort.flyInOptions.forEach(function(f) {
+      var originMap = FLIGHT_ESTIMATES[origin] || {};
+      var cost = originMap[f.code];
+      if(cost === 0) { bestAirport = f.code; bestCost = 0; }
+      else if(cost !== undefined && cost < bestCost) { bestCost = cost; bestAirport = f.code; }
+    });
+  }
+  if(bestCost === 0) return {cost:0, isDrive:true, airport:bestAirport};
+  if(bestCost === 99999) {
+    // No known route — estimate based on resort region vs origin
+    bestCost = 280; // conservative unknown estimate
+  }
+  return {cost:bestCost, isDrive:false, airport:bestAirport};
 }
+
+// ── TRIP COST ESTIMATOR ─────────────────────────────────────────────────────
+function estimateTripCost(m, origin, skiDays, nights, userPass) {
+  // Lift tickets
+  var liftPerDay = 0;
+  var hasPass = userPass && m.skiPass === userPass;
+  if(!hasPass) liftPerDay = m.liftTicket || 99;
+
+  // Lodging — use cheapest tier
+  var lodgingPerNight = 999;
+  if(m.lodgingTiers && m.lodgingTiers.length > 0) {
+    lodgingPerNight = Math.min.apply(null, m.lodgingTiers.map(function(t){ return t.pricePerNight; }));
+  }
+
+  // Flight
+  var flight = getFlightCost(origin, m);
+  var flightCost = flight.cost;
+
+  var liftTotal = liftPerDay * skiDays;
+  var lodgingTotal = lodgingPerNight * nights;
+  var total = flightCost + liftTotal + lodgingTotal;
+
+  return {
+    total: Math.round(total),
+    lift: liftTotal,
+    lodging: lodgingTotal,
+    flight: flightCost,
+    liftPerDay: liftPerDay,
+    lodgingPerNight: lodgingPerNight,
+    hasPass: hasPass,
+    isDrive: flight.isDrive,
+    airport: flight.airport,
+  };
+}
+
+
+// ── DRIVEABLE RESORTS PER ORIGIN ────────────────────────────────────────────
+// Resorts within ~3hr drive of each origin city. Used for "Driving only" filter.
+var DRIVEABLE_FROM = {
+  DEN: ['abasin','arapahoe','eldora','winterpark','loveland','breckenridge','coppermtn',
+        'keystone','vail','steamboat','wolfcreek','monarch','silverton','purgatory',
+        'crested','telluride'],
+  SLC: ['snowbird','alta','brighton','solitude','parkcity','deervalley','snowbasin',
+        'powdermtn','sundance','sundance'],
+  SEA: ['crystalmtn','stevenspass','mtbaker','mtsummit','whitepas'],
+  BZN: ['bridgerbowl','bigsky','redlodge','losttrl'],
+  PDX: ['mthood','hoodoo','anthonylakes'],
+  LAX: ['mammoth','junemtn','bearvalley','boreal','sugarbowl','mtrose','heavenly',
+        'kirkwood','northstar','palisades'],
+  SFO: ['mammoth','junemtn','bearvalley','boreal','sugarbowl','mtrose','heavenly',
+        'kirkwood','northstar','palisades'],
+  PHX: ['arizonasnowbowl','taos','santafe'],
+  drive: []
+};
+
+function isDriveableFrom(origin, resortId) {
+  if(origin === 'drive') return true; // "drive" = show all driveable resorts
+  var list = DRIVEABLE_FROM[origin] || [];
+  return list.indexOf(resortId) !== -1;
+}
+// ── SCORING ─────────────────────────────────────────────────────────────────
+// Priority: 1. Proximity/access, 2. Pass savings, 3. Storm (live), 4. Snow, 5. Value, 6. Crowds
+
+// Drive distance from origin city to resort
+var DRIVE_DISTANCES = {
+  DEN:{abasin:68,arapahoe:68,eldora:45,winterpark:67,loveland:56,breckenridge:85,coppermtn:75,keystone:75,vail:97,steamboat:157,crested:230,aspen:200,telluride:333,wolfcreek:240,monarch:180,silverton:340,purgatory:350,santafe:385,taos:290,arizonasnowbowl:680},
+  SLC:{snowbird:25,alta:25,brighton:28,solitude:27,parkcity:32,deervalley:34,snowbasin:40,powdermtn:55,sundance:50,grandtarghee:290,jacksonthole:280},
+  SEA:{crystalmtn:76,stevenspass:65,mtbaker:90,mtsummit:52,whitepas:135,mthood:168,mtbachelor:270,hoodoo:330},
+  BZN:{bridgerbowl:16,bigsky:60,redlodge:60,losttrl:180,whitefish:220,grandtarghee:180,jacksonthole:150},
+  PDX:{mthood:65,mtbachelor:180,hoodoo:120,anthonylakes:240,stevenspass:260},
+  drive:{}
+};
+
+function getProximityBonus(m, origin) {
+  var distMap = DRIVE_DISTANCES[origin] || {};
+  var dist = distMap[m.id];
+  // If no specific entry but resort is drive-mode from this origin, use accessScore as proxy
+  if(dist === undefined) {
+    if(m.travelMode === 'fly') return 0;
+    // Use accessScore as rough proxy — higher = closer
+    if(m.accessScore >= 90) return 20;
+    if(m.accessScore >= 85) return 15;
+    if(m.accessScore >= 78) return 10;
+    return 3;
+  }
+  if(dist < 50)  return 28;
+  if(dist < 80)  return 22;
+  if(dist < 120) return 16;
+  if(dist < 200) return 8;
+  if(dist < 300) return 3;
+  return 0;
+}
+
+function getPassSavingsBonus(m, userPass, skiDays) {
+  if(!userPass || m.skiPass !== userPass) return 0;
+  var savings = (m.liftTicket || 99) * (skiDays || 3);
+  if(savings >= 400) return 15;
+  if(savings >= 250) return 12;
+  if(savings >= 150) return 8;
+  return 4;
+}
+
+function scoreResort(m, origin, userPass, skiDays) {
+  var proxBonus   = getProximityBonus(m, origin);
+  var passBonus   = getPassSavingsBonus(m, userPass, skiDays || 3);
+
+  // Storm bonus from live data
+  var stormBonus = 0;
+  if(stormDataCache) {
+    var se = stormDataCache.find(function(d){ return d.resort.id === m.id; });
+    if(se && se.totalSnow7 > 0) stormBonus = Math.min(18, Math.round(se.totalSnow7 * 3));
+  }
+
+  var base = Math.round(
+    m.snowScore       * 0.28 +
+    m.valueScore      * 0.22 +
+    (100-m.crowdScore)* 0.15 +
+    m.accessScore     * 0.12
+  );
+
+  return base + proxBonus + passBonus + stormBonus;
+}
+
 function runSearch(){
-  var origin=document.getElementById('f-origin').value;
-  var budget=parseInt(document.getElementById('f-budget').value)||0;
-  var skill=document.getElementById('f-skill').value;
-  var pass=document.getElementById('f-pass').value;
-  var sort=document.getElementById('f-sort').value;
-  var results=MOUNTAINS.filter(function(m){
-    if(budget>0){var minPrice=m.lodgingTiers&&m.lodgingTiers.length>0?Math.min.apply(null,m.lodgingTiers.map(function(t){return t.pricePerNight;})):999;if(minPrice>budget)return false;}
-    if(skill){if(!m.tags.includes(skill==='advanced'?'advanced':skill))return false;}
-    if(pass&&m.skiPass!==pass)return false;
+  var origin = document.getElementById('f-origin').value;
+  var daysVal = document.getElementById('f-days').value;
+  var budget = parseInt(document.getElementById('f-budget').value) || 0;
+  var pass = document.getElementById('f-pass').value;
+  var skill = document.getElementById('f-skill').value;
+
+  var skiDays = daysVal ? parseInt(daysVal) : 3;
+  var nights = skiDays > 1 ? skiDays - 1 : 1;
+
+  // Filter
+  var results = MOUNTAINS.filter(function(m) {
+    // Skill filter
+    if(skill) {
+      if(skill === 'advanced' && !m.tags.includes('advanced')) return false;
+      if(skill === 'intermediate' && !m.tags.includes('intermediate')) return false;
+      if(skill === 'beginner' && !m.tags.includes('beginner')) return false;
+    }
+    // Drive-only filter — check origin-specific driveable list, not resort's global travelMode
+    if(origin === 'drive' && !isDriveableFrom(origin, m.id)) return false;
+
+    // Budget filter — total trip cost
+    if(budget > 0) {
+      var cost = estimateTripCost(m, origin, skiDays, nights, pass);
+      if(cost.total > budget) return false;
+    }
     return true;
   });
-  results.forEach(function(m){m._score=scoreResort(m,origin);});
-  results.sort(function(a,b){
-    if(sort==='snow')return b.snowScore-a.snowScore;
-    if(sort==='value')return b.valueScore-a.valueScore;
-    if(sort==='crowds')return a.crowdScore-b.crowdScore;
-    if(sort==='access')return b.accessScore-a.accessScore;
-    return b._score-a._score;
+
+  // Score and attach cost breakdown to each result
+  results.forEach(function(m) {
+    m._score = scoreResort(m, origin, pass, skiDays);
+    m._tripCost = estimateTripCost(m, origin, skiDays, nights, pass);
+    m._skiDays = skiDays;
+    m._nights = nights;
   });
-  state.results=results;state.expanded=null;renderCards();showTab('results');
+
+  // Sort: always by overall score (storm-weighted) unless no storm data
+  results.sort(function(a,b){ return b._score - a._score; });
+
+  state.results = results;
+  state.expanded = null;
+  renderCards();
+  showTab('results');
+
+  // Update count label with budget context
+  var countEl = document.getElementById('results-count');
+  var budgetLabel = budget > 0 ? ' within $'+budget+' total' : '';
+  var daysLabel = daysVal ? ' · '+skiDays+'-day trip' : '';
+  countEl.textContent = 'Showing '+results.length+' resort'+(results.length!==1?'s':'')+budgetLabel+daysLabel;
 }
 function renderCards(){
   var container=document.getElementById('cards-container');
@@ -383,7 +591,22 @@ function buildCard(m,rank){
   var hasScore=m._score!==undefined;
   var bannerHtml=m.skiPass?'<div class="pass-banner pass-'+m.skiPass+'">'+pass.label+'</div>':'';
   var tagsHtml=m.tags.slice(0,4).map(function(t){return'<span class="tag">'+t+'</span>';}).join('');
-  var scoreHtml=hasScore?[{lbl:'Overall',val:m._score},{lbl:'Snow',val:m.snowScore},{lbl:'Value',val:m.valueScore}].map(function(s){return'<div class="score-item"><span class="score-label">'+s.lbl+'</span><div class="score-val">'+s.val+'</div><div class="score-bar-track"><div class="score-bar-fill" style="width:'+s.val+'%"></div></div></div>';}).join(''):'';
+  // Trip cost badge
+  var costHtml = '';
+  if(m._tripCost) {
+    var tc = m._tripCost;
+    var flightLabel = tc.isDrive ? 'Drive' : '~$'+tc.flight+' flight';
+    var liftLabel = tc.hasPass ? 'Pass covers lifts' : '$'+tc.liftPerDay+'/day lifts';
+    costHtml = '<div style="display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;gap:2px;">'+
+      '<div style="font-size:1.1rem;font-weight:800;color:var(--bark);">$'+tc.total+'</div>'+
+      '<div style="font-size:0.6rem;color:var(--text-light);text-align:right;">est. total trip</div>'+
+      '<div style="font-size:0.6rem;color:var(--text-light);text-align:right;">'+(tc.hasPass?'&#10003; pass':'$'+tc.liftPerDay+'/day')+' &middot; $'+tc.lodgingPerNight+'/night</div>'+
+    '</div>';
+  } else {
+    var scoreHtml2 = hasScore?[{lbl:'Snow',val:m.snowScore},{lbl:'Value',val:m.valueScore}].map(function(s){return'<div class="score-item"><span class="score-label">'+s.lbl+'</span><div class="score-val">'+s.val+'</div><div class="score-bar-track"><div class="score-bar-fill" style="width:'+s.val+'%"></div></div></div>';}).join(''):'';
+    costHtml = '<div class="card-scores">'+scoreHtml2+'</div>';
+  }
+  var scoreHtml = '';
   var isExpanded=state.expanded===m.id;
   var cardClass='card'+(m.skiPass?'':' no-banner')+(rank<3&&hasScore?' top-pick':'');
   wrap.innerHTML=bannerHtml+'<div class="'+cardClass+'" id="card-'+m.id+'" onclick="toggleCard(\''+m.id+'\')">'+
@@ -392,9 +615,9 @@ function buildCard(m,rank){
     '<div class="card-name">'+m.name+'</div>'+
     '<div class="card-meta">'+m.state+' · '+m.verticalDrop.toLocaleString()+'ft vertical · '+m.skiableAcres.toLocaleString()+' acres</div>'+
     '<div class="card-tags">'+tagsHtml+'</div></div>'+
-    '<div class="card-scores">'+scoreHtml+'</div></div>'+
+    costHtml+'</div>'+
     '<div class="card-desc">'+m.description+'</div>'+
-    '<div class="expand-hint">'+(isExpanded?'Hide details':'Flights, lodging & more ↓')+'</div>'+
+    '<div class="expand-hint">'+(isExpanded?'Hide details':(m._tripCost?(m._tripCost.isDrive?'&#128663; Driveable':'&#9992; Flight required')+' &middot; details &darr;':'Flights, lodging & more ↓'))+'</div>'+
     (isExpanded?buildExpandedHtml(m):'')+
     '</div>';
   return wrap;
@@ -574,7 +797,7 @@ function renderBestOf(){
 function showModal(){document.getElementById('why-modal').style.display='flex';}
 function hideModal(){document.getElementById('why-modal').style.display='none';}
 (function init(){
-  MOUNTAINS.forEach(function(m){m._score=scoreResort(m,'DEN');});
+  MOUNTAINS.forEach(function(m){m._score=scoreResort(m,'DEN','',3);m._tripCost=null;});
   MOUNTAINS.sort(function(a,b){return b._score-a._score;});
   state.results=MOUNTAINS.slice();renderCards();
 })();
