@@ -6,66 +6,295 @@
 <title>SummitSync — Find Your Mountain</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+:root {
+  --cream:#faf7f2; --cream-dark:#f0ebe0; --cream-border:#e2d9cc;
+  --bark:#2c1f0e; --bark-mid:#5c3d1e; --pine:#1f4a2e; --pine-light:#2d6b42;
+  --pine-pale:#e8f2ec; --slate:#2a3d4f; --snow:#ffffff;
+  --rust:#b5441a; --rust-pale:#fdf0eb; --gold:#c8901a; --gold-pale:#fdf6e8;
+  --text:#2c1f0e; --text-mid:#6b5a45; --text-light:#9e8a72; --border:#e2d9cc;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);font-family:'Source Sans 3',sans-serif;color:var(--text);line-height:1.6;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+a{color:inherit;text-decoration:none;}
+select,input{cursor:pointer;font-family:inherit;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--cream-dark);}
+::-webkit-scrollbar-thumb{background:var(--cream-border);border-radius:3px;}
 
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(250,247,242,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 1.5rem;}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--bark);}
+.nav-logo span{color:var(--pine-light);}
+.nav-btn{background:none;border:none;cursor:pointer;font-family:inherit;font-size:0.82rem;color:var(--text-mid);padding:6px 12px;border-radius:8px;transition:background 0.15s;}
+.nav-btn:hover{background:var(--cream-dark);}
 
-:root{--cream:#faf7f2;--cream-dark:#f0ebe0;--cream-border:#e2d9cc;--bark:#2c1f0e;--bark-mid:#5c3d1e;--pine:#1f4a2e;--pine-light:#2d6b42;--pine-pale:#e8f2ec;--slate:#2a3d4f;--slate-light:#4a6275;--slate-pale:#e8eef3;--snow:#ffffff;--rust:#b5441a;--rust-pale:#fdf0eb;--gold:#c8901a;--gold-pale:#fdf6e8;--text:#2c1f0e;--text-mid:#6b5a45;--text-light:#9e8a72;--border:#e2d9cc;}*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}body{background:var(--cream);font-family:'Source Sans 3',sans-serif;color:var(--text);line-height:1.6;}body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}@keyframes spin{to{transform:rotate(360deg);}}@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.7);}}@keyframes shimmer{0%{background-position:-600px 0}100%{background-position:600px 0}}@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}select,input{cursor:pointer;appearance:none;}a{color:inherit;}::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--cream-dark);}::-webkit-scrollbar-thumb{background:var(--cream-border);border-radius:3px;}.leaflet-popup-content-wrapper{border-radius:14px !important;box-shadow:0 12px 40px rgba(44,31,14,0.2) !important;border:1px solid var(--border) !important;padding:0 !important;overflow:hidden;background:var(--cream) !important;}.leaflet-popup-content{margin:0 !important;width:270px !important;}.leaflet-popup-tip{background:var(--bark) !important;}.leaflet-container{font-family:'Source Sans 3',sans-serif !important;background:#e8e4dc !important;}.leaflet-tile{filter:sepia(15%) saturate(0.9) brightness(1.02);}.ss-input{height:46px;border:1.5px solid var(--border);border-radius:10px;padding:0 14px;font-family:'Source Sans 3',sans-serif;font-size:0.92rem;color:var(--text);background:var(--snow);outline:none;width:100%;transition:border-color 0.15s,box-shadow 0.15s;}.ss-input:focus{border-color:var(--pine-light);box-shadow:0 0 0 3px rgba(45,107,66,0.12);}.ss-label{font-size:0.68rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:5px;display:block;}.score-bar-track{width:52px;height:4px;background:var(--cream-dark);border-radius:99px;overflow:hidden;}.score-bar-fill{height:100%;border-radius:99px;transition:width 0.8s ease;}.tag{display:inline-flex;align-items:center;gap:3px;font-size:0.65rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:var(--cream-dark);color:var(--text-mid);border-radius:99px;padding:3px 9px;}.resort-card{background:var(--snow);border:1.5px solid var(--border);border-radius:16px;padding:1.4rem;margin-bottom:0rem;cursor:pointer;transition:box-shadow 0.2s,border-color 0.2s;}.resort-card.has-pass-banner{border-top:none;}.resort-card-wrap{margin-bottom:0.75rem;}.resort-card:hover{box-shadow:0 4px 24px rgba(44,31,14,0.08);}.resort-card.top{border-color:var(--pine-light);}.resort-card.expanded{box-shadow:0 8px 40px rgba(44,31,14,0.1);}.btn-primary{background:var(--bark);color:var(--cream);border:none;border-radius:10px;font-family:'Source Sans 3',sans-serif;font-weight:700;cursor:pointer;transition:background 0.15s,transform 0.1s;}.btn-primary:hover{background:var(--bark-mid);}.btn-primary:active{transform:scale(0.99);}.btn-ghost{background:none;border:1.5px solid var(--border);border-radius:8px;font-family:'Source Sans 3',sans-serif;cursor:pointer;transition:border-color 0.15s,background 0.15s;color:var(--text-mid);}.btn-ghost:hover{border-color:var(--text-mid);background:var(--cream-dark);}.mountain-divider{width:100%;height:1px;background:var(--border);position:relative;margin:1.5rem 0;}.forecast-day{flex:1;background:var(--cream);border-radius:8px;padding:7px 4px;text-align:center;}.modal-overlay{position:fixed;inset:0;background:rgba(44,31,14,0.6);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeIn 0.2s ease;backdrop-filter:blur(4px);}.modal-box{background:var(--cream);border-radius:20px;max-width:640px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp 0.3s ease;}.hero-bg{background:radial-gradient(ellipse at 20% 50%,rgba(31,74,46,0.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(42,61,79,0.06) 0%,transparent 50%),var(--cream);}.nav{position:sticky;top:0;z-index:100;background:rgba(250,247,242,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}.ai-card{background:var(--bark);border-radius:14px;padding:1.5rem;margin-bottom:1.75rem;position:relative;overflow:hidden;}.ai-card::before{content:'';position:absolute;top:-30px;right:-30px;width:180px;height:180px;background:radial-gradient(circle,rgba(31,74,46,0.4) 0%,transparent 70%);}.lodging-tier{display:block;text-decoration:none;background:var(--snow);border:1px solid var(--border);border-radius:9px;padding:9px 11px;transition:border-color 0.15s;}.lodging-tier:hover{border-color:var(--pine-light);}.flight-opt{display:flex;justify-content:space-between;align-items:flex-start;text-decoration:none;border-radius:8px;padding:9px 11px;transition:opacity 0.15s;}.flight-opt:hover{opacity:0.85;}.flight-opt.best{background:var(--pine);color:var(--cream);}.flight-opt.alt{background:var(--cream-dark);color:var(--text);border:1px solid var(--border);}.flight-opt.regional{background:var(--gold-pale);color:var(--text);border:1px solid #e8d5a0;}
-#loading{position:fixed;inset:0;background:#faf7f2;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Source Sans 3',sans-serif;}
-#loading h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:#2c1f0e;margin-bottom:0.5rem;}
-#loading p{color:#9e8a72;font-size:0.9rem;}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2c1f0e;margin:0 3px;animation:pulse 1.2s ease-in-out infinite;}
-.dot:nth-child(2){animation-delay:0.2s;}
-.dot:nth-child(3){animation-delay:0.4s;}
+/* HERO */
+.hero{background:radial-gradient(ellipse at 20% 50%,rgba(31,74,46,0.07) 0%,transparent 60%),var(--cream);padding:3rem 1.5rem 2rem;}
+.hero-inner{max-width:1100px;margin:0 auto;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:var(--bark);line-height:1.2;margin-bottom:0.5rem;}
+.hero h1 em{font-style:italic;color:var(--pine-light);}
+.hero p{color:var(--text-mid);font-size:1rem;max-width:520px;margin-bottom:1.5rem;}
 
-#loading{position:fixed;inset:0;background:#faf7f2;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Source Sans 3',sans-serif;}
-#loading h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:#2c1f0e;margin-bottom:0.5rem;}
-#loading p{color:#9e8a72;font-size:0.9rem;}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2c1f0e;margin:0 3px;animation:pulse 1.2s ease-in-out infinite;}
-.dot:nth-child(2){animation-delay:0.2s;}.dot:nth-child(3){animation-delay:0.4s;}
+/* FILTERS */
+.filters{background:var(--snow);border:1.5px solid var(--border);border-radius:16px;padding:1.25rem 1.5rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;}
+.filter-group{}
+.filter-label{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:5px;display:block;}
+.filter-select{height:42px;border:1.5px solid var(--border);border-radius:10px;padding:0 12px;font-size:0.9rem;color:var(--text);background:var(--cream);width:100%;outline:none;transition:border-color 0.15s;}
+.filter-select:focus{border-color:var(--pine-light);}
+.filter-input{height:42px;border:1.5px solid var(--border);border-radius:10px;padding:0 12px;font-size:0.9rem;color:var(--text);background:var(--cream);width:100%;outline:none;transition:border-color 0.15s;}
+.filter-input:focus{border-color:var(--pine-light);}
+.search-btn{height:42px;background:var(--bark);color:var(--cream);border:none;border-radius:10px;font-family:inherit;font-weight:700;font-size:0.9rem;cursor:pointer;width:100%;transition:background 0.15s;}
+.search-btn:hover{background:var(--bark-mid);}
 
-#loading{position:fixed;inset:0;background:#faf7f2;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:'Source Sans 3',sans-serif;}
-#loading h2{font-family:'Playfair Display',serif;font-size:1.8rem;color:#2c1f0e;margin-bottom:0.5rem;}
-#loading p{color:#9e8a72;font-size:0.9rem;}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2c1f0e;margin:0 3px;animation:pulse 1.2s ease-in-out infinite;}
-.dot:nth-child(2){animation-delay:0.2s;}.dot:nth-child(3){animation-delay:0.4s;}
+/* MAIN LAYOUT */
+.main{max-width:1100px;margin:0 auto;padding:1.5rem;}
+.results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.results-count{font-size:0.8rem;color:var(--text-light);font-weight:600;letter-spacing:0.05em;text-transform:uppercase;}
+
+/* TABS */
+.tabs{display:flex;gap:0.5rem;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0;}
+.tab{background:none;border:none;cursor:pointer;font-family:inherit;font-size:0.88rem;color:var(--text-mid);padding:8px 16px;border-radius:8px 8px 0 0;transition:all 0.15s;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.tab.active{color:var(--pine-light);border-bottom-color:var(--pine-light);font-weight:600;}
+.tab:hover:not(.active){background:var(--cream-dark);}
+
+/* PASS BANNER */
+.pass-banner{border-radius:8px 8px 0 0;padding:5px 12px;font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;}
+.pass-epic{background:#1a3a5c;color:#fff;}
+.pass-ikon{background:#0a4a6b;color:#fff;}
+.pass-mountain_collective{background:#2d1a4a;color:#fff;}
+.pass-indy{background:#1a4a2a;color:#fff;}
+.pass-indep{background:#3a3a3a;color:#ccc;}
+
+/* RESORT CARD */
+.card-wrap{margin-bottom:0.75rem;animation:fadeUp 0.3s ease both;}
+.card{background:var(--snow);border:1.5px solid var(--border);border-radius:0 16px 16px 16px;padding:1.25rem 1.4rem;cursor:pointer;transition:box-shadow 0.2s,border-color 0.2s;}
+.card.no-banner{border-radius:16px;}
+.card:hover{box-shadow:0 4px 24px rgba(44,31,14,0.08);}
+.card.top-pick{border-color:var(--pine-light);}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
+.card-left{flex:1;min-width:0;}
+.card-rank{font-size:0.65rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--pine-light);margin-bottom:2px;}
+.card-name{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--bark);}
+.card-meta{font-size:0.8rem;color:var(--text-light);margin-top:2px;}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px;}
+.tag{display:inline-flex;align-items:center;font-size:0.62rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;background:var(--cream-dark);color:var(--text-mid);border-radius:99px;padding:3px 8px;}
+.card-scores{display:flex;gap:1.5rem;flex-shrink:0;}
+.score-item{text-align:center;}
+.score-label{font-size:0.58rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-light);display:block;margin-bottom:3px;}
+.score-val{font-size:1.1rem;font-weight:700;color:var(--bark);}
+.score-bar-track{width:40px;height:3px;background:var(--cream-dark);border-radius:99px;overflow:hidden;margin:3px auto 0;}
+.score-bar-fill{height:100%;border-radius:99px;background:var(--pine-light);}
+.card-desc{margin-top:0.75rem;font-size:0.88rem;color:var(--text-mid);line-height:1.5;}
+.expand-hint{font-size:0.75rem;color:var(--text-light);margin-top:6px;}
+
+/* EXPANDED CARD */
+.expanded-body{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);animation:fadeIn 0.2s ease;}
+.expanded-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+@media(max-width:600px){.expanded-grid{grid-template-columns:1fr;}.card-scores{display:none;}}
+.exp-section{}
+.exp-label{font-size:0.65rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:8px;display:block;}
+.pros-cons{display:flex;flex-direction:column;gap:6px;}
+.pro-item,.con-item{font-size:0.85rem;padding-left:16px;position:relative;line-height:1.4;}
+.pro-item::before{content:"✓";position:absolute;left:0;color:var(--pine-light);font-weight:700;}
+.con-item::before{content:"×";position:absolute;left:0;color:var(--rust);font-weight:700;}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat-box{background:var(--cream);border-radius:8px;padding:8px 10px;}
+.stat-val{font-size:1rem;font-weight:700;color:var(--bark);}
+.stat-lbl{font-size:0.65rem;color:var(--text-light);text-transform:uppercase;letter-spacing:0.05em;}
+.lodging-tier{display:block;text-decoration:none;background:var(--cream);border:1px solid var(--border);border-radius:9px;padding:9px 11px;margin-bottom:6px;transition:border-color 0.15s;}
+.lodging-tier:hover{border-color:var(--pine-light);}
+.lodging-name{font-size:0.8rem;font-weight:600;color:var(--bark);}
+.lodging-price{font-size:0.75rem;color:var(--text-mid);}
+.flight-list{display:flex;flex-direction:column;gap:6px;}
+.flight-opt{display:flex;justify-content:space-between;align-items:center;text-decoration:none;border-radius:8px;padding:8px 11px;font-size:0.82rem;transition:opacity 0.15s;}
+.flight-opt:hover{opacity:0.85;}
+.flight-best{background:var(--pine);color:var(--cream);}
+.flight-alt{background:var(--cream-dark);color:var(--text);border:1px solid var(--border);}
+.btn-row{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap;}
+.btn-primary{background:var(--bark);color:var(--cream);border:none;border-radius:10px;font-family:inherit;font-weight:700;font-size:0.85rem;cursor:pointer;padding:10px 18px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:background 0.15s;}
+.btn-primary:hover{background:var(--bark-mid);}
+.btn-ghost{background:none;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:0.85rem;cursor:pointer;padding:10px 16px;text-decoration:none;display:inline-flex;align-items:center;gap:6px;color:var(--text-mid);transition:all 0.15s;}
+.btn-ghost:hover{border-color:var(--text-mid);background:var(--cream-dark);}
+
+/* MAP */
+#map{height:520px;border-radius:16px;border:1.5px solid var(--border);overflow:hidden;}
+.leaflet-popup-content-wrapper{border-radius:12px!important;border:1px solid var(--border)!important;padding:0!important;overflow:hidden;background:var(--cream)!important;}
+.leaflet-popup-content{margin:0!important;width:240px!important;}
+.popup-inner{padding:12px 14px;}
+.popup-name{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--bark);}
+.popup-meta{font-size:0.75rem;color:var(--text-light);margin:2px 0 8px;}
+.popup-btn{display:block;text-align:center;background:var(--bark);color:var(--cream);border-radius:8px;padding:7px;font-size:0.8rem;font-weight:700;text-decoration:none;transition:background 0.15s;}
+.popup-btn:hover{background:var(--bark-mid);}
+
+/* BEST OF */
+.bestof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;}
+.bestof-card{background:var(--snow);border:1.5px solid var(--border);border-radius:14px;padding:1.1rem 1.25rem;}
+.bestof-title{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--bark);margin-bottom:2px;}
+.bestof-desc{font-size:0.78rem;color:var(--text-light);margin-bottom:10px;}
+.bestof-resort{display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--cream-border);font-size:0.85rem;}
+.bestof-resort:last-child{border-bottom:none;}
+.bestof-resort a{color:var(--pine-light);font-size:0.75rem;font-weight:600;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(44,31,14,0.6);z-index:999;display:flex;align-items:center;justify-content:center;padding:1rem;animation:fadeIn 0.2s ease;backdrop-filter:blur(4px);}
+.modal-box{background:var(--cream);border-radius:20px;max-width:560px;width:100%;max-height:90vh;overflow-y:auto;animation:fadeUp 0.3s ease;padding:2rem;}
+.modal-box h2{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--bark);margin-bottom:1rem;}
+.modal-close{float:right;background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--text-light);}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:4rem 2rem;color:var(--text-light);}
+.empty h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--text-mid);margin-bottom:0.5rem;}
 </style>
 </head>
 <body>
-<div id="loading"><h2>⛷ SummitSync</h2><p>Loading<span class="dot"></span><span class="dot"></span><span class="dot"></span></p></div>
-<div id="root"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">Summit<span>Sync</span></div>
+    <div style="display:flex;gap:4px;">
+      <button class="nav-btn" onclick="showTab('results')">🏔 Results</button>
+      <button class="nav-btn" onclick="showTab('map')">🗺 Map</button>
+      <button class="nav-btn" onclick="showTab('bestof')">⭐ Best Of</button>
+      <button class="nav-btn" onclick="showModal()">? Why SummitSync</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO + FILTERS -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1>Find your <em>perfect</em> mountain.</h1>
+    <p>60 western resorts scored on snow, value, access, and crowds. Real data, no sponsored results.</p>
+    <div class="filters">
+      <div class="filter-group">
+        <label class="filter-label">Flying from</label>
+        <select class="filter-select" id="f-origin">
+          <option value="DEN">Denver (DEN)</option>
+          <option value="SLC">Salt Lake City (SLC)</option>
+          <option value="SEA">Seattle (SEA)</option>
+          <option value="BZN">Bozeman (BZN)</option>
+          <option value="LAX">Los Angeles (LAX)</option>
+          <option value="SFO">San Francisco (SFO)</option>
+          <option value="PDX">Portland (PDX)</option>
+          <option value="PHX">Phoenix (PHX)</option>
+          <option value="drive">Driving (no flights)</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Budget / night</label>
+        <select class="filter-select" id="f-budget">
+          <option value="0">Any budget</option>
+          <option value="100">Under $100</option>
+          <option value="200">Under $200</option>
+          <option value="400">Under $400</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Skill level</label>
+        <select class="filter-select" id="f-skill">
+          <option value="">Any level</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced / Expert</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Ski pass</label>
+        <select class="filter-select" id="f-pass">
+          <option value="">Any / No pass</option>
+          <option value="epic">Epic Pass</option>
+          <option value="ikon">Ikon Pass</option>
+          <option value="mountain_collective">Mountain Collective</option>
+          <option value="indy">Indy Pass</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Prioritize</label>
+        <select class="filter-select" id="f-sort">
+          <option value="overall">Overall score</option>
+          <option value="snow">Snow quality</option>
+          <option value="value">Best value</option>
+          <option value="crowds">Fewest crowds</option>
+          <option value="access">Easiest access</option>
+        </select>
+      </div>
+      <div class="filter-group" style="display:flex;align-items:flex-end;">
+        <button class="search-btn" onclick="runSearch()">Find Mountains →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="tabs">
+    <button class="tab active" id="tab-results" onclick="showTab('results')">🏔 Results</button>
+    <button class="tab" id="tab-map" onclick="showTab('map')">🗺 Map</button>
+    <button class="tab" id="tab-bestof" onclick="showTab('bestof')">⭐ Best Of</button>
+  </div>
+
+  <!-- RESULTS TAB -->
+  <div id="view-results">
+    <div class="results-header">
+      <div class="results-count" id="results-count">Showing all 60 resorts</div>
+    </div>
+    <div id="cards-container"></div>
+  </div>
+
+  <!-- MAP TAB -->
+  <div id="view-map" style="display:none;">
+    <div id="map"></div>
+  </div>
+
+  <!-- BEST OF TAB -->
+  <div id="view-bestof" style="display:none;">
+    <div class="bestof-grid" id="bestof-container"></div>
+  </div>
+</div>
+
+<!-- WHY MODAL -->
+<div class="modal-overlay" id="why-modal" style="display:none;" onclick="if(event.target===this)hideModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="hideModal()">✕</button>
+    <h2>Why SummitSync?</h2>
+    <p style="color:var(--text-mid);line-height:1.7;margin-bottom:1rem;">Most ski trip planning tools are either resort marketing pages or outdated forum posts. SummitSync scores 60 western resorts across four dimensions — snow quality, value, crowds, and access — using real data, not sponsored content.</p>
+    <p style="color:var(--text-mid);line-height:1.7;margin-bottom:1rem;">Every resort gets a score from 0–100 in each category. The algorithm weights snow and value highest because those are what matter most when you're actually there.</p>
+    <p style="color:var(--text-mid);line-height:1.7;">No ads. No affiliate deals. No resort partnerships. Just the mountain.</p>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 <script>
-const { useState, useRef, useEffect, useCallback, useMemo } = React;
-
-
-const { useState, useRef, useEffect, useCallback, useMemo } = React;
-
 const MOUNTAINS = [
   { id:"abasin", name:"Arapahoe Basin", state:"CO", region:"rockies", nickname:"The Legend", tags:["all-mountain","powder","advanced","intermediate","value"], skiPass:"ikon", lat:39.6426, lon:-105.8719, travelMode:"drive", distanceDenver:68, distanceSLC:450, distanceSeattle:1200, distanceBZN:620, verticalDrop:2270, skiableAcres:1428, averageSnowfall:350, liftTicket:99, crowdScore:28, snowScore:84, valueScore:92, accessScore:75, description:"Colorado's highest ski area. No resort lodging keeps crowds thin. Famous for skiing into June.", pros:"Highest base in CO, thin crowds, incredible late-season skiing, free parking.", cons:"Limited on-mountain lodging, very windy at summit.", openSnowLink:"https://opensnow.com/location/arapahoe-basin", resortLink:"https://www.arapahoebasin.com/the-mountain/mountain-conditions/", resortHomepage:"https://www.arapahoebasin.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Best fares, most flights — easie..."}, {code:"EGE",drive:"45 min",note:"Closer drive but fewer flights, ..."}], lodgingTiers:[ {tier:"budget",pricePerNight:59,note:"10 min drive, basic rooms, f...",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"}, {tier:"luxury",pricePerNight:390,note:"Full resort, spa, ski concie...",link:"https://www.booking.com/searchresults.html?ss=Keystone%2C+Colorado"}, ]},
-  { id:"steamboat", name:"Steamboat Springs", state:"CO", region:"rockies", nickname:"Ski Town USA", tags:["all-mountain","family","intermediate","powder","beginner"], skiPass:"ikon", lat:40.4572, lon:-106.8045, travelMode:"either", distanceDenver:157, distanceSLC:380, distanceSeattle:1300, distanceBZN:500, verticalDrop:3668, skiableAcres:2965, averageSnowfall:349, liftTicket:159, crowdScore:48, snowScore:80, valueScore:65, accessScore:70, description:"Steamboat invented the champagne powder marketing term — and it's accurate. The resort sits in a unique coastal-influenced snowstorm pattern that produces famously dry, light snow averaging 349 inches annually. Morningside Park, Priest Creek, and the Christmas Tree Bowl trees are some of the best glades in Colorado. Ikon Pass.", pros:"Champagne powder snow quality, excellent tree skiing, Ikon Pass, genuine western ranch tow", cons:"Not as steep as other CO resorts, less expert terrain than Vail or Breckenridge,", openSnowLink:"https://opensnow.com/location/steamboat", resortLink:"https://www.steamboat.com/the-mountain/mountain-report", resortHomepage:"https://www.steamboat.com", flyInOptions:[{code:"DEN",drive:"3 hrs",note:"Most flights, cheapest fares"}, {code:"SLC",drive:"3.5 hrs",note:"Good Southwest options"}, {code:"HDN",drive:"40 min",note:"Closest but limited seasonal ser..."}], lodgingTiers:[ {tier:"budget",pricePerNight:65,note:"Walk to gondola, free breakf...",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"}, {tier:"luxury",pricePerNight:560,note:"Slope-side, rooftop hot tub,...",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"}, ]},
-  { id:"vail", name:"Vail", state:"CO", region:"rockies", nickname:"The Beast", tags:["all-mountain","powder","advanced","intermediate","family"], skiPass:"epic", lat:39.6433, lon:-106.3781, travelMode:"drive", distanceDenver:97, distanceSLC:420, distanceSeattle:1230, distanceBZN:600, verticalDrop:3450, skiableAcres:5317, averageSnowfall:354, liftTicket:249, crowdScore:72, snowScore:78, valueScore:38, accessScore:85, description:"7 Back Bowls covering 3,000 acres of above-treeline terrain make Vail's footprint unlike anything else in Colorado. 195 ", pros:"7 Back Bowls, Epic Pass, peak-to-peak with Breckenridge, EGE airport 30 min away, top-tier", cons:"Very expensive, heavily crowded on holidays and weekends, corporate feel, I-70 t", openSnowLink:"https://opensnow.com/location/vail", resortLink:"https://www.vail.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.vail.com", flyInOptions:[{code:"DEN",drive:"2 hrs",note:"Most flights, cheapest fares"}, {code:"EGE",drive:"35 min",note:"Closest but pricier, seasonal only"}, {code:"ASE",drive:"1.5 hrs",note:"Small, expensive, weather-depend..."}], lodgingTiers:[ {tier:"budget",pricePerNight:120,note:"10 min bus ride, half the pr...",link:"https://www.booking.com/searchresults.html?ss=Avon%2C+Colorado"}, {tier:"luxury",pricePerNight:1100,note:"Forbes 5-star, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=Vail%2C+Colorado"}, ]},
-  { id:"breckenridge", name:"Breckenridge", state:"CO", region:"rockies", nickname:"Breck", tags:["all-mountain","park","intermediate","beginner","family"], skiPass:"epic", lat:39.4800, lon:-106.0667, travelMode:"drive", distanceDenver:85, distanceSLC:500, distanceSeattle:1250, distanceBZN:620, verticalDrop:3398, skiableAcres:2908, averageSnowfall:360, liftTicket:199, crowdScore:80, snowScore:74, valueScore:46, accessScore:88, description:"5 peaks, 187 trails, and 2,908 acres sitting at the highest base elevation of any major Colorado resort (9,600 ft). Peak", pros:"Epic Pass, historic mining town walkable from slopes, high-alpine bowl terrain, strong beg", cons:"Altitude hits hard at 9,600 ft base, I-70 traffic on weekends, crowded on holida", openSnowLink:"https://opensnow.com/location/breckenridge", resortLink:"https://www.breckenridge.com/mountain/snow-and-weather-report.aspx", resortHomepage:"https://www.breckenridge.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Best option by far — tons of fli..."}, {code:"EGE",drive:"1.5 hrs",note:"Seasonal, fewer options"}], lodgingTiers:[ {tier:"budget",pricePerNight:89,note:"15 min free bus to Breck. Wa...",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"}, {tier:"luxury",pricePerNight:580,note:"Top of Peak 8, indoor pool, ...",link:"https://www.booking.com/searchresults.html?ss=Breckenridge%2C+Colorado"}, ]},
-  { id:"telluride", name:"Telluride", state:"CO", region:"rockies", nickname:"The Box Canyon", tags:["all-mountain","powder","advanced","intermediate"], skiPass:"mtn", lat:37.9375, lon:-107.8123, travelMode:"fly", distanceDenver:333, distanceSLC:475, distanceSeattle:1500, distanceBZN:700, verticalDrop:4425, skiableAcres:2000, averageSnowfall:309, liftTicket:179, crowdScore:30, snowScore:70, valueScore:55, accessScore:44, description:"Tucked into a box canyon in the San Juans, Telluride has 2,000 acres spanning both the historic town and Mountain Villag", pros:"Stunning box canyon setting, uncrowded for its caliber, free gondola between town and vill", cons:"330 miles from Denver, regional airport only, expensive lift tickets, some years", openSnowLink:"https://opensnow.com/location/telluride", resortLink:"https://www.tellurideskiresort.com/mountain/snow-report/", resortHomepage:"https://tellurideskiresort.com", flyInOptions:[{code:"DEN",drive:"5.5 hrs drive",note:"Best fares — connect to TEX or j..."}, {code:"GJT",drive:"2 hrs",note:"More reliable than TEX, cheaper ..."}, {code:"TEX",drive:"15 min",note:"Closest but tiny, pricey, weathe..."}], lodgingTiers:[ {tier:"budget",pricePerNight:140,note:"Stay in town, free gondola up",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"}, {tier:"luxury",pricePerNight:750,note:"Forbes 4-star, gondola steps...",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"}, ]},
-  { id:"aspen", name:"Aspen Snowmass", state:"CO", region:"rockies", nickname:"The Four Mountains", tags:["all-mountain","powder","advanced","intermediate","luxury"], skiPass:"ikon", lat:39.2084, lon:-106.9490, travelMode:"fly", distanceDenver:200, distanceSLC:430, distanceSeattle:1400, distanceBZN:650, verticalDrop:4406, skiableAcres:5527, averageSnowfall:300, liftTicket:229, crowdScore:45, snowScore:72, valueScore:30, accessScore:62, description:"Four mountains — Aspen Mountain, Aspen Highlands, Buttermilk, and Snowmass — on one Ikon Pass. Snowmass alone has 3,362 ", pros:"4 mountains on one Ikon Pass, Highland Bowl hike is bucket-list, Snowmass Village ski-in/s", cons:"Most expensive ski destination in Colorado, very limited beginner terrain on Asp", openSnowLink:"https://opensnow.com/location/aspen-snowmass", resortLink:"https://www.aspensnowmass.com/while-youre-here/mountain-cams-conditions", resortHomepage:"https://www.aspensnowmass.com", flyInOptions:[{code:"DEN",drive:"4 hrs",note:"Best fares — drive via I-70 + Hw..."}, {code:"EGE",drive:"70 min",note:"More reliable than ASE, seasonal"}, {code:"ASE",drive:"10 min",note:"Closest but expensive and weathe..."}], lodgingTiers:[ {tier:"budget",pricePerNight:130,note:"20 min away, RFTA bus to mou...",link:"https://www.booking.com/searchresults.html?ss=Basalt%2C+Colorado"}, {tier:"luxury",pricePerNight:1500,note:"Only ski-in/ski-out on Aspen...",link:"https://www.booking.com/searchresults.html?ss=Aspen%2C+Colorado"}, ]},
-  { id:"crested", name:"Crested Butte", state:"CO", region:"rockies", nickname:"The Last Great Ski Town", tags:["all-mountain","powder","advanced","intermediate","value"], skiPass:"ikon", lat:38.8997, lon:-106.9650, travelMode:"fly", distanceDenver:230, distanceSLC:550, distanceSeattle:1500, distanceBZN:680, verticalDrop:2775, skiableAcres:1547, averageSnowfall:300, liftTicket:129, crowdScore:22, snowScore:74, valueScore:80, accessScore:50, description:"37% of the terrain is double-black diamond — more than any other Colorado resort. The North Face, Rambo, and Third Bowl ", pros:"Best expert terrain in Colorado, genuine old-school mountain town, Ikon Pass, short lift l", cons:"4 hours from Denver via US-285, lower snowfall than northern Colorado (234in avg), expert-heavy leaves intermediates underserved", openSnowLink:"https://opensnow.com/location/crested-butte", resortLink:"https://www.skicb.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.skicb.com", flyInOptions:[{code:"DEN",drive:"4 hrs",note:"Best fares — drive via Monarch P..."}, {code:"GUC",drive:"30 min",note:"Closest but small, limited flights"}, {code:"ASE",drive:"2.5 hrs",note:"Only if already connecting throu..."}], lodgingTiers:[ {tier:"budget",pricePerNight:85,note:"Funky town, free bus to moun...",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"}, {tier:"luxury",pricePerNight:420,note:"All-inclusive, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"}, ]},
-  { id:"winterpark", name:"Winter Park", state:"CO", region:"rockies", nickname:"Colorado's Favorite", tags:["all-mountain","intermediate","beginner","family","value"], skiPass:"ikon", lat:39.8868, lon:-105.7625, travelMode:"drive", distanceDenver:67, distanceSLC:480, distanceSeattle:1220, distanceBZN:600, verticalDrop:3060, skiableAcres:3081, averageSnowfall:327, liftTicket:169, crowdScore:58, snowScore:72, valueScore:72, accessScore:82, description:"Mary Jane side of Winter Park has some of the most sustained mogul terrain in Colorado — steep, relentless, never groome", pros:"Ikon Pass, best moguls in Colorado on Mary Jane, ski train from Denver on weekends, strong", cons:"US-40 drive from Denver is slower than I-70, base village is functional but not ", openSnowLink:"https://opensnow.com/location/winter-park", resortLink:"https://www.winterparkresort.com/the-mountain/mountain-conditions", resortHomepage:"https://www.winterparkresort.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Best and really only option — or..."}, {code:"EGE",drive:"2 hrs",note:"Seasonal only, not worth it over..."}], lodgingTiers:[ {tier:"budget",pricePerNight:90,note:"5 min drive, Summit Stage bus",link:"https://www.booking.com/searchresults.html?ss=Fraser%2C+Colorado"}, {tier:"luxury",pricePerNight:420,note:"Ski-in/ski-out, full kitchen...",link:"https://www.booking.com/searchresults.html?ss=Winter+Park%2C+Colorado"}, ]},
+  { id:"steamboat", name:"Steamboat Springs", state:"CO", region:"rockies", nickname:"Ski Town USA", tags:["all-mountain","family","intermediate","powder","beginner"], skiPass:"ikon", lat:40.4572, lon:-106.8045, travelMode:"either", distanceDenver:157, distanceSLC:380, distanceSeattle:1300, distanceBZN:500, verticalDrop:3668, skiableAcres:2965, averageSnowfall:349, liftTicket:159, crowdScore:48, snowScore:80, valueScore:65, accessScore:70, description:"Steamboat invented the champagne powder marketing term — and it's accurate. The resort sits in a unique coastal-influenced snowstorm pattern that produces famously dry, light snow averaging 349 inches annually. Morningside Park, Priest Creek, and the Christmas Tree Bowl trees are some of the best glades in Colorado. Ikon Pass.", pros:"Champagne powder snow quality, excellent tree skiing, Ikon Pass, genuine western ranch town feel.", cons:"Not as steep as other CO resorts, less expert terrain than Vail or Breckenridge,", openSnowLink:"https://opensnow.com/location/steamboat", resortLink:"https://www.steamboat.com/the-mountain/mountain-report", resortHomepage:"https://www.steamboat.com", flyInOptions:[{code:"DEN",drive:"3 hrs",note:"Most flights, cheapest fares"}, {code:"SLC",drive:"3.5 hrs",note:"Good Southwest options"}, {code:"HDN",drive:"40 min",note:"Closest but limited seasonal ser..."}], lodgingTiers:[ {tier:"budget",pricePerNight:65,note:"Walk to gondola, free breakf...",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"}, {tier:"luxury",pricePerNight:560,note:"Slope-side, rooftop hot tub,...",link:"https://www.booking.com/searchresults.html?ss=Steamboat+Springs%2C+Colorado"}, ]},
+  { id:"vail", name:"Vail", state:"CO", region:"rockies", nickname:"The Beast", tags:["all-mountain","powder","advanced","intermediate","family"], skiPass:"epic", lat:39.6433, lon:-106.3781, travelMode:"drive", distanceDenver:97, distanceSLC:420, distanceSeattle:1230, distanceBZN:600, verticalDrop:3450, skiableAcres:5317, averageSnowfall:354, liftTicket:249, crowdScore:72, snowScore:78, valueScore:38, accessScore:85, description:"7 Back Bowls covering 3,000 acres of above-treeline terrain make Vail's footprint unlike anything else in Colorado. 195 ", pros:"7 Back Bowls, Epic Pass, peak-to-peak with Breckenridge, EGE airport 30 min away, top-tier grooming and amenities.", cons:"Very expensive, heavily crowded on holidays and weekends, corporate feel, I-70 traffic.", openSnowLink:"https://opensnow.com/location/vail", resortLink:"https://www.vail.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.vail.com", flyInOptions:[{code:"DEN",drive:"2 hrs",note:"Most flights, cheapest fares"}, {code:"EGE",drive:"35 min",note:"Closest but pricier, seasonal only"}, {code:"ASE",drive:"1.5 hrs",note:"Small, expensive, weather-depend..."}], lodgingTiers:[ {tier:"budget",pricePerNight:120,note:"10 min bus ride, half the pr...",link:"https://www.booking.com/searchresults.html?ss=Avon%2C+Colorado"}, {tier:"luxury",pricePerNight:1100,note:"Forbes 5-star, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=Vail%2C+Colorado"}, ]},
+  { id:"breckenridge", name:"Breckenridge", state:"CO", region:"rockies", nickname:"Breck", tags:["all-mountain","park","intermediate","beginner","family"], skiPass:"epic", lat:39.4800, lon:-106.0667, travelMode:"drive", distanceDenver:85, distanceSLC:500, distanceSeattle:1250, distanceBZN:620, verticalDrop:3398, skiableAcres:2908, averageSnowfall:360, liftTicket:199, crowdScore:80, snowScore:74, valueScore:46, accessScore:88, description:"5 peaks, 187 trails, and 2,908 acres sitting at the highest base elevation of any major Colorado resort at 9,600 ft. Peak-season crowds are manageable with early starts.", pros:"Epic Pass, historic mining town walkable from slopes, high-alpine bowl terrain, strong beginner programs.", cons:"Altitude hits hard at 9,600 ft base, I-70 traffic on weekends, crowded on holidays, expensive lodging in town.", openSnowLink:"https://opensnow.com/location/breckenridge", resortLink:"https://www.breckenridge.com/mountain/snow-and-weather-report.aspx", resortHomepage:"https://www.breckenridge.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Best option by far — tons of fli..."}, {code:"EGE",drive:"1.5 hrs",note:"Seasonal, fewer options"}], lodgingTiers:[ {tier:"budget",pricePerNight:89,note:"15 min free bus to Breck. Wa...",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"}, {tier:"luxury",pricePerNight:580,note:"Top of Peak 8, indoor pool, ...",link:"https://www.booking.com/searchresults.html?ss=Breckenridge%2C+Colorado"}, ]},
+  { id:"telluride", name:"Telluride", state:"CO", region:"rockies", nickname:"The Box Canyon", tags:["all-mountain","powder","advanced","intermediate"], skiPass:"mtn", lat:37.9375, lon:-107.8123, travelMode:"fly", distanceDenver:333, distanceSLC:475, distanceSeattle:1500, distanceBZN:700, verticalDrop:4425, skiableAcres:2000, averageSnowfall:309, liftTicket:179, crowdScore:30, snowScore:70, valueScore:55, accessScore:44, description:"Tucked into a box canyon in the San Juans, Telluride has 2,000 acres spanning both the historic town and Mountain Village. Free gondola connects them.", pros:"Stunning box canyon setting, uncrowded for its caliber, free gondola between town and village, stunning San Juan scenery.", cons:"330 miles from Denver, regional airport only, expensive lift tickets, lower snowfall in some years.", openSnowLink:"https://opensnow.com/location/telluride", resortLink:"https://www.tellurideskiresort.com/mountain/snow-report/", resortHomepage:"https://tellurideskiresort.com", flyInOptions:[{code:"DEN",drive:"5.5 hrs drive",note:"Best fares — connect to TEX or j..."}, {code:"GJT",drive:"2 hrs",note:"More reliable than TEX, cheaper ..."}, {code:"TEX",drive:"15 min",note:"Closest but tiny, pricey, weathe..."}], lodgingTiers:[ {tier:"budget",pricePerNight:140,note:"Stay in town, free gondola up",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"}, {tier:"luxury",pricePerNight:750,note:"Forbes 4-star, gondola steps...",link:"https://www.booking.com/searchresults.html?ss=Telluride%2C+Colorado"}, ]},
+  { id:"aspen", name:"Aspen Snowmass", state:"CO", region:"rockies", nickname:"The Four Mountains", tags:["all-mountain","powder","advanced","intermediate","luxury"], skiPass:"ikon", lat:39.2084, lon:-106.9490, travelMode:"fly", distanceDenver:200, distanceSLC:430, distanceSeattle:1400, distanceBZN:650, verticalDrop:4406, skiableAcres:5527, averageSnowfall:300, liftTicket:229, crowdScore:45, snowScore:72, valueScore:30, accessScore:62, description:"Four mountains — Aspen Mountain, Aspen Highlands, Buttermilk, and Snowmass — on one Ikon Pass. Snowmass alone has 3,362 ", pros:"4 mountains on one Ikon Pass, Highland Bowl hike is bucket-list, Snowmass Village ski-in/ski-out.", cons:"Most expensive ski destination in Colorado, very limited beginner terrain on Aspen Mountain.", openSnowLink:"https://opensnow.com/location/aspen-snowmass", resortLink:"https://www.aspensnowmass.com/while-youre-here/mountain-cams-conditions", resortHomepage:"https://www.aspensnowmass.com", flyInOptions:[{code:"DEN",drive:"4 hrs",note:"Best fares — drive via I-70 + Hw..."}, {code:"EGE",drive:"70 min",note:"More reliable than ASE, seasonal"}, {code:"ASE",drive:"10 min",note:"Closest but expensive and weathe..."}], lodgingTiers:[ {tier:"budget",pricePerNight:130,note:"20 min away, RFTA bus to mou...",link:"https://www.booking.com/searchresults.html?ss=Basalt%2C+Colorado"}, {tier:"luxury",pricePerNight:1500,note:"Only ski-in/ski-out on Aspen...",link:"https://www.booking.com/searchresults.html?ss=Aspen%2C+Colorado"}, ]},
+  { id:"crested", name:"Crested Butte", state:"CO", region:"rockies", nickname:"The Last Great Ski Town", tags:["all-mountain","powder","advanced","intermediate","value"], skiPass:"ikon", lat:38.8997, lon:-106.9650, travelMode:"fly", distanceDenver:230, distanceSLC:550, distanceSeattle:1500, distanceBZN:680, verticalDrop:2775, skiableAcres:1547, averageSnowfall:300, liftTicket:129, crowdScore:22, snowScore:74, valueScore:80, accessScore:50, description:"37% of the terrain is double-black diamond — more than any other Colorado resort. The North Face, Rambo, and Third Bowl ", pros:"Best expert terrain in Colorado, genuine old-school mountain town, Ikon Pass, short lift lines.", cons:"4 hours from Denver via US-285, lower snowfall than northern Colorado, 234in average snowfall is lower than northern CO, expert-heavy terrain can leave intermediates underserved.", openSnowLink:"https://opensnow.com/location/crested-butte", resortLink:"https://www.skicb.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.skicb.com", flyInOptions:[{code:"DEN",drive:"4 hrs",note:"Best fares — drive via Monarch P..."}, {code:"GUC",drive:"30 min",note:"Closest but small, limited flights"}, {code:"ASE",drive:"2.5 hrs",note:"Only if already connecting throu..."}], lodgingTiers:[ {tier:"budget",pricePerNight:85,note:"Funky town, free bus to moun...",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"}, {tier:"luxury",pricePerNight:420,note:"All-inclusive, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=Crested+Butte%2C+Colorado"}, ]},
+  { id:"winterpark", name:"Winter Park", state:"CO", region:"rockies", nickname:"Colorado's Favorite", tags:["all-mountain","intermediate","beginner","family","value"], skiPass:"ikon", lat:39.8868, lon:-105.7625, travelMode:"drive", distanceDenver:67, distanceSLC:480, distanceSeattle:1220, distanceBZN:600, verticalDrop:3060, skiableAcres:3081, averageSnowfall:327, liftTicket:169, crowdScore:58, snowScore:72, valueScore:72, accessScore:82, description:"Mary Jane side has the best sustained moguls in Colorado — steep, relentless, never groomed. Ikon Pass.", pros:"Ikon Pass, best moguls in Colorado on Mary Jane, ski train from Denver on weekends, strong intermediate terrain.", cons:"US-40 drive from Denver is slower than I-70, base village is functional but not ", openSnowLink:"https://opensnow.com/location/winter-park", resortLink:"https://www.winterparkresort.com/the-mountain/mountain-conditions", resortHomepage:"https://www.winterparkresort.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Best and really only option — or..."}, {code:"EGE",drive:"2 hrs",note:"Seasonal only, not worth it over..."}], lodgingTiers:[ {tier:"budget",pricePerNight:90,note:"5 min drive, Summit Stage bus",link:"https://www.booking.com/searchresults.html?ss=Fraser%2C+Colorado"}, {tier:"luxury",pricePerNight:420,note:"Ski-in/ski-out, full kitchen...",link:"https://www.booking.com/searchresults.html?ss=Winter+Park%2C+Colorado"}, ]},
   { id:"eldora", name:"Eldora Mountain", state:"CO", region:"rockies", nickname:"Boulder's Backyard", tags:["all-mountain","beginner","intermediate","value","family"], skiPass:"ikon", lat:39.9373, lon:-105.5820, travelMode:"drive", distanceDenver:45, distanceSLC:530, distanceSeattle:1300, distanceBZN:620, verticalDrop:1600, skiableAcres:680, averageSnowfall:300, liftTicket:79, crowdScore:55, snowScore:60, valueScore:90, accessScore:92, description:"Closest ski area to Denver and Boulder. Perfect day trip, incredible value.", pros:"Closest to Denver/Boulder, cheapest tickets, great for beginners.", cons:"Smaller resort, 2 hrs from Seattle, rainy at base in warm years.r vertical, lower snowfall than higher resorts.", openSnowLink:"https://opensnow.com/location/eldora", resortLink:"https://www.eldora.com/mountain/snow-report", resortHomepage:"https://www.eldora.com", flyInOptions:[{code:"DEN",drive:"1 hr",note:"Only real option — it's basicall..."}], lodgingTiers:[ {tier:"budget",pricePerNight:0,note:"45 min drive — no lodging ne...",link:"https://www.google.com/maps/dir/Denver,+CO/Eldora+Mountain+Resort"}, {tier:"luxury",pricePerNight:220,note:"45 min scenic drive, more am...",link:"https://www.expedia.com/Hotel-Search?destination=Boulder+Colorado"}, ]},
   { id:"keystone", name:"Keystone", state:"CO", region:"rockies", nickname:"Night Ski Capital", tags:["all-mountain","intermediate","beginner","family","value"], skiPass:"epic", lat:39.6042, lon:-105.9378, travelMode:"drive", distanceDenver:75, distanceSLC:460, distanceSeattle:1220, distanceBZN:620, verticalDrop:2900, skiableAcres:3148, averageSnowfall:235, liftTicket:149, crowdScore:55, snowScore:62, valueScore:74, accessScore:86, description:"Best night skiing in Colorado. Three peaks, surprisingly deep when it does snow.", pros:"Longest night skiing in CO, family-friendly, great intermediate progression.", cons:"Lower average snowfall, can ice up.", openSnowLink:"https://opensnow.com/location/keystone", resortLink:"https://www.keystoneresort.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.keystoneresort.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Best option"}, {code:"EGE",drive:"1 hr",note:"Seasonal, pricier"}], lodgingTiers:[ {tier:"budget",pricePerNight:79,note:"10 min drive, Summit Stage b...",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"}, {tier:"luxury",pricePerNight:380,note:"Historic B&B, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=Keystone%2C+Colorado"}, ]},
   { id:"coppermtn", name:"Copper Mountain", state:"CO", region:"rockies", nickname:"Naturally Divided", tags:["all-mountain","intermediate","advanced","park","value"], skiPass:"ikon", lat:39.5022, lon:-106.1505, travelMode:"drive", distanceDenver:75, distanceSLC:460, distanceSeattle:1220, distanceBZN:620, verticalDrop:2601, skiableAcres:2465, averageSnowfall:305, liftTicket:149, crowdScore:50, snowScore:68, valueScore:72, accessScore:86, description:"Naturally divided terrain — beginners stay west, experts go east. One of I-70's best values.", pros:"Natural terrain separation, great park, less crowded than Breck, easy I-70 access.", cons:"Base village can feel sterile, lower snowfall.", openSnowLink:"https://opensnow.com/location/copper-mountain", resortLink:"https://www.coppercolorado.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.coppercolorado.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Best option"}, {code:"EGE",drive:"1 hr",note:"Seasonal, closer but fewer flights"}], lodgingTiers:[ {tier:"budget",pricePerNight:85,note:"10 min east in Frisco",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"}, {tier:"luxury",pricePerNight:450,note:"Slope-side premium condos",link:"https://www.booking.com/searchresults.html?ss=Copper+Mountain%2C+Colorado"}, ]},
   { id:"loveland", name:"Loveland Ski Area", state:"CO", region:"rockies", nickname:"The Summit County Secret", tags:["all-mountain","intermediate","advanced","value"], skiPass:"indy", lat:39.6797, lon:-105.8977, travelMode:"drive", distanceDenver:56, distanceSLC:460, distanceSeattle:1210, distanceBZN:620, verticalDrop:2410, skiableAcres:1800, averageSnowfall:422, liftTicket:99, crowdScore:30, snowScore:80, valueScore:90, accessScore:88, description:"Right at the Eisenhower Tunnel. Great snow, no lodging means no crowds. Denvers best kept secret.", pros:"Closest major resort to Denver, great snow, Indy Pass, very low crowds.", cons:"No on-mountain lodging, can be icy in early season.", openSnowLink:"https://opensnow.com/location/loveland", resortLink:"https://skiloveland.com/mountain-report/", resortHomepage:"https://skiloveland.com", flyInOptions:[{code:"DEN",drive:"1 hr",note:"Easiest, 56 miles on I-70"},{code:"EGE",drive:"1.5 hrs",note:"Eagle County, fewer flights"}], lodgingTiers:[{tier:"budget",pricePerNight:89,note:"Dillon or Silverthorne options",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"},{tier:"luxury",pricePerNight:320,note:"Keystone or Breckenridge area",link:"https://www.booking.com/searchresults.html?ss=Keystone%2C+Colorado"}]},
-  { id:"snowbird", name:"Snowbird", state:"UT", region:"rockies", nickname:"The Deep", tags:["all-mountain","powder","advanced"], skiPass:"ikon", lat:40.5831, lon:-111.6558, travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceBZN:430, verticalDrop:3240, skiableAcres:2500, averageSnowfall:500, liftTicket:209, crowdScore:58, snowScore:97, valueScore:52, accessScore:74, description:"Adjacent to Alta with a shared lift connection, Snowbird rises to 11,000 ft with 3,240 vertical feet and 3,240 acres. Th", pros:"Combined Alta-Snowbird pass covers 4,700 acres, longest Utah season, 500in+ snow, tram to summit", cons:"Very challenging terrain for intermediates, base area feels dated, can be icy on", openSnowLink:"https://opensnow.com/location/snowbird", resortLink:"https://www.snowbird.com/mountain-report/", resortHomepage:"https://www.snowbird.com", flyInOptions:[{code:"SLC",drive:"35 min",note:"One of the best airport-to-ski r..."}, {code:"OGD",drive:"50 min",note:"Very limited flights — stick wit..."}], lodgingTiers:[ {tier:"budget",pricePerNight:90,note:"35 min canyon drive. Saves $...",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"}, {tier:"luxury",pricePerNight:620,note:"Ski-in/ski-out suite, panora...",link:"https://www.booking.com/searchresults.html?ss=Snowbird%2C+Utah"}, ]},
-  { id:"alta", name:"Alta", state:"UT", region:"rockies", nickname:"Skiers Only", tags:["all-mountain","powder","advanced","intermediate"], skiPass:"ikon", lat:40.5883, lon:-111.6372, travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceBZN:430, verticalDrop:2538, skiableAcres:2614, averageSnowfall:547, liftTicket:159, crowdScore:45, snowScore:99, valueScore:62, accessScore:72, description:"Skiers only since 1939. At the top of Little Cottonwood Canyon, Alta sits in a microclimate that produces 545in of annual snowfall — consistently ranked the best snow in North America. The High Traverse, Baldy Chutes, Devil's Castle, and Greeley Bowl are all earned through terrain knowledge, not just ability. Combined with Snowbird: 4,700 acres.", pros:"545in avg snowfall, skiers-only preserves the snow, cheap lift tickets for Utah, legendary LCC powder culture", cons:"Highway 210 closes frequently in storms (Interlodge), no snowboarding, limited b", openSnowLink:"https://opensnow.com/location/alta", resortLink:"https://www.alta.com/mountain/snow-report", resortHomepage:"https://www.alta.com", flyInOptions:[{code:"SLC",drive:"35 min",note:"35 min up Little Cottonwood Cany..."}, {code:"OGD",drive:"50 min",note:"Very limited flights — stick wit..."}], lodgingTiers:[ {tier:"budget",pricePerNight:90,note:"35 min up Little Cottonwood ...",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"}, {tier:"luxury",pricePerNight:580,note:"Ski-in/ski-out, heated outdo...",link:"https://www.booking.com/searchresults.html?ss=Alta%2C+Utah"}, ]},
+  { id:"snowbird", name:"Snowbird", state:"UT", region:"rockies", nickname:"The Deep", tags:["all-mountain","powder","advanced"], skiPass:"ikon", lat:40.5831, lon:-111.6558, travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceBZN:430, verticalDrop:3240, skiableAcres:2500, averageSnowfall:500, liftTicket:209, crowdScore:58, snowScore:97, valueScore:52, accessScore:74, description:"Adjacent to Alta with a shared lift connection, Snowbird rises to 11,000 ft with 3,240 vertical feet. The tram is an iconic bucket-list experience.", pros:"Combined Alta-Snowbird pass covers 4,700 acres, longest Utah season, 500in+ snow, tram to summit.", cons:"Very challenging terrain for intermediates, base area feels dated, can be icy on lower runs.", openSnowLink:"https://opensnow.com/location/snowbird", resortLink:"https://www.snowbird.com/mountain-report/", resortHomepage:"https://www.snowbird.com", flyInOptions:[{code:"SLC",drive:"35 min",note:"One of the best airport-to-ski r..."}, {code:"OGD",drive:"50 min",note:"Very limited flights — stick wit..."}], lodgingTiers:[ {tier:"budget",pricePerNight:90,note:"35 min canyon drive. Saves $...",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"}, {tier:"luxury",pricePerNight:620,note:"Ski-in/ski-out suite, panora...",link:"https://www.booking.com/searchresults.html?ss=Snowbird%2C+Utah"}, ]},
+  { id:"alta", name:"Alta", state:"UT", region:"rockies", nickname:"Skiers Only", tags:["all-mountain","powder","advanced","intermediate"], skiPass:"ikon", lat:40.5883, lon:-111.6372, travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceBZN:430, verticalDrop:2538, skiableAcres:2614, averageSnowfall:547, liftTicket:159, crowdScore:45, snowScore:99, valueScore:62, accessScore:72, description:"Skiers only since 1939. At the top of Little Cottonwood Canyon, Alta sits in a microclimate that produces 545in of annual snowfall — consistently ranked the best snow in North America. The High Traverse, Baldy Chutes, Devil's Castle, and Greeley Bowl are all earned through terrain knowledge, not just ability. Combined with Snowbird: 4,700 acres.", pros:"545in avg snowfall, legendary powder, cheap lift tickets for Utah, world-class expert terrain.", cons:"Highway 210 closes frequently in storms due to Interlodge avalanche control, no snowboarding.", openSnowLink:"https://opensnow.com/location/alta", resortLink:"https://www.alta.com/mountain/snow-report", resortHomepage:"https://www.alta.com", flyInOptions:[{code:"SLC",drive:"35 min",note:"35 min up Little Cottonwood Cany..."}, {code:"OGD",drive:"50 min",note:"Very limited flights — stick wit..."}], lodgingTiers:[ {tier:"budget",pricePerNight:90,note:"35 min up Little Cottonwood ...",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"}, {tier:"luxury",pricePerNight:580,note:"Ski-in/ski-out, heated outdo...",link:"https://www.booking.com/searchresults.html?ss=Alta%2C+Utah"}, ]},
   { id:"parkcity", name:"Park City Mountain", state:"UT", region:"rockies", nickname:"Biggest in the US", tags:["all-mountain","intermediate","beginner","family","park"], skiPass:"epic", lat:40.6514, lon:-111.5080, travelMode:"fly", distanceDenver:520, distanceSLC:32, distanceSeattle:850, distanceBZN:420, verticalDrop:3226, skiableAcres:7300, averageSnowfall:355, liftTicket:219, crowdScore:68, snowScore:75, valueScore:50, accessScore:82, description:"Largest ski resort in the US at 7,300 acres. Historic Main Street is 5 minutes from the lifts.", pros:"Largest resort in US, walk to Main Street, SLC airport is 35 min.", cons:"Can be crowded, some terrain feels spread thin.", openSnowLink:"https://opensnow.com/location/park-city-mountain", resortLink:"https://www.parkcitymountain.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.parkcitymountain.com", flyInOptions:[{code:"SLC",drive:"35 min",note:"35 min on I-80 — incredible airp..."}, {code:"OGD",drive:"55 min",note:"Budget flights but very limited ..."}], lodgingTiers:[ {tier:"budget",pricePerNight:150,note:"Walk to gondola from histori...",link:"https://www.booking.com/searchresults.html?ss=Park+City%2C+Utah"}, {tier:"luxury",pricePerNight:950,note:"Forbes 5-star, ski-in/ski-ou...",link:"https://www.booking.com/searchresults.html?ss=Deer+Valley%2C+Utah"}, ]},
   { id:"deervalley", name:"Deer Valley", state:"UT", region:"rockies", nickname:"The Pampered Mountain", tags:["all-mountain","intermediate","advanced","luxury"], skiPass:"ikon", lat:40.6374, lon:-111.4783, travelMode:"fly", distanceDenver:520, distanceSLC:34, distanceSeattle:850, distanceBZN:420, verticalDrop:3000, skiableAcres:2026, averageSnowfall:300, liftTicket:249, crowdScore:38, snowScore:74, valueScore:35, accessScore:80, description:"Skiers only. Valet ski storage, groomed to perfection, no lift lines on weekdays.", pros:"Best grooming in Utah, ski valet, no snowboards, impeccably run.", cons:"Very expensive, skiers only.", openSnowLink:"https://opensnow.com/location/deer-valley", resortLink:"https://www.deervalley.com/mountain/snow-report", resortHomepage:"https://www.deervalley.com", flyInOptions:[{code:"SLC",drive:"40 min",note:"Best option by far"}, {code:"OGD",drive:"55 min",note:"Budget option, very limited flig..."}], lodgingTiers:[ {tier:"budget",pricePerNight:140,note:"10 min drive or shuttle",link:"https://www.booking.com/searchresults.html?ss=Park+City%2C+Utah"}, {tier:"luxury",pricePerNight:1100,note:"Mid-mountain, Forbes 5-star",link:"https://www.booking.com/searchresults.html?ss=Deer+Valley%2C+Utah"}, ]},
   { id:"brighton", name:"Brighton Resort", state:"UT", region:"rockies", nickname:"Local's Mountain", tags:["all-mountain","park","intermediate","beginner","value","family"], skiPass:"ikon", lat:40.5986, lon:-111.5836, travelMode:"fly", distanceDenver:525, distanceSLC:28, distanceSeattle:850, distanceBZN:430, verticalDrop:1745, skiableAcres:1050, averageSnowfall:500, liftTicket:119, crowdScore:40, snowScore:91, valueScore:82, accessScore:76, description:"Utah's best kept secret. Same snowpack as Alta/Snowbird at half the price.", pros:"Same Wasatch snow as Alta, cheaper tickets, night skiing, great park.", cons:"Smaller resort, 2 hrs from Seattle, rainy at base in warm years.r than neighbors, crowds on powder days.", openSnowLink:"https://opensnow.com/location/brighton", resortLink:"https://www.brightonresort.com/mountain/snow-report", resortHomepage:"https://www.brightonresort.com", flyInOptions:[{code:"SLC",drive:"35 min",note:"Best and only real option"}], lodgingTiers:[ {tier:"budget",pricePerNight:85,note:"35 min up Big Cottonwood Can...",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"}, {tier:"luxury",pricePerNight:320,note:"Neighboring Solitude, quiete...",link:"https://www.booking.com/searchresults.html?ss=Solitude%2C+Utah"}, ]},
   { id:"solitude", name:"Solitude Mountain", state:"UT", region:"rockies", nickname:"Just You and the Snow", tags:["all-mountain","powder","intermediate","advanced","value"], skiPass:"ikon", lat:40.6197, lon:-111.5919, travelMode:"fly", distanceDenver:525, distanceSLC:27, distanceSeattle:850, distanceBZN:430, verticalDrop:2047, skiableAcres:1200, averageSnowfall:500, liftTicket:129, crowdScore:25, snowScore:93, valueScore:80, accessScore:74, description:"Big Cottonwood Canyon's quieter side. Same snowpack as Brighton next door, half the people.", pros:"Least crowded Cottonwood Canyon resort, excellent powder stashes, European village feel.", cons:"Smaller resort, 2 hrs from Seattle, rainy at base in warm years.r than Park City or Snowbird, limited nightlife.", openSnowLink:"https://opensnow.com/location/solitude", resortLink:"https://www.solitudemountain.com/mountain/snow-report", resortHomepage:"https://www.solitudemountain.com", flyInOptions:[{code:"SLC",drive:"35 min",note:"Best and only real option"}], lodgingTiers:[ {tier:"budget",pricePerNight:85,note:"27 min up Big Cottonwood Can...",link:"https://www.booking.com/searchresults.html?ss=Salt+Lake+City%2C+Utah"}, {tier:"luxury",pricePerNight:380,note:"Slope-side condos, full kitc...",link:"https://www.booking.com/searchresults.html?ss=Solitude%2C+Utah"}, ]},
   { id:"snowbasin", name:"Snowbasin", state:"UT", region:"rockies", nickname:"2002 Olympic Downhill", tags:["all-mountain","powder","advanced","intermediate"], skiPass:"mtn", lat:41.2161, lon:-111.8569, travelMode:"fly", distanceDenver:540, distanceSLC:40, distanceSeattle:860, distanceBZN:400, verticalDrop:2959, skiableAcres:3000, averageSnowfall:400, liftTicket:139, crowdScore:25, snowScore:82, valueScore:80, accessScore:72, description:"Site of 2002 Olympic downhill. Stunning gondola lodges. Almost nobody goes here.", pros:"Almost no crowds, beautiful lodges, great vert, Ogden nearby.", cons:"No ski-in/ski-out lodging at mountain, limited base village.", openSnowLink:"https://opensnow.com/location/snowbasin", resortLink:"https://www.snowbasin.com/mountain/snow-report/", resortHomepage:"https://www.snowbasin.com", flyInOptions:[{code:"SLC",drive:"50 min",note:"Best option, easy I-15 drive"}, {code:"OGD",drive:"25 min",note:"Closest airport — very limited f..."}], lodgingTiers:[ {tier:"budget",pricePerNight:80,note:"40 min drive, Ogden is under...",link:"https://www.booking.com/searchresults.html?ss=Ogden%2C+Utah"}, {tier:"luxury",pricePerNight:280,note:"Historic hotel in downtown O...",link:"https://www.booking.com/searchresults.html?ss=Ogden%2C+Utah"}, ]},
   { id:"powdermtn", name:"Powder Mountain", state:"UT", region:"rockies", nickname:"The Secret Stash", tags:["all-mountain","powder","intermediate","value"], skiPass:"indy", lat:41.3789, lon:-111.7811, travelMode:"fly", distanceDenver:500, distanceSLC:55, distanceSeattle:850, distanceBZN:450, verticalDrop:2442, skiableAcres:8464, averageSnowfall:500, liftTicket:95, crowdScore:18, snowScore:88, valueScore:85, accessScore:72, description:"Largest ski area in America by acreage at 8,464 acres. Strictly limits daily tickets so it never feels crowded. Legendary Utah powder.", pros:"Huge acreage, strictly limited crowds, incredible powder, affordable.", cons:"Limited lifts for the acreage, need a car, small base village.", openSnowLink:"https://opensnow.com/location/powder-mountain", resortLink:"https://powdermountain.com/snow-report/", resortHomepage:"https://powdermountain.com", flyInOptions:[{code:"SLC",drive:"1 hr",note:"Salt Lake City, best option"},{code:"OGD",drive:"45 min",note:"Ogden airport, smaller"}], lodgingTiers:[{tier:"budget",pricePerNight:90,note:"Eden or Ogden area hotels",link:"https://www.booking.com/searchresults.html?ss=Eden%2C+Utah"},{tier:"luxury",pricePerNight:380,note:"Powder Mountain lodges on site",link:"https://www.booking.com/searchresults.html?ss=Powder+Mountain%2C+Utah"}]},
-  { id:"jacksonthole", name:"Jackson Hole", state:"WY", region:"rockies", nickname:"The Big One", tags:["all-mountain","powder","advanced"], skiPass:"ikon", lat:43.5875, lon:-110.8280, travelMode:"fly", distanceDenver:540, distanceSLC:280, distanceSeattle:870, distanceBZN:150, verticalDrop:4139, skiableAcres:2500, averageSnowfall:459, liftTicket:239, crowdScore:52, snowScore:93, valueScore:44, accessScore:66, description:"4,139 vertical feet off a single tram — the most continuous inbounds vert in the US. Half the terrain is rated expert, and 465in of annual snowfall means powder days are more rule than exception. The Aerial Tram reaches the 10,450 ft summit in 9 minutes and opens the entire left side of the mountain. Corbet's Couloir sits 50 yards from the tram dock.", pros:"Greatest continuous inbounds vert in the US, legendary Aerial Tram, Ikon Pass, direct flig", cons:"50% expert terrain — genuinely not beginner-friendly, most expensive Wyoming res", openSnowLink:"https://opensnow.com/location/jackson-hole", resortLink:"https://www.jacksonhole.com/mountain-report.html", resortHomepage:"https://www.jacksonhole.com", flyInOptions:[{code:"SLC",drive:"4.5 hrs",note:"Cheapest fares — scenic drive th..."}, {code:"BZN",drive:"3 hrs",note:"Good Delta/Southwest options, gr..."}, {code:"JAC",drive:"20 min",note:"Closest — beautiful approach but..."}], lodgingTiers:[ {tier:"budget",pricePerNight:75,note:"Legendary ski bum hostel at ...",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"}, {tier:"luxury",pricePerNight:900,note:"Ski-in/ski-out, Forbes 5-star",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"}, ]},
+  { id:"jacksonthole", name:"Jackson Hole", state:"WY", region:"rockies", nickname:"The Big One", tags:["all-mountain","powder","advanced"], skiPass:"ikon", lat:43.5875, lon:-110.8280, travelMode:"fly", distanceDenver:540, distanceSLC:280, distanceSeattle:870, distanceBZN:150, verticalDrop:4139, skiableAcres:2500, averageSnowfall:459, liftTicket:239, crowdScore:52, snowScore:93, valueScore:44, accessScore:66, description:"4,139 vertical feet off a single tram — the most continuous inbounds vert in the US. Half the terrain is rated expert, and 465in of annual snowfall means powder days are more rule than exception. The Aerial Tram reaches the 10,450 ft summit in 9 minutes and opens the entire left side of the mountain. Corbet's Couloir sits 50 yards from the tram dock.", pros:"Greatest continuous inbounds vert in the US, legendary Aerial Tram, Ikon Pass, direct flights to JAC.", cons:"50% expert terrain — genuinely not beginner-friendly, most expensive Wyoming resort.", openSnowLink:"https://opensnow.com/location/jackson-hole", resortLink:"https://www.jacksonhole.com/mountain-report.html", resortHomepage:"https://www.jacksonhole.com", flyInOptions:[{code:"SLC",drive:"4.5 hrs",note:"Cheapest fares — scenic drive th..."}, {code:"BZN",drive:"3 hrs",note:"Good Delta/Southwest options, gr..."}, {code:"JAC",drive:"20 min",note:"Closest — beautiful approach but..."}], lodgingTiers:[ {tier:"budget",pricePerNight:75,note:"Legendary ski bum hostel at ...",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"}, {tier:"luxury",pricePerNight:900,note:"Ski-in/ski-out, Forbes 5-star",link:"https://www.booking.com/searchresults.html?ss=Teton+Village%2C+Wyoming"}, ]},
   { id:"grandtarghee", name:"Grand Targhee", state:"WY", region:"rockies", nickname:"The Hidden Gem", tags:["all-mountain","powder","intermediate","family"], skiPass:"mountain_collective", lat:43.7879, lon:-110.9498, travelMode:"fly", distanceDenver:600, distanceSLC:290, distanceSeattle:900, distanceBZN:180, verticalDrop:2602, skiableAcres:2602, averageSnowfall:500, liftTicket:139, crowdScore:22, snowScore:91, valueScore:72, accessScore:62, description:"On the west slope of the Tetons with 500in of snow and almost no crowds. Jackson Hole gets the fame but Targhee gets the powder.", pros:"Massive snowfall, low crowds, stunning Teton views, Mountain Collective.", cons:"Remote, smaller resort, less vertical than Jackson.", openSnowLink:"https://opensnow.com/location/grand-targhee", resortLink:"https://www.grandtarghee.com/mountain/conditions/", resortHomepage:"https://www.grandtarghee.com", flyInOptions:[{code:"JAC",drive:"1 hr",note:"Jackson Hole Airport, closest"},{code:"SLC",drive:"4 hrs",note:"More flights, longer drive"},{code:"BZN",drive:"2.5 hrs",note:"Bozeman, good option"}], lodgingTiers:[{tier:"budget",pricePerNight:120,note:"Driggs ID or Victor ID area",link:"https://www.booking.com/searchresults.html?ss=Driggs%2C+Idaho"},{tier:"luxury",pricePerNight:340,note:"Targhee Lodge slope-side",link:"https://www.grandtarghee.com/lodging/"}]},
   { id:"bigsky", name:"Big Sky", state:"MT", region:"rockies", nickname:"The Biggest Skiing in America", tags:["all-mountain","powder","advanced","intermediate","value"], skiPass:"ikon", lat:45.2868, lon:-111.4015, travelMode:"fly", distanceDenver:600, distanceSLC:400, distanceSeattle:800, distanceBZN:60, verticalDrop:4350, skiableAcres:5850, averageSnowfall:400, liftTicket:169, crowdScore:30, snowScore:85, valueScore:78, accessScore:68, description:"5,850 acres and the Lone Peak Tram to 11,166ft. Biggest ski area in America. Cold smoke powder, massive terrain. nonexistent outside of holidays.", pros:"Biggest skiing in America, virtually no lift lines, cold smoke powder, Ikon Pass, Bozeman ", cons:"1 hour from Bozeman, tram is a separate upcharge, base village still developing,", openSnowLink:"https://opensnow.com/location/big-sky", resortLink:"https://www.bigskyresort.com/mountain/mountain-report", resortHomepage:"https://www.bigskyresort.com", flyInOptions:[ {code:"BZN",drive:"1 hr",note:"Best option — direct flights on ..."}, {code:"SLC",drive:"4.5 hrs",note:"Cheaper fares, longer drive nort..."}, {code:"MSO",drive:"2.5 hrs",note:"Regional option with limited ser..."}, ], lodgingTiers:[ {tier:"budget",pricePerNight:100,note:"1 hr drive, Bozeman is a gre...",link:"https://www.booking.com/searchresults.html?ss=Bozeman%2C+Montana"}, {tier:"luxury",pricePerNight:900,note:"Forbes 5-star, ski-in/ski-ou...",link:"https://www.booking.com/searchresults.html?ss=Big+Sky%2C+Montana"}, ]},
   { id:"bridgerbowl", name:"Bridger Bowl", state:"MT", region:"rockies", nickname:"The Cold Smoke Capital", tags:["all-mountain","powder","advanced","value"], skiPass:"indy", lat:45.8112, lon:-110.9070, travelMode:"fly", distanceDenver:700, distanceSLC:520, distanceSeattle:930, distanceBZN:16, verticalDrop:2600, skiableAcres:2000, averageSnowfall:350, liftTicket:75, crowdScore:20, snowScore:85, valueScore:95, accessScore:80, description:"Bozeman community ski hill 16 miles from town. Non-profit means no corporate nonsense. Cold smoke powder is the driest lightest snow in Montana.", pros:"Cheapest tickets in the Rockies, legendary cold smoke powder, Indy Pass, near Bozeman.", cons:"Smaller resort, no slope-side lodging, limited lifts.", openSnowLink:"https://opensnow.com/location/bridger-bowl", resortLink:"https://www.bridgerbowl.com/snow-report", resortHomepage:"https://www.bridgerbowl.com", flyInOptions:[{code:"BZN",drive:"30 min",note:"Bozeman Yellowstone, best option"}], lodgingTiers:[{tier:"budget",pricePerNight:89,note:"Bozeman hotels and Airbnbs",link:"https://www.booking.com/searchresults.html?ss=Bozeman%2C+Montana"},{tier:"luxury",pricePerNight:280,note:"Bozeman boutique hotels",link:"https://www.booking.com/searchresults.html?ss=Bozeman%2C+Montana"}]},
@@ -88,11 +317,11 @@ const MOUNTAINS = [
   { id:"mtrose", name:"Mt Rose Ski Tahoe", state:"NV", region:"california", nickname:"The Highest Base", tags:["all-mountain","intermediate","value","family"], skiPass:"indep", lat:39.3143, lon:-119.8957, travelMode:"fly", distanceDenver:1060, distanceSLC:580, distanceSeattle:840, distanceBZN:880, verticalDrop:1800, skiableAcres:1200, averageSnowfall:350, liftTicket:99, crowdScore:35, snowScore:74, valueScore:78, accessScore:80, description:"Highest base elevation in the Tahoe region at 8,260ft. 20 minutes from Reno with less traffic than South Lake. Great value alternative to bigger Tahoe resorts.", pros:"Highest base in Tahoe, close to Reno, less traffic than South Lake, good value.", cons:"Smaller resort, no major pass affiliation, limited terrain.", openSnowLink:"https://opensnow.com/location/mt-rose", resortLink:"https://www.skirose.com/mountain/conditions/", resortHomepage:"https://www.skirose.com", flyInOptions:[{code:"RNO",drive:"25 min",note:"Reno, best option for Mt Rose"}], lodgingTiers:[{tier:"budget",pricePerNight:79,note:"Reno hotels, 25 min away",link:"https://www.booking.com/searchresults.html?ss=Reno%2C+Nevada"},{tier:"luxury",pricePerNight:280,note:"Incline Village Tahoe",link:"https://www.booking.com/searchresults.html?ss=Incline+Village%2C+Nevada"}]},
   { id:"taos", name:"Taos Ski Valley", state:"NM", region:"rockies", nickname:"The Tough One", tags:["all-mountain","powder","advanced","scenery"], skiPass:"mountain_collective", lat:36.5951, lon:-105.4428, travelMode:"fly", distanceDenver:290, distanceSLC:620, distanceSeattle:1500, distanceBZN:1100, verticalDrop:2612, skiableAcres:1294, averageSnowfall:305, liftTicket:139, crowdScore:28, snowScore:78, valueScore:68, accessScore:55, description:"13,150ft summit and some of the most serious expert terrain in North America. European village character in a high desert setting. Snowboarders allowed since 2008. Mountain Collective pass.", pros:"World-class expert terrain, unique culture, Mountain Collective, uncrowded, historic.", cons:"Remote, 2.5 hours from Albuquerque, limited beginner terrain.", openSnowLink:"https://opensnow.com/location/taos-ski-valley", resortLink:"https://www.skitaos.com/mountain/conditions", resortHomepage:"https://www.skitaos.com", flyInOptions:[{code:"ABQ",drive:"2.5 hrs",note:"Albuquerque, most flights"},{code:"SAF",drive:"1.5 hrs",note:"Santa Fe, smaller airport"}], lodgingTiers:[{tier:"budget",pricePerNight:95,note:"Taos town rentals, 18 miles away",link:"https://www.booking.com/searchresults.html?ss=Taos%2C+New+Mexico"},{tier:"luxury",pricePerNight:380,note:"Blake at Taos Ski Valley, slope-side",link:"https://www.booking.com/searchresults.html?ss=Taos+Ski+Valley%2C+New+Mexico"}]},
   { id:"santafe", name:"Ski Santa Fe", state:"NM", region:"rockies", nickname:"High Desert Skiing", tags:["all-mountain","beginner","family","intermediate"], skiPass:"indep", lat:35.7910, lon:-105.8271, travelMode:"fly", distanceDenver:385, distanceSLC:700, distanceSeattle:1600, distanceBZN:1200, verticalDrop:1725, skiableAcres:660, averageSnowfall:225, liftTicket:89, crowdScore:32, snowScore:62, valueScore:80, accessScore:82, description:"16 miles from Santa Fe at 12,000ft base. Combines world-class cultural destination with solid skiing. Day trip skiing with Santa Fe art galleries and restaurants at night.", pros:"Unique desert mountain setting, near Santa Fe culture, affordable, high altitude.", cons:"Small resort, lower snowfall, limited terrain variety.", openSnowLink:"https://opensnow.com/location/santa-fe-ski", resortLink:"https://skisantafe.com/conditions/", resortHomepage:"https://skisantafe.com", flyInOptions:[{code:"SAF",drive:"1 hr",note:"Santa Fe Airport, closest"},{code:"ABQ",drive:"1.5 hrs",note:"Albuquerque, more flight options"}], lodgingTiers:[{tier:"budget",pricePerNight:95,note:"Santa Fe motels and B&Bs",link:"https://www.booking.com/searchresults.html?ss=Santa+Fe%2C+New+Mexico"},{tier:"luxury",pricePerNight:380,note:"Inn at the Five Graces or La Fonda",link:"https://www.booking.com/searchresults.html?ss=Santa+Fe%2C+New+Mexico"}]},
-  { id:"sunvalley", name:"Sun Valley", state:"ID", region:"rockies", nickname:"America's First Ski Resort", tags:["all-mountain","powder","advanced","intermediate","luxury"], skiPass:"mtn", lat:43.6957, lon:-114.3516, travelMode:"fly", distanceDenver:680, distanceSLC:240, distanceSeattle:700, distanceBZN:350, verticalDrop:3400, skiableAcres:2154, averageSnowfall:220, liftTicket:179, crowdScore:35, snowScore:70, valueScore:58, accessScore:68, description:"America's first destination ski resort, built in 1936. Bald Mountain is one of the best groomed mountains in the country", pros:"Legendary grooming, beautiful town, celebrities but not crowded, great Nordic skiing.", cons:"Lower snowfall than Utah/Montana, expensive lodging, remote.", openSnowLink:"https://opensnow.com/location/sun-valley", resortLink:"https://www.sunvalley.com/explore/mountain/snow-report", resortHomepage:"https://www.sunvalley.com", flyInOptions:[ {code:"SLC",drive:"3 hrs",note:"Best fares — drive north through..."}, {code:"BOI",drive:"2.5 hrs",note:"Good Southwest/Delta options, sc..."}, {code:"SUN",drive:"15 min",note:"Closest — pricey, limited season..."}, ], lodgingTiers:[ {tier:"budget",pricePerNight:110,note:"Stay in Ketchum, free bus to...",link:"https://www.booking.com/searchresults.html?ss=Ketchum%2C+Idaho"}, {tier:"luxury",pricePerNight:680,note:"The original 1936 lodge, ico...",link:"https://www.booking.com/searchresults.html?ss=Sun+Valley%2C+Idaho"}, ]},
+  { id:"sunvalley", name:"Sun Valley", state:"ID", region:"rockies", nickname:"America's First Ski Resort", tags:["all-mountain","powder","advanced","intermediate","luxury"], skiPass:"mtn", lat:43.6957, lon:-114.3516, travelMode:"fly", distanceDenver:680, distanceSLC:240, distanceSeattle:700, distanceBZN:350, verticalDrop:3400, skiableAcres:2154, averageSnowfall:220, liftTicket:179, crowdScore:35, snowScore:70, valueScore:58, accessScore:68, description:"America's first destination ski resort, built in 1936. Bald Mountain is one of the best groomed mountains in the country. Massive terrain for all levels.", pros:"Legendary grooming, beautiful town, celebrities but not crowded, great Nordic skiing.", cons:"Lower snowfall than Utah/Montana, expensive lodging, remote.", openSnowLink:"https://opensnow.com/location/sun-valley", resortLink:"https://www.sunvalley.com/explore/mountain/snow-report", resortHomepage:"https://www.sunvalley.com", flyInOptions:[ {code:"SLC",drive:"3 hrs",note:"Best fares — drive north through..."}, {code:"BOI",drive:"2.5 hrs",note:"Good Southwest/Delta options, sc..."}, {code:"SUN",drive:"15 min",note:"Closest — pricey, limited season..."}, ], lodgingTiers:[ {tier:"budget",pricePerNight:110,note:"Stay in Ketchum, free bus to...",link:"https://www.booking.com/searchresults.html?ss=Ketchum%2C+Idaho"}, {tier:"luxury",pricePerNight:680,note:"The original 1936 lodge, ico...",link:"https://www.booking.com/searchresults.html?ss=Sun+Valley%2C+Idaho"}, ]},
   { id:"schweitzer", name:"Schweitzer", state:"ID", region:"pnw", nickname:"Northern Idaho's Hidden Giant", tags:["all-mountain","powder","intermediate","advanced","value","family"], skiPass:"indy", lat:48.3669, lon:-116.6228, travelMode:"fly", distanceDenver:1000, distanceSLC:700, distanceSeattle:350, distanceBZN:280, verticalDrop:2400, skiableAcres:2900, averageSnowfall:300, liftTicket:99, crowdScore:18, snowScore:76, valueScore:88, accessScore:62, description:"Northern Idaho above Lake Pend Oreille. Massive terrain, almost zero crowds, $99 tickets.", pros:"Almost nobody goes here, massive terrain, great value, stunning lake views.", cons:"Remote, limited flights to Spokane, cold.", openSnowLink:"https://opensnow.com/location/schweitzer", resortLink:"https://schweitzer.com/mountain/conditions/", resortHomepage:"https://schweitzer.com", flyInOptions:[ {code:"GEG",drive:"1.5 hrs",note:"Best option — good Alaska/Delta ..."}, {code:"SEA",drive:"5 hrs",note:"Most flights, long drive east on..."}, {code:"BZN",drive:"4 hrs",note:"Option from the east"}, ], lodgingTiers:[ {tier:"budget",pricePerNight:70,note:"20 min from Schweitzer, cute...",link:"https://www.booking.com/searchresults.html?ss=Sandpoint%2C+Idaho"}, {tier:"luxury",pricePerNight:340,note:"On-mountain lodge, stunning ...",link:"https://www.booking.com/searchresults.html?ss=Sandpoint%2C+Idaho"}, ]},
   { id:"bogusbasin", name:"Bogus Basin Mountain Recreation Area", state:"ID", region:"northwest", nickname:"Boise Backyard", tags:["all-mountain","beginner","family","value"], skiPass:"indy", lat:43.7654, lon:-116.1001, travelMode:"fly", distanceDenver:820, distanceSLC:340, distanceSeattle:500, distanceBZN:450, verticalDrop:1800, skiableAcres:2600, averageSnowfall:250, liftTicket:59, crowdScore:40, snowScore:62, valueScore:95, accessScore:85, description:"16 miles from downtown Boise. Non-profit mountain with $59 lift tickets. Free bus from Boise. Indy Pass makes it essentially free for 2 days.", pros:"Free bus from Boise, cheap $59 tickets, Indy Pass, non-profit, great value.", cons:"Lower snowfall, smaller vertical, not a destination resort.", openSnowLink:"https://opensnow.com/location/bogus-basin-ski-resort", resortLink:"https://bogusbasin.org/mountain/conditions/", resortHomepage:"https://bogusbasin.org", flyInOptions:[{code:"BOI",drive:"30 min",note:"Boise Airport, 16 miles away"}], lodgingTiers:[{tier:"budget",pricePerNight:79,note:"Boise hotels, free ski bus",link:"https://www.booking.com/searchresults.html?ss=Boise%2C+Idaho"},{tier:"luxury",pricePerNight:220,note:"Downtown Boise boutique hotels",link:"https://www.booking.com/searchresults.html?ss=Boise%2C+Idaho"}]},
   { id:"wolfcreek", name:"Wolf Creek Ski Area", state:"CO", region:"rockies", nickname:"The Snow Globe", tags:["all-mountain","powder","intermediate","value"], skiPass:"indy", lat:37.4751, lon:-106.7956, travelMode:"drive", distanceDenver:240, distanceSLC:520, distanceSeattle:1600, distanceBZN:1000, verticalDrop:1604, skiableAcres:1600, averageSnowfall:430, liftTicket:89, crowdScore:18, snowScore:92, valueScore:90, accessScore:62, description:"Colorados snowiest resort averaging 430 inches. No lodging on the mountain keeps it empty. Continental Divide location catches every storm. The best powder value in Colorado.", pros:"Most snow in Colorado, virtually no crowds, cheap Indy Pass tickets, powder days are real.", cons:"No on-mountain lodging, remote southern Colorado, small resort.", openSnowLink:"https://opensnow.com/location/wolf-creek", resortLink:"https://wolfcreekski.com/snow-report/", resortHomepage:"https://wolfcreekski.com", flyInOptions:[{code:"DEN",drive:"4 hrs",note:"Denver, most flights"},{code:"ABQ",drive:"3.5 hrs",note:"Albuquerque, closer option"}], lodgingTiers:[{tier:"budget",pricePerNight:79,note:"South Fork or Pagosa Springs",link:"https://www.booking.com/searchresults.html?ss=South+Fork%2C+Colorado"},{tier:"luxury",pricePerNight:220,note:"Pagosa Springs resort area",link:"https://www.booking.com/searchresults.html?ss=Pagosa+Springs%2C+Colorado"}]},
-  { id:"silverton", name:"Silverton Mountain", state:"CO", region:"rockies", nickname:"Guides Only", tags:["all-mountain","powder","advanced"], skiPass:"indep", lat:37.8767, lon:-107.6611, travelMode:"fly", distanceDenver:340, distanceSLC:500, distanceSeattle:1550, distanceBZN:950, verticalDrop:3000, skiableAcres:26819, averageSnowfall:400, liftTicket:139, crowdScore:8, snowScore:90, valueScore:80, accessScore:38, description:"One chairlift. 26,000 acres. Guide required Mon-Fri. The most extreme resort in North America.", pros:"Most acres per skier of any resort, zero crowds by design, extreme terrain, San Juan powde", cons:"Guide required most days, extremely remote, one chairlift, serious expert terrai", openSnowLink:"https://opensnow.com/location/silverton-mountain", resortLink:"https://silvertonmountain.com/conditions/", resortHomepage:"https://silvertonmountain.com", flyInOptions:[ {code:"DEN",drive:"6 hrs",note:"Best fares — long drive but wort..."}, {code:"TEX",drive:"1 hr",note:"Pricey but closest airport to Si..."}, {code:"DRO",drive:"1 hr",note:"More reliable than TEX, good sea..."}, ], lodgingTiers:[ {tier:"budget",pricePerNight:80,note:"Stay in historic Silverton m...",link:"https://www.booking.com/searchresults.html?ss=Silverton%2C+Colorado"}, {tier:"luxury",pricePerNight:280,note:"Historic Victorian hotel, 1 ...",link:"https://www.booking.com/searchresults.html?ss=Durango%2C+Colorado"}, ]},
+  { id:"silverton", name:"Silverton Mountain", state:"CO", region:"rockies", nickname:"Guides Only", tags:["all-mountain","powder","advanced"], skiPass:"indep", lat:37.8767, lon:-107.6611, travelMode:"fly", distanceDenver:340, distanceSLC:500, distanceSeattle:1550, distanceBZN:950, verticalDrop:3000, skiableAcres:26819, averageSnowfall:400, liftTicket:139, crowdScore:8, snowScore:90, valueScore:80, accessScore:38, description:"One chairlift. 26,000 acres. Guide required Mon-Fri. The most extreme resort in North America.", pros:"Most acres per skier of any resort, zero crowds by design, extreme expert terrain, legendary San Juan powder.", cons:"Guide required most days, extremely remote, very limited lifts, serious expert-only terrain.", openSnowLink:"https://opensnow.com/location/silverton-mountain", resortLink:"https://silvertonmountain.com/conditions/", resortHomepage:"https://silvertonmountain.com", flyInOptions:[ {code:"DEN",drive:"6 hrs",note:"Best fares — long drive but wort..."}, {code:"TEX",drive:"1 hr",note:"Pricey but closest airport to Si..."}, {code:"DRO",drive:"1 hr",note:"More reliable than TEX, good sea..."}, ], lodgingTiers:[ {tier:"budget",pricePerNight:80,note:"Stay in historic Silverton m...",link:"https://www.booking.com/searchresults.html?ss=Silverton%2C+Colorado"}, {tier:"luxury",pricePerNight:280,note:"Historic Victorian hotel, 1 ...",link:"https://www.booking.com/searchresults.html?ss=Durango%2C+Colorado"}, ]},
   { id:"monarch", name:"Monarch Mountain", state:"CO", region:"rockies", nickname:"The Continental Divide", tags:["all-mountain","powder","intermediate","value"], skiPass:"indy", lat:38.5179, lon:-106.3310, travelMode:"drive", distanceDenver:180, distanceSLC:500, distanceSeattle:1550, distanceBZN:950, verticalDrop:1162, skiableAcres:800, averageSnowfall:350, liftTicket:79, crowdScore:15, snowScore:82, valueScore:95, accessScore:68, description:"Continental Divide resort at 11,952ft elevation. Light dry snow, zero crowds, $79 tickets. Nobody talks about Monarch but those who know it love it.", pros:"Continental Divide snowpack, almost no crowds, cheap $79 tickets, Indy Pass.", cons:"Small resort, limited terrain, no on-mountain lodging.", openSnowLink:"https://opensnow.com/location/monarch-mountain", resortLink:"https://www.skimonarch.com/conditions/", resortHomepage:"https://www.skimonarch.com", flyInOptions:[{code:"DEN",drive:"3.5 hrs",note:"Denver, most flights"},{code:"COS",drive:"2.5 hrs",note:"Colorado Springs, closer"}], lodgingTiers:[{tier:"budget",pricePerNight:75,note:"Salida CO, 30 min away",link:"https://www.booking.com/searchresults.html?ss=Salida%2C+Colorado"},{tier:"luxury",pricePerNight:200,note:"Salida boutique hotels",link:"https://www.booking.com/searchresults.html?ss=Salida%2C+Colorado"}]},
   { id:"arapahoe", name:"Arapahoe Basin Ski Area", state:"CO", region:"rockies", nickname:"The Legend", tags:["all-mountain","powder","advanced","value"], skiPass:"ikon", lat:39.6426, lon:-105.8719, travelMode:"drive", distanceDenver:68, distanceSLC:450, distanceSeattle:1200, distanceBZN:620, verticalDrop:2270, skiableAcres:1428, averageSnowfall:350, liftTicket:99, crowdScore:28, snowScore:84, valueScore:92, accessScore:75, description:"Colorados highest ski area. No resort lodging keeps crowds thin. Famous for skiing into June most years. Ikon Pass.", pros:"Highest base in CO, thin crowds, late-season skiing into June, Ikon Pass.", cons:"No on-mountain lodging, very windy at summit ridge.", openSnowLink:"https://opensnow.com/location/arapahoe-basin", resortLink:"https://www.arapahoebasin.com/the-mountain/mountain-conditions/", resortHomepage:"https://www.arapahoebasin.com", flyInOptions:[{code:"DEN",drive:"1.5 hrs",note:"Denver, most flights"},{code:"EGE",drive:"45 min",note:"Eagle County, fewer flights"}], lodgingTiers:[{tier:"budget",pricePerNight:89,note:"Dillon or Silverthorne area",link:"https://www.booking.com/searchresults.html?ss=Dillon%2C+Colorado"},{tier:"luxury",pricePerNight:390,note:"Keystone Lodge area",link:"https://www.booking.com/searchresults.html?ss=Keystone%2C+Colorado"}]},
   { id:"junemtn", name:"June Mountain", state:"CA", region:"california", nickname:"Mammoth Lite", tags:["all-mountain","beginner","intermediate","value"], skiPass:"ikon", lat:37.7797, lon:-119.0809, travelMode:"fly", distanceDenver:1010, distanceSLC:610, distanceSeattle:910, distanceBZN:910, verticalDrop:2590, skiableAcres:1500, averageSnowfall:250, liftTicket:79, crowdScore:12, snowScore:68, valueScore:88, accessScore:68, description:"Quiet sister mountain to Mammoth 20 miles north. Same Ikon Pass, cheaper tickets, and almost nobody there. Good choice when Mammoth is crowded.", pros:"Ikon Pass coverage, much less crowded than Mammoth, cheaper tickets.", cons:"Less terrain than Mammoth, lower snowfall, fewer amenities.", openSnowLink:"https://opensnow.com/location/june-mountain", resortLink:"https://www.junemountain.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.junemountain.com", flyInOptions:[{code:"MMH",drive:"30 min",note:"Mammoth Yosemite Airport"},{code:"LAX",drive:"5 hrs",note:"Los Angeles, most flights"}], lodgingTiers:[{tier:"budget",pricePerNight:89,note:"June Lake village rentals",link:"https://www.booking.com/searchresults.html?ss=June+Lake%2C+California"},{tier:"luxury",pricePerNight:280,note:"June Lake Loop cabins",link:"https://www.booking.com/searchresults.html?ss=June+Lake%2C+California"}]},
@@ -103,917 +332,339 @@ const MOUNTAINS = [
   { id:"tamarack", name:"Tamarack Resort", state:"ID", region:"rockies", nickname:"Idaho's Newest Mountain", tags:["all-mountain","intermediate","advanced","value"], skiPass:"indy", lat:44.7166, lon:-115.9830, travelMode:"fly", distanceDenver:750, distanceSLC:350, distanceSeattle:450, distanceBZN:380, verticalDrop:2800, skiableAcres:1100, averageSnowfall:300, liftTicket:89, crowdScore:15, snowScore:72, valueScore:88, accessScore:62, description:"Rebuilt and reopened resort on Lake Cascade. Almost never crowded. Great intermediate terrain.", pros:"Almost nobody goes here, Lake Cascade views, good value, close to Boise.", cons:"Limited services, remote valley, still developing.", openSnowLink:"https://opensnow.com/location/tamarack", resortLink:"https://tamarackidaho.com/mountain-report/", resortHomepage:"https://tamarackidaho.com", flyInOptions:[ {code:"BOI",drive:"1.5 hrs",note:"Best option — great Southwest fa..."}, {code:"SLC",drive:"4 hrs",note:"Budget backup"}, {code:"GEG",drive:"3 hrs",note:"Option from the northwest"}, ], lodgingTiers:[ {tier:"budget",pricePerNight:70,note:"Right at the lake, quiet and...",link:"https://www.booking.com/searchresults.html?ss=Cascade%2C+Idaho"}, {tier:"luxury",pricePerNight:320,note:"Full resort amenities, lakes...",link:"https://www.booking.com/searchresults.html?ss=Cascade%2C+Idaho"}, ]},
   { id:"purgatory", name:"Purgatory Resort", state:"CO", region:"rockies", nickname:"Durango's Mountain", tags:["all-mountain","intermediate","beginner","family","value"], skiPass:"indy", lat:37.6297, lon:-107.8622, travelMode:"fly", distanceDenver:350, distanceSLC:530, distanceSeattle:1550, distanceBZN:950, verticalDrop:2029, skiableAcres:1635, averageSnowfall:260, liftTicket:109, crowdScore:28, snowScore:68, valueScore:80, accessScore:62, description:"25 miles north of Durango. Good family terrain, historic narrow gauge railroad, Four Corners culture.", pros:"Great family terrain, Durango is a fantastic town, narrow gauge railroad, uncrowded.", cons:"Lower snowfall than northern CO, remote Four Corners location.", openSnowLink:"https://opensnow.com/location/purgatory", resortLink:"https://www.purgatoryresort.com/the-mountain/mountain-conditions/snow-report.aspx", resortHomepage:"https://www.purgatoryresort.com", flyInOptions:[ {code:"DRO",drive:"45 min",note:"Best option — direct flights on ..."}, {code:"DEN",drive:"6 hrs",note:"Most fares, connect to DRO or dr..."}, {code:"ABQ",drive:"3.5 hrs",note:"Good Southwest option from the s..."}, ], lodgingTiers:[ {tier:"budget",pricePerNight:80,note:"25 min from Purgatory, Duran...",link:"https://www.booking.com/searchresults.html?ss=Durango%2C+Colorado"}, {tier:"luxury",pricePerNight:280,note:"Historic 1887 hotel in downt...",link:"https://www.booking.com/searchresults.html?ss=Durango%2C+Colorado"}, ]},
   { id:"mtspokane", name:"Mt Spokane Ski Area", state:"WA", region:"northwest", nickname:"Spokanes Mountain", tags:["all-mountain","beginner","family","intermediate"], skiPass:"indy", lat:47.9205, lon:-117.1071, travelMode:"fly", distanceDenver:1250, distanceSLC:850, distanceSeattle:280, distanceBZN:350, verticalDrop:2000, skiableAcres:1425, averageSnowfall:300, liftTicket:69, crowdScore:30, snowScore:68, valueScore:85, accessScore:82, description:"30 miles from downtown Spokane in the Selkirk Mountains. Affordable Inland Northwest skiing with Indy Pass. Great for Spokane locals.", pros:"Close to Spokane, affordable, Indy Pass, low crowds.", cons:"Small resort, lower elevation, limited terrain variety.", openSnowLink:"https://opensnow.com/location/mount-spokane", resortLink:"https://mtspokane.com/snow-conditions/", resortHomepage:"https://mtspokane.com", flyInOptions:[{code:"GEG",drive:"45 min",note:"Spokane International Airport"},{code:"BZN",drive:"4 hrs",note:"Bozeman, alternative option"}], lodgingTiers:[{tier:"budget",pricePerNight:79,note:"Spokane hotels, 30 miles away",link:"https://www.booking.com/searchresults.html?ss=Spokane%2C+Washington"},{tier:"luxury",pricePerNight:220,note:"Downtown Spokane hotels",link:"https://www.booking.com/searchresults.html?ss=Spokane%2C+Washington"}]},
-  { id:"anthonylakes", name:"Anthony Lakes", state:"OR", region:"pnw", nickname:"Eastern Oregon Powder", tags:["all-mountain","powder","intermediate","advanced","value"], skiPass:"indy", lat:44.9611, lon:-118.2344, travelMode:"fly", distanceDenver:1000, distanceSLC:680, distanceSeattle:400, distanceBZN:450, verticalDrop:900, skiableAcres:900, averageSnowfall:300, liftTicket:59, crowdScore:8, snowScore:76, valueScore:94, accessScore:55, description:"Wallowa Mountains of eastern Oregon. Incredibly dry powder, $59 tickets, almost always empty.", pros:"Driest powder in Oregon, $59 tickets, literally empty most days, beautiful Wallowa setting", cons:"Very small, very remote, limited services.", openSnowLink:"https://opensnow.com/location/anthony-lakes-mountain-resort", resortLink:"https://anthonylakes.com/conditions/snow-report/", resortHomepage:"https://anthonylakes.com", flyInOptions:[ {code:"PDX",drive:"4 hrs",note:"Best fares — drive east on I-84 ..."}, {code:"BOI",drive:"3 hrs",note:"Good Southwest option, drive nor..."}, {code:"GEG",drive:"3.5 hrs",note:"Option from the northwest"}, ], lodgingTiers:[ {tier:"budget",pricePerNight:55,note:"30 min east, historic gold r...",link:"https://www.booking.com/searchresults.html?ss=Baker+City%2C+Oregon"}, {tier:"luxury",pricePerNight:220,note:"Charming art town near Wallo..."}, ]},
+  { id:"anthonylakes", name:"Anthony Lakes", state:"OR", region:"pnw", nickname:"Eastern Oregon Powder", tags:["all-mountain","powder","intermediate","advanced","value"], skiPass:"indy", lat:44.9611, lon:-118.2344, travelMode:"fly", distanceDenver:1000, distanceSLC:680, distanceSeattle:400, distanceBZN:450, verticalDrop:900, skiableAcres:900, averageSnowfall:300, liftTicket:59, crowdScore:8, snowScore:76, valueScore:94, accessScore:55, description:"Wallowa Mountains of eastern Oregon. Incredibly dry powder, $59 tickets, almost always empty.", pros:"Driest powder in Oregon, $59 tickets, literally empty most days, beautiful Wallowa Mountain setting.", cons:"Very small, very remote, limited services.", openSnowLink:"https://opensnow.com/location/anthony-lakes-mountain-resort", resortLink:"https://anthonylakes.com/conditions/snow-report/", resortHomepage:"https://anthonylakes.com", flyInOptions:[ {code:"PDX",drive:"4 hrs",note:"Best fares — drive east on I-84 ..."}, {code:"BOI",drive:"3 hrs",note:"Good Southwest option, drive nor..."}, {code:"GEG",drive:"3.5 hrs",note:"Option from the northwest"}, ], lodgingTiers:[ {tier:"budget",pricePerNight:55,note:"30 min east, historic gold r...",link:"https://www.booking.com/searchresults.html?ss=Baker+City%2C+Oregon"}, {tier:"luxury",pricePerNight:220,note:"Charming art town near Wallo..."}, ]},
   { id:"sundance", name:"Sundance Mountain Resort", state:"UT", region:"rockies", nickname:"Redfords Mountain", tags:["all-mountain","beginner","scenery","family"], skiPass:"ikon", lat:40.3926, lon:-111.5887, travelMode:"fly", distanceDenver:520, distanceSLC:50, distanceSeattle:840, distanceBZN:480, verticalDrop:2150, skiableAcres:500, averageSnowfall:323, liftTicket:89, crowdScore:22, snowScore:76, valueScore:80, accessScore:85, description:"Robert Redfords mountain resort in Provo Canyon 50 miles from SLC. Intimate, uncrowded, and beautiful. Ikon Pass. Sundance Film Festival in January.", pros:"Uncrowded, beautiful scenery, Ikon Pass, near Provo Canyon, authentic mountain feel.", cons:"Small resort, limited terrain, can sell out during film festival.", openSnowLink:"https://opensnow.com/location/sundance", resortLink:"https://www.sundanceresort.com/mountain/conditions/", resortHomepage:"https://www.sundanceresort.com", flyInOptions:[{code:"SLC",drive:"1 hr",note:"Salt Lake City, best option"}], lodgingTiers:[{tier:"budget",pricePerNight:110,note:"Provo UT hotels, 20 min away",link:"https://www.booking.com/searchresults.html?ss=Provo%2C+Utah"},{tier:"luxury",pricePerNight:420,note:"Sundance Resort cabins on-site",link:"https://www.sundanceresort.com/lodging/"}]}
 ];
-
-const VALUE_RESORTS = [
-  { name:"Bridger Bowl",       liftDay:75,  lodgeNight:110, transport:"Drive from BZN (30 min)",      pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
-  { name:"Wolf Creek",         liftDay:89,  lodgeNight:95,  transport:"Drive from Alamosa (~1hr)",     pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
-  { name:"Monarch Mountain",   liftDay:79,  lodgeNight:100, transport:"Drive from Salida (30 min)",    pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
-  { name:"Loveland Ski Area",  liftDay:99,  lodgeNight:130, transport:"60 mi from Denver on I-70in,     pass:"Ikon",  passNote:"Ikon Access — unlimited" },
-  { name:"Bogus Basin",        liftDay:59,  lodgeNight:120, transport:"16 mi from Boise (30 min)",     pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
-  { name:"Schweitzer",         liftDay:79,  lodgeNight:115, transport:"Drive from Spokane (1.5 hrs)",  pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
-  { name:"Eldora Mountain",    liftDay:89,  lodgeNight:130, transport:"45 mi from Denver, ski bus",    pass:"Ikon",  passNote:"Ikon Base — unlimited" },
-];
-
-const BEST_OF = [
-  {
-    id:"powder",
-    icon:"🌨",
-    label:"Snowing Right Now",
-    desc:"Ranked by live OpenSnow forecast — updated daily",
-    dynamic: true, // pulls from live forecast data
-  },
-  {
-    id:"value",
-    icon:"💰",
-    label:"Best Value",
-    desc:"Real cost breakdown: lift + lodging + transport + pass",
-    dynamic: false,
-    custom: "value",
-  },
-  {
-    id:"expert",
-    icon:"💀",
-    label:"Expert Terrain",
-    desc:"Steep, technical, consequence",
-    resorts:["Silverton Mountain","Jackson Hole","Alta","Snowbird","Telluride","Crested Butte","Big Sky"],
-  },
-  {
-    id:"family",
-    icon:"👨‍👩‍👧",
-    label:"Best for Families",
-    desc:"Mellow terrain, ski school, easy base areas",
-    resorts:["Deer Valley","Keystone","Park City Mountain","Northstar California","Steamboat Springs","Sun Valley","Sundance Mountain Resort"],
-  },
-  {
-    id:"scenery",
-    icon:"🏔",
-    label:"Most Scenic",
-    desc:"Views that make you stop mid-run",
-    resorts:["Telluride","Whitefish Mountain","Grand Targhee","Taos Ski Valley","Mt. Hood Meadows","Palisades Tahoe","Jackson Hole"],
-  },
-  {
-    id:"hidden",
-    icon:"🤫",
-    label:"Hidden Gems",
-    desc:"Legitimately great, nobody goes",
-    resorts:["Silverton Mountain","Lost Trail Powder Mountain","Anthony Lakes","Monarch Mountain","Schweitzer","Bear Valley","Tamarack Resort"],
-  },
-];
 </script>
-<script type="text/babel">
-
-
-// ─── PASS BADGE ───────────────────────────────────────────────────────────────
-const PASS_CONFIG = {
-  epic:  { label:"Epic Pass",           bg:"#003087in, color:"#fff",      stripe:"#0044b8in },
-  ikon:  { label:"Ikon Pass",           bg:"#1a3c8f", color:"#fff",      stripe:"#2451b3in },
-  mtn:   { label:"Mountain Collective", bg:"#1f4a2e", color:"#c8f0d8in,   stripe:"#2a6040in },
-  indy:  { label:"Indy Pass",           bg:"#b8560a", color:"#fff",      stripe:"#d4691a" },
-  indep: { label:"Independent",         bg:"#8a7560in, color:"#fff",      stripe:"#9e8970in },
+<script>
+// ── PASS CONFIG ──────────────────────────────────────────────────────────────
+var PASS_CONFIG = {
+  epic:              {label:"Epic Pass",        bg:"#1a3a5c", color:"#fff"},
+  ikon:              {label:"Ikon Pass",        bg:"#0a4a6b", color:"#fff"},
+  mountain_collective:{label:"Mtn Collective",  bg:"#2d1a4a", color:"#fff"},
+  indy:              {label:"Indy Pass",        bg:"#1a4a2a", color:"#fff"},
+  indep:             {label:"Independent",      bg:"#3a3a3a", color:"#ccc"},
 };
-function PassBannerStrip({ pass }) {
-  if (!pass || pass === "indep") return null;
-  const cfg = PASS_CONFIG[pass];
-  return (
-    <div style={{
-      background:cfg.bg,
-      color:cfg.color,
-      fontSize:"0.58rem",
-      fontWeight:800,
-      letterSpacing:"0.12em",
-      textTransform:"uppercase",
-      padding:"4px 14px",
-      marginBottom:0,
-      borderRadius:"10px 10px 0 0in,
-      // subtle diagonal stripe via repeating gradient
-      backgroundImage:`repeating-linear-gradient(135deg, ${cfg.stripe} 0px, ${cfg.stripe} 1px, ${cfg.bg} 1px, ${cfg.bg} 8px)`,
-    }}>
-      {cfg.label}
-    </div>
-    </div>
-  );
-}
-function PassBadge({ pass, size="sm" }) {
-  const cfg = PASS_CONFIG[pass] || PASS_CONFIG.indep;
-  const isLg = size === "lg";
-  return (
-    <span style={{
-      display:"inline-flex", alignItems:"center", gap:4,
-      fontSize: isLg ? "0.72rem" : "0.62rem",
-      fontWeight:700, letterSpacing:"0.04em",
-      background:cfg.bg, color:cfg.color,
-      borderRadius:99, padding: isLg ? "4px 10px" : "2px 8px",
-      whiteSpace:"nowrap", border: pass==="indep" ? "1px solid var(--border)" : "none"
-    }}>
-      {cfg.dot} {cfg.label}
-    </span>
-  );
-}
 
-// ─── RESULT CARD ──────────────────────────────────────────────────────────────
-function ResultCard({ mountain, rank, params, isExpanded, onToggle, liveData }) {
-  const nights = nightsBetween(params.depDate, params.retDate) || params.nights;
-  const cost = calcTripCost(mountain, nights, params.groupSize, params.origin);
-  const withinBudget = cost <= params.budget * 1.15;
-  const live = liveData?.[mountain.id];
-  const forecast = live?.forecast || [];
-  const totalSnow = forecast.reduce((s,d)=>s+(d.snow||0),0);
-  const isDriver = params.travel === "drive" || (params.travel === "either" && getDistance(mountain, params.origin) <= 220);
-  const origCode = ORIGIN_AIRPORT[params.origin] || "DEN";
-  const majorCodes = ["DEN","SLC","SEA","PDX","SFO","LAX","SMF","BZN","RNO","FCA","GEG","MSP","BOI","PHX","ABQ"];
+var BEST_OF = [
+  {title:"Best Expert Terrain",  emoji:"💀", desc:"For skiers who want to be scared",
+   resorts:["Jackson Hole","Silverton Mountain","Crested Butte","Big Sky","Taos Ski Valley"]},
+  {title:"Best Value Trips",     emoji:"💰", desc:"Maximum mountain, minimum spend",
+   resorts:["Bridger Bowl","Wolf Creek Ski Area","Monarch Mountain","Arapahoe Basin","Lost Trail Powder Mountain"]},
+  {title:"Best Powder Hunting",  emoji:"❄️", desc:"Highest snowfall, lightest snow",
+   resorts:["Mt Baker Ski Area","Snowbird","Alta","Jackson Hole","Wolf Creek Ski Area"]},
+  {title:"Best for Beginners",   emoji:"🟢", desc:"Learn without intimidation",
+   resorts:["Keystone","Winter Park","Breckenridge","Sundance Mountain Resort","Hoodoo Ski Area"]},
+  {title:"Least Crowded",        emoji:"🏔", desc:"Find your own lines",
+   resorts:["Silverton Mountain","Lost Trail Powder Mountain","Monarch Mountain","Wolf Creek Ski Area","Bridger Bowl"]},
+  {title:"Best Road Trips",      emoji:"🚗", desc:"Drive-to classics worth the miles",
+   resorts:["Arapahoe Basin","Loveland Ski Area","Eldora","Bridger Bowl","Bogus Basin Mountain Recreation Area"]},
+];
 
-  return (
-    <div style={{animation:`fadeUp 0.3s ease ${Math.min(rank-1,6)*0.05}s both`}}>
-      <PassBannerStrip pass={mountain.skiPass}/>
-      <div
-        className={`resort-card ${rank===1?"top":""} ${isExpanded?"expanded":""} ${mountain.skiPass&&mountain.skiPass!=="indep"?"has-pass-banner":""}`}
-        onClick={onToggle}
-        style={{borderRadius: mountain.skiPass && mountain.skiPass !== "indep" ? "0 0 16px 16px" : 16}}
-      >
-      
-      <div style={{display:"grid",gridTemplateColumns:"38px 1fr auto",gap:"1rem",alignItems:"flex-start"}}>
-        
-        <div style={{
-          width:36,height:36,borderRadius:"50%",flexShrink:0,
-          background: rank===1?"var(--pine)":rank<=3?"var(--slate)":"var(--cream-dark)",
-          color: rank<=3?"var(--cream)":"var(--text-light)",
-          display:"flex",alignItems:"center",justifyContent:"center",
-          fontSize:"0.82rem",fontWeight:800
-        }}>{rank}</div>
+// ── STATE ────────────────────────────────────────────────────────────────────
+var state = {
+  results: MOUNTAINS.slice(),
+  expanded: null,
+  mapInit: false,
+  map: null,
+  markers: [],
+};
 
-        <div>
-          {rank===1 && (
-            <div style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",background:"var(--pine-pale)",color:"var(--pine-light)",borderRadius:99,padding:"3px 10px",marginBottom:7}}>
-              ⭐ Top Pick
-            </div>
-          )}
-          <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.15rem",lineHeight:1.2,marginBottom:2}}>{mountain.name}<span style={{fontSize:"0.8rem",color:"var(--text-light)",fontFamily:"'Source Sans 3',sans-serif",fontWeight:400,marginLeft:6}}>{mountain.state}</span></div>
-          <div style={{fontSize:"0.72rem",color:"var(--text-light)",fontStyle:"italic",marginBottom:9}}>"{mountain.nickname}"</div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:"10px",fontSize:"0.78rem",color:"var(--text-mid)",marginBottom:10}}>
-            <span>⛰ {mountain.verticalDrop.toLocaleString()} ft</span>
-            <span>🎿 {mountain.skiableAcres?.toLocaleString()} ac</span>
-            <span>🎟 ${mountain.liftTicket}/day</span>
-            <span style={{color:totalSnow>10?"var(--pine-light)":"var(--text-light)"}}>❄️ {totalSnow}" {live?"forecast":"avg"}</span>
-          </div>
-          <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
-            <ScoreBar label="Snow" value={mountain.snowScore} color="var(--slate)"/>
-            <ScoreBar label="Value" value={mountain.valueScore} color="var(--pine-light)"/>
-            <ScoreBar label="Quiet" value={100-mountain.crowdScore} color="var(--gold)"/>
-            <ScoreBar label="Access" value={mountain.accessScore} color="var(--rust)"/>
-          </div>
-        </div>
-
-        
-        <div style={{textAlign:"right",flexShrink:0}}>
-          <div style={{fontSize:"0.58rem",fontWeight:700,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)",marginBottom:3}}>SummitScore</div>
-          <div style={{fontFamily:"'Playfair Display',serif",fontSize:"2.4rem",lineHeight:1,color:"var(--bark)"}}>{mountain.score}</div>
-          <div style={{fontSize:"0.82rem",fontWeight:700,color:withinBudget?"var(--pine-light)":"var(--rust)",marginTop:6}}>${cost.toLocaleString()}</div>
-          <div style={{fontSize:"0.65rem",color:"var(--text-light)",marginTop:1}}>{withinBudget?"✓ in budget":"⚠ over budget"}</div>
-        </div>
-      </div>
-
-      
-      {isExpanded && (
-        <div style={{marginTop:"1.5rem",paddingTop:"1.5rem",borderTop:"1px solid var(--border)",animation:"fadeUp 0.25s ease"}}}>
-
-          
-          <div style={{display:"flex",gap:"1rem",marginBottom:"1rem",flexWrap:"wrap"}}>
-            <div style={{flex:"1 1 280px",minWidth:0}}>
-              <p style={{fontSize:"0.82rem",color:"var(--text-mid)",lineHeight:1.7,margin:0}}>{mountain.description}</p>
-            </div>
-            <div style={{display:"flex",flexWrap:"wrap",gap:6,alignContent:"flex-start",flexShrink:0}}>
-              {[
-                ["⛰", `${mountain.verticalDrop.toLocaleString()} ft vert`],
-                ["🎿", `${mountain.skiableAcres?.toLocaleString()} acres`],
-                ["❄️", `${mountain.averageSnowfall}" avg snow`],
-                ["🎟", `$${mountain.liftTicket}/day`],
-              ].map(([icon,label])=>(
-                <div key={label} style={{display:"flex",alignItems:"center",gap:5,background:"var(--cream)",border:"1px solid var(--border)",borderRadius:8,padding:"5px 10px",fontSize:"0.75rem",fontWeight:600,color:"var(--text-mid)",whiteSpace:"nowrap"}}>
-                  {icon} {label}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.6rem",marginBottom:"1rem"}}>
-            <div style={{background:"#f0f7f2in,border:"1px solid #c8e6d0in,borderRadius:10,padding:"0.75rem"}}>
-              <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--pine-light)",marginBottom:6}}>Going for it</div>
-              <div style={{fontSize:"0.78rem",color:"var(--text-mid)",lineHeight:1.6}}>{mountain.pros}</div>
-            </div>
-            <div style={{background:"#fdf6ef",border:"1px solid #f0d8c0in,borderRadius:10,padding:"0.75rem"}}>
-              <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--rust)",marginBottom:6}}>Worth knowing</div>
-              <div style={{fontSize:"0.78rem",color:"var(--text-mid)",lineHeight:1.6}}>{mountain.cons}</div>
-            </div>
-          </div>
-
-          
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"0.75rem"}}>
-
-            
-            <div style={{background:"var(--cream)",borderRadius:12,padding:"0.9rem"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
-                <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)"}}>Snow Forecast</div>
-                {live && <span style={{fontSize:"0.58rem",fontWeight:800,background:"var(--slate-pale)",color:"var(--slate)",borderRadius:99,padding:"2px 7px",letterSpacing:"0.06em"}}>LIVE</span>}
-              </div>
-              <div style={{display:"flex",gap:3,marginBottom:10}}>
-                {forecast.length > 0 ? forecast.map((d,i)=><ForecastDay key={i} {...d}/>) : [0,1,2,3,4].map(i=>(
-                  <div key={i} className="forecast-day" style={{opacity:0.35}}>
-                    <div style={{fontSize:"0.58rem",color:"var(--text-light)"}}>—</div>
-                    <div style={{fontSize:"0.9rem"}}>?</div>
-                    <div style={{fontSize:"0.7rem",color:"var(--cream-border)"}}>—</div>
-                  </div>
-                ))}
-              </div>
-              {params.depDate && (
-                <div style={{background:"var(--pine-pale)",borderRadius:7,padding:"6px 9px",marginBottom:8,fontSize:"0.7rem",color:"var(--pine)",fontWeight:600}}>
-                  📅 {fmt(params.depDate)} → {fmt(params.retDate)} · {nights}n
-                </div>
-              )}
-              <a href={mountain.openSnowLink} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}
-                style={{display:"flex",alignItems:"center",gap:5,textDecoration:"none",background:"var(--slate)",color:"var(--cream)",borderRadius:7,padding:"7px 10px",fontSize:"0.7rem",fontWeight:700}}>
-                ❄️ OpenSnow Forecast
-              </a>
-            </div>
-
-            
-            <div style={{background:"var(--cream)",borderRadius:12,padding:"0.9rem"}}>
-              <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)",marginBottom:8}}>Where to Stay</div>
-              <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:8}}>
-                {mountain.lodgingTiers?.map(t=>(
-                  <a key={t.tier}
-                    href={getHotelURL(t, params.depDate, params.retDate)}
-                    target="_blank" rel="noopener noreferrer"
-                    onClick={e=>e.stopPropagation()}
-                    className="lodging-tier">
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:1}}>
-                      <span style={{fontSize:"0.68rem",fontWeight:700,color:"var(--text)"}}>{t.tier==="budget"?"Budget":t.tier==="luxury"?"Luxury":"Mid"}</span>
-                      <span style={{fontSize:"0.72rem",fontWeight:800,color:"var(--pine-light)"}}>{t.pricePerNight===0?"Free":`~$${t.pricePerNight}/n`}</span>
-                    </div>
-                    
-                    {params.depDate && t.pricePerNight > 0 && (
-                      <div style={{fontSize:"0.64rem",color:"var(--pine)",marginTop:2,fontWeight:600}}>
-                        ≈ ${(t.pricePerNight * nights).toLocaleString()} total
-                      </div>
-                    )}
-                  </a>
-                ))}
-              </div>
-              <div style={{display:"flex",gap:6}}>
-                <a href={mountain.resortHomepage || mountain.resortLink} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}
-                  style={{display:"inline-flex",alignItems:"center",gap:5,textDecoration:"none",background:"var(--bark)",color:"var(--cream)",borderRadius:7,padding:"6px 10px",fontSize:"0.68rem",fontWeight:700}}>
-                  🏔 Visit Resort
-                </a>
-                <a href={mountain.resortLink} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}
-                  style={{display:"inline-flex",alignItems:"center",gap:5,textDecoration:"none",background:"var(--cream-dark)",color:"var(--text)",border:"1px solid var(--border)",borderRadius:7,padding:"6px 10px",fontSize:"0.68rem",fontWeight:700}}>
-                  ❄️ Snow Report
-                </a>
-              </div>
-            </div>
-
-            
-            <div style={{background:"var(--cream)",borderRadius:12,padding:"0.9rem"}}>
-              {isDriver ? (
-                <>
-                  <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)",marginBottom:8}}>Drive Info</div>
-                  <div style={{fontSize:"0.82rem",color:"var(--text-mid)",marginBottom:8,lineHeight:1.6}}>
-                    🚗 <strong>{getDistance(mountain, params.origin).toLocaleString()} miles</strong><br/>
-                    <span style={{fontSize:"0.72rem",color:"var(--text-light)"}}>from {ORIGIN_LABELS[params.origin]?.split(",")[0]}</span>
-                  </div>
-                  {params.depDate && (
-                    <div style={{background:"var(--pine-pale)",borderRadius:7,padding:"6px 9px",fontSize:"0.7rem",color:"var(--pine)",fontWeight:600}}>
-                      Depart {fmt(params.depDate)} · Return {fmt(params.retDate)}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)",marginBottom:8}}>Fly In</div>
-                  {params.depDate && (
-                    <div style={{fontSize:"0.64rem",color:"var(--text-light)",marginBottom:6}}>
-                      {fmt(params.depDate)} → {fmt(params.retDate)} · from {origCode}
-                    </div>
-                  )}
-                  <div style={{display:"flex",flexDirection:"column",gap:4}}>
-                    {mountain.flyInOptions?.map((apt, i) => {
-                      const isMajor = majorCodes.includes(apt.code);
-                      const dep = params.depDate || "";
-                      const ret = params.retDate || "";
-                      const flightUrl = dep
-                        ? `https://www.google.com/travel/flights?q=Flights+from+${origCode}+to+${apt.code}&tfs=CBwQAhoeEgoyMDI1LTEyLTEwagcIARIDDEN#flt=${origCode}.${apt.code}.${dep};c:USD;e:1;sd:1;t:f*${apt.code}.${origCode}.${ret};c:USD;e:1;sd:1;t:f`
-                        : `https://www.google.com/travel/flights#flt=${origCode}.${apt.code}.;c:USD;e:1;sd:1;t:f`;
-                      const cls = i===0?"best":isMajor?"alt":"regional";
-                      return (
-                        <a key={apt.code} href={flightUrl} target="_blank" rel="noopener noreferrer"
-                          onClick={e=>e.stopPropagation()}
-                          className={`flight-opt ${cls}`}>
-                          <div style={{flex:1}}>
-                            <div style={{display:"flex",alignItems:"center",gap:4,marginBottom:1}}>
-                              <span style={{fontSize:"0.72rem",fontWeight:800}}>✈️ {apt.code}</span>
-                              {i===0&&<span style={{fontSize:"0.54rem",fontWeight:800,letterSpacing:"0.06em",textTransform:"uppercase",background:"rgba(255,255,255,0.25)",borderRadius:99,padding:"1px 5px"}}>Best</span>}
-                              {!isMajor&&i!==0&&<span style={{fontSize:"0.54rem",fontWeight:700,color:"var(--gold)"}}>Regional</span>}
-                            </div>
-                            <div style={{fontSize:"0.62rem",opacity:0.75}}>{apt.note}</div>
-                          </div>
-                          <div style={{fontSize:"0.65rem",fontWeight:700,opacity:0.8,marginLeft:6,whiteSpace:"nowrap"}}>🚗 {apt.drive}</div>
-                        </a>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-              
-              <div style={{marginTop:10,padding:"7px 10px",background:"var(--cream-dark)",border:"1px solid var(--border)",borderRadius:8,fontSize:"0.72rem",fontWeight:700,color:withinBudget?"var(--pine-light)":"var(--rust)"}}>
-                💰 Est. ${cost.toLocaleString()} · {params.groupSize} skier{params.groupSize!==1?"s":""}, {nights} night{nights!==1?"s":""}
-              </div>
-            </div>
-
-          </div>
-        </div>
-      )}}
-    </div>
-  );
-}
-
-// ─── BEST OF STRIPS ───────────────────────────────────────────────────────────
-function BestOfStrips() {
-  const [active, setActive] = useState(null);
-  const [forecasts, setForecasts] = useState({});
-  const cfg = BEST_OF.find(b => b.id === active);
-
-  // Fetch live forecast data when Powder strip is opened
-  useEffect(() => {
-    if (active !== "powder") return;
-    if (Object.keys(forecasts).length > 0) return; // already loaded
-    const ids = MOUNTAINS.map(m => m.id);
-    Promise.all(ids.map(id =>
-      fetch(`https://api.opensnow.com/v1/locations/${id}/forecasts/daily?api_key=summitsync_demo`)
-        .then(r => r.ok ? r.json() : null)
-        .catch(() => null)
-        .then(data => ({ id, data }))
-    )).then(results => {
-      const out = {};
-      results.forEach(({ id, data }) => {
-        if (data?.forecasts) {
-          const total = data.forecasts.slice(0, 5).reduce((s, d) => s + (d.snow_in || 0), 0);
-          out[id] = total;
-        }
-      });
-      if (Object.keys(out).length > 0) setForecasts(out);
-    });
-  }, [active]);
-
-  // Sort mountains by live forecast inches (fallback to snowScore)
-  const powderRanked = useMemo(() => {
-    return [...MOUNTAINS]
-      .map(m => ({
-        ...m,
-        liveInches: forecasts[m.id] ?? null,
-        sortVal: forecasts[m.id] != null ? forecasts[m.id] : (m.snowScore / 10),
-      }))
-      .sort((a, b) => b.sortVal - a.sortVal)
-      .slice(0, 7);
-  }, [forecasts]);
-
-  function handle(id) { setActive(active === id ? null : id); }
-
-  // Value cost row renderer
-  function ValueRow({ v, i }) {
-    const m = MOUNTAINS.find(m => m.name === v.name);
-    const nightsEst = 2;
-    const totalEst = (v.liftDay * nightsEst) + (v.lodgeNight * nightsEst);
-    return (
-      <div style={{
-        display:"flex", alignItems:"flex-start", gap:12,
-        padding:"10px 0in,
-        borderBottom: i < VALUE_RESORTS.length - 1 ? "1px solid var(--border)" : "none"
-      }}>
-        <div style={{width:24,height:24,borderRadius:"50%",background:"var(--cream-dark)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.7rem",fontWeight:800,color:"var(--text-light)",flexShrink:0,marginTop:2}}>{i+1}</div>
-        <div style={{flex:1,minWidth:0}}>
-          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3}}>
-            <span style={{fontSize:"0.88rem",fontWeight:700,color:"var(--text)"}}>{v.name}</span>
-            {m?.skiPass && <PassBadge pass={m.skiPass}/>}
-          </div>
-          <div style={{display:"flex",flexWrap:"wrap",gap:"6px 14px",fontSize:"0.72rem",color:"var(--text-mid)",marginBottom:4}}>
-            <span>🎟 <strong>${v.liftDay}/day</strong></span>
-            <span>🛏 <strong>~${v.lodgeNight}/night</strong></span>
-            <span>🚗 {v.transport}</span>
-          </div>
-          <div style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:"0.67rem",fontWeight:700,background:"#f0f7f2in,color:"var(--pine-light)",border:"1px solid #c8e6d0in,borderRadius:6,padding:"2px 8px"}}>
-            {v.passNote}
-          </div>
-        </div>
-        <div style={{textAlign:"right",flexShrink:0}}>
-          <div style={{fontSize:"0.65rem",color:"var(--text-light)",marginBottom:1}}>Est. 2-day trip</div>
-          <div style={{fontSize:"0.95rem",fontWeight:800,color:"var(--bark)"}}>${totalEst.toLocaleString()}</div>
-          <div style={{fontSize:"0.6rem",color:"var(--text-light)"}}>lift + lodging only</div>
-        </div>
-      </div>
-    );
+// ── SCORING ──────────────────────────────────────────────────────────────────
+function scoreResort(m, origin) {
+  var accessBonus = 0;
+  if (origin && origin !== 'drive') {
+    var hasDirectFlight = m.flyInOptions && m.flyInOptions.some(function(f){ return f.code === origin; });
+    accessBonus = hasDirectFlight ? 15 : 0;
   }
-
-  return (
-    <div style={{maxWidth:900, margin:"0 auto", padding:"0 2rem 2.5rem"}}>
-      <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"1.3rem",color:"var(--bark)",marginBottom:"1rem"}}>Browse by Category</h2>
-
-      
-      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:"1rem"}}>
-        {BEST_OF.map(b => (
-          <button key={b.id} onClick={()=>handle(b.id)}
-            style={{
-              display:"flex",alignItems:"center",gap:5,
-              background: active===b.id ? "var(--bark)" : "var(--snow)",
-              color: active===b.id ? "var(--cream)" : "var(--text)",
-              border: `1.5px solid ${active===b.id ? "var(--bark)" : "var(--border)"}`,
-              borderRadius:99, padding:"7px 14px",
-              fontSize:"0.8rem", fontWeight:600, cursor:"pointer",
-              transition:"all 0.15s"
-            }}>
-            {b.icon} {b.label}
-          </button>
-        ))}
-      </div>
-
-      
-      {cfg && (
-        <div style={{background:"var(--snow)",border:"1.5px solid var(--border)",borderRadius:14,padding:"1.25rem",animation:"fadeUp 0.2s ease"}}>
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1rem"}}>
-            <div>
-              <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",marginBottom:2}}>{cfg.icon} {cfg.label}</div>
-              <div style={{fontSize:"0.75rem",color:"var(--text-light)"}}>{cfg.desc}</div>
-            </div>
-            <button onClick={()=>setActive(null)} style={{background:"none",border:"none",fontSize:"1rem",cursor:"pointer",color:"var(--text-light)",padding:4}}>✕</button>
-          </div>
-
-          
-          {cfg.id === "powder" && (
-            <div style={{display:"flex",flexDirection:"column",gap:0}}>
-              {Object.keys(forecasts).length === 0 && (
-                <div style={{fontSize:"0.75rem",color:"var(--text-light)",marginBottom:10,fontStyle:"italic"}}>
-                  Loading live forecasts... (ranked by historical snowfall until data arrives)
-                </div>
-              )}
-              {powderRanked.map((m, i) => (
-                <div key={m.id} style={{display:"flex",alignItems:"center",gap:12,padding:"9px 0in,borderBottom:i<powderRanked.length-1?"1px solid var(--border)":"none"}}>
-                  <div style={{width:24,height:24,borderRadius:"50%",background:"var(--cream-dark)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.7rem",fontWeight:800,color:"var(--text-light)",flexShrink:0}}>{i+1}</div>
-                  <div style={{flex:1}}>
-                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:2}}>
-                      <span style={{fontSize:"0.9rem",fontWeight:600}}>{m.name}</span>
-                      <PassBadge pass={m.skiPass}/>
-                      <span style={{fontSize:"0.72rem",color:"var(--text-light)"}}>{m.state}</span>
-                    </div>
-                    <div style={{fontSize:"0.72rem",color:"var(--text-light)"}}>
-                      {m.averageSnowfall}" avg season · {m.skiableAcres?.toLocaleString()} acres
-                    </div>
-                  </div>
-                  <div style={{textAlign:"right",flexShrink:0}}>
-                    {m.liveInches != null ? (
-                      <div>
-                        <div style={{fontSize:"1.1rem",fontWeight:800,color:"var(--slate)",lineHeight:1}}>{m.liveInches}"</div>
-                        <div style={{fontSize:"0.6rem",color:"var(--text-light)"}}>5-day forecast</div>
-                      </div>
-                    ) : (
-                      <div style={{fontSize:"0.75rem",color:"var(--text-light)",fontStyle:"italic"}}>{m.averageSnowfall}" avg</div>
-                    )}
-                  </div>
-                  <div style={{display:"flex",gap:5,flexShrink:0}}>
-                    <a href={m.openSnowLink} target="_blank" rel="noopener noreferrer" style={{fontSize:"0.68rem",fontWeight:700,color:"var(--slate)",background:"var(--slate-pale)",borderRadius:7,padding:"5px 8px",textDecoration:"none"}}>❄️ Forecast</a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          
-          {cfg.id === "value" && (
-            <div>
-              <div style={{fontSize:"0.72rem",color:"var(--text-light)",marginBottom:"0.75rem",fontStyle:"italic"}}>
-                Estimates based on lift tickets, lodging, and transport. Pass savings shown separately.
-              </div>
-              <div style={{display:"flex",flexDirection:"column",gap:0}}>
-                {VALUE_RESORTS.map((v, i) => <ValueRow key={v.name} v={v} i={i}/>)}
-              </div>
-            </div>
-          )}
-
-          
-          {!cfg.dynamic && cfg.id !== "value" && cfg.resorts && (
-            <div style={{display:"flex",flexDirection:"column",gap:0}}>
-              {cfg.resorts.map((name, i) => {
-                const m = MOUNTAINS.find(m => m.name === name);
-                return (
-                  <div key={name} style={{display:"flex",alignItems:"center",gap:12,padding:"9px 0in,borderBottom:i<cfg.resorts.length-1?"1px solid var(--border)":"none"}}>
-                    <div style={{width:24,height:24,borderRadius:"50%",background:"var(--cream-dark)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.7rem",fontWeight:800,color:"var(--text-light)",flexShrink:0}}>{i+1}</div>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:"0.9rem",fontWeight:600,color:"var(--text)",display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-                        {name}
-                        {m?.skiPass && <PassBadge pass={m.skiPass}/>}
-                        {m && <span style={{fontSize:"0.72rem",color:"var(--text-light)",fontWeight:400}}>{m.state}</span>}
-                      </div>
-                      {m && <div style={{fontSize:"0.72rem",color:"var(--text-light)",marginTop:1}}>
-                        ⛰ {m.verticalDrop.toLocaleString()} ft · ❄️ {m.averageSnowfall}" avg · 🎟 ${m.liftTicket}/day
-                      </div>}
-                    </div>
-                    {m && (
-                      <div style={{display:"flex",gap:5,flexShrink:0}}>
-                        <a href={m.openSnowLink} target="_blank" rel="noopener noreferrer"
-                          style={{fontSize:"0.68rem",fontWeight:700,color:"var(--slate)",background:"var(--slate-pale)",borderRadius:7,padding:"5px 8px",textDecoration:"none"}}>❄️ Snow</a>
-                        <a href={m.resortHomepage || m.resortLink} target="_blank" rel="noopener noreferrer"
-                          style={{fontSize:"0.68rem",fontWeight:700,color:"var(--text)",background:"var(--cream-dark)",border:"1px solid var(--border)",borderRadius:7,padding:"5px 8px",textDecoration:"none"}}>🏔 Visit</a>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+  if (origin === 'drive' && m.travelMode === 'drive') accessBonus = 10;
+  return Math.round(
+    m.snowScore * 0.35 +
+    m.valueScore * 0.30 +
+    (100 - m.crowdScore) * 0.20 +
+    (m.accessScore + accessBonus) * 0.15
   );
 }
 
-// ─── MAP SECTION ──────────────────────────────────────────────────────────────
-function MapSection({ results, params }) {
-  const mapRef = useRef(null);
-  const mapInstanceRef = useRef(null);
-  const markersRef = useRef({});
-  const resultIds = new Set((results||[]).map(r=>r.id));
+// ── SEARCH ───────────────────────────────────────────────────────────────────
+function runSearch() {
+  var origin = document.getElementById('f-origin').value;
+  var budget = parseInt(document.getElementById('f-budget').value) || 0;
+  var skill  = document.getElementById('f-skill').value;
+  var pass   = document.getElementById('f-pass').value;
+  var sort   = document.getElementById('f-sort').value;
 
-  function buildPopupHtml(m, isResult, rank, cost, withinBudget) {
-    return `<div style="font-family:'Source Sans 3',sans-serif;">
-      <div style="background:#2c1f0e;padding:14px 16px 12px;">
-        ${isResult?`<div style="font-size:10px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:${rank===0?"#f5c842in:"#7eb89a"};margin-bottom:4px;">${rank===0?"⭐ Top Pick":`#${rank+1} Match`}</div>`:""}
-        <div style="font-family:'Playfair Display',serif;font-size:15px;color:#faf7f2;line-height:1.2;">${m.name}</div>
-        <div style="font-size:11px;color:#9e8a72;margin-top:2px;">${m.state} · <em>${m.nickname}</em></div>
-      </div>
-      <div style="padding:12px 14px 14px;background:#faf7f2;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px;">
-          ${[["Vertical",`${m.verticalDrop.toLocaleString()} ft`],["Avg Snow",`${m.averageSnowfall}"`],["Lift Ticket",`$${m.liftTicket}/day`],["Crowds",m.crowdScore<30?"Low ✓":m.crowdScore<60?"Moderate":"High"]].map(([l,v])=>`
-          <div style="background:#f0ebe0;border-radius:7px;padding:7px 9px;">
-            <div style="font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#9e8a72;">${l}</div>
-            <div style="font-size:13px;font-weight:700;color:#2c1f0e;">${v}</div>
-          </div>`).join("")}
-        </div>
-        ${cost?`<div style="background:${withinBudget?"#e8f2ec":"#fdf0eb"};border-radius:7px;padding:7px 10px;margin-bottom:10px;display:flex;justify-content:space-between;">
-          <span style="font-size:11px;font-weight:700;color:${withinBudget?"#2d6b42in:"#b5441a"};">${withinBudget?"✓ In budget":"⚠ Over budget"}</span>
-          <span style="font-size:13px;font-weight:800;color:#2c1f0e;">$${cost.toLocaleString()}</span>
-        </div>`:""}
-        <div style="display:flex;gap:6px;">
-          <a href="${m.openSnowLink}" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;background:#2a3d4f;color:#faf7f2;border-radius:7px;padding:8px;font-size:11px;font-weight:700;text-decoration:none;">❄️ Forecast</a>
-          <a href="${m.resortHomepage || m.resortLink}" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:4px;background:#2c1f0e;color:#faf7f2;border-radius:7px;padding:8px;font-size:11px;font-weight:700;text-decoration:none;">🏔 Visit Resort</a>
-        </div>
-      </div>
-    </div>`;
-  }
-
-  useEffect(() => {
-    if (mapInstanceRef.current) return;
-    const map = L.map(mapRef.current, { center:[43.5,-112], zoom:5, zoomControl:true, scrollWheelZoom:false });
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-      attribution:"© OpenStreetMap © CartoDB", subdomains:"abcd", maxZoom:14
-    }).addTo(map);
-    mapInstanceRef.current = map;
-
-    MOUNTAINS.forEach(m => {
-      const isResult = resultIds.has(m.id);
-      const rank = results.findIndex(r=>r.id===m.id);
-      const color = REGION_COLORS[m.region]||"#6b5a45in;
-      const cost = params ? calcTripCost(m, nightsBetween(params.depDate,params.retDate)||params.nights, params.groupSize, params.origin) : null;
-      const withinBudget = cost && params ? cost <= params.budget*1.15 : null;
-
-      const size = isResult ? 32 : 24;
-      const label = rank >= 0 ? `#${rank+1}` : "·";
-      const iconHtml = `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${isResult?"#c8901a":color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:${isResult?11:9}px;font-weight:800;font-family:Source Sans 3,sans-serif;border:2.5px solid #fff;box-shadow:${isResult?"0 0 0 4px rgba(200,144,26,0.4),0 2px 12px rgba(0,0,0,0.25)":"0 2px 8px rgba(0,0,0,0.2)"};cursor:pointer;">${label}</div>`;
-      const icon = L.divIcon({ html:iconHtml, className:"", iconSize:[size,size], iconAnchor:[size/2,size/2], popupAnchor:[0,-size/2] });
-      const marker = L.marker([m.lat,m.lon],{icon}).addTo(map);
-      marker.bindPopup(buildPopupHtml(m,isResult,rank,cost,withinBudget), {maxWidth:270,minWidth:270});
-      markersRef.current[m.id] = marker;
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    const nights = nightsBetween(params?.depDate, params?.retDate) || params?.nights || 4;
-    MOUNTAINS.forEach(m => {
-      const marker = markersRef.current[m.id];
-      if (!marker) return;
-      const isResult = resultIds.has(m.id);
-      const rank = results.findIndex(r=>r.id===m.id);
-      const color = REGION_COLORS[m.region]||"#6b5a45in;
-      const cost = params ? calcTripCost(m, nights, params.groupSize, params.origin) : null;
-      const withinBudget = cost && params ? cost <= params.budget*1.15 : null;
-      const size = isResult ? 32 : 24;
-      const label = rank >= 0 ? `#${rank+1}` : "·";
-      const iconHtml = `<div style="width:${size}px;height:${size}px;border-radius:50%;background:${isResult?"#c8901a":color};color:#fff;display:flex;align-items:center;justify-content:center;font-size:${isResult?11:9}px;font-weight:800;font-family:Source Sans 3,sans-serif;border:2.5px solid #fff;box-shadow:${isResult?"0 0 0 4px rgba(200,144,26,0.4),0 2px 12px rgba(0,0,0,0.25)":"0 2px 8px rgba(0,0,0,0.2)"};cursor:pointer;">${label}</div>`;
-      const icon = L.divIcon({ html:iconHtml, className:"", iconSize:[size,size], iconAnchor:[size/2,size/2], popupAnchor:[0,-size/2] });
-      marker.setIcon(icon);
-      marker.setPopupContent(buildPopupHtml(m,isResult,rank,cost,withinBudget));
-    });
-  }, [results, params]);
-
-  return (
-    <div style={{padding:"0 2rem 5rem",maxWidth:1100,margin:"0 auto"}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"1.25rem",flexWrap:"wrap",gap:8}}>
-        <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"1.5rem",color:"var(--bark)"}}>All 60 Resorts</h2>
-        <div style={{display:"flex",gap:"1rem",alignItems:"center",flexWrap:"wrap"}}>
-          {[["🟡","Search match"],["🟢","Rockies"],["🔵","PNW"],["🟤","Sierra"]].map(([dot,label])=>(
-            <span key={label} style={{fontSize:"0.72rem",color:"var(--text-light)",display:"flex",alignItems:"center",gap:4}}>{dot} {label}</span>
-          ))}
-        </div>
-      </div>
-      <div ref={mapRef} style={{height:520,borderRadius:16,overflow:"hidden",border:"1px solid var(--border)",boxShadow:"0 4px 24px rgba(44,31,14,0.08)"}}/>
-      <p style={{marginTop:8,fontSize:"0.68rem",color:"var(--text-light)",textAlign:"right"}}>Use +/− to zoom · scroll zoom disabled · click any pin for resort details</p>
-    </div>
-  );
-}
-
-// ─── MAIN APP ─────────────────────────────────────────────────────────────────
-function App() {
-  // Default dates: next Friday + Sunday (quick weekend trip feel)
-  function getDefaultDates() {
-    const today = new Date();
-    const daysUntilFri = (5 - today.getDay() + 7) % 7 || 7;
-    const dep = new Date(today); dep.setDate(today.getDate() + daysUntilFri);
-    const ret = new Date(dep); ret.setDate(dep.getDate() + 3);
-    return [dep.toISOString().split("T")[0], ret.toISOString().split("T")[0]];
-  }
-  const [defaultDep, defaultRet] = getDefaultDates();
-
-  const [params, setParams] = useState({
-    budget:2500, groupSize:2, origin:"denver",
-    travel:"either", style:"all-mountain", skill:"intermediate",
-    depDate:defaultDep, retDate:defaultRet
-  });
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [aiRec, setAiRec] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [expandedId, setExpandedId] = useState(null);
-  const [hasSearched, setHasSearched] = useState(false);
-  const [showCount, setShowCount] = useState(8);
-  const [liveData, setLiveData] = useState({});
-  const [showAbout, setShowAbout] = useState(false);
-  const resultsRef = useRef(null);
-  const set = (k,v) => setParams(p=>({...p,[k]:v}));
-
-  const nights = nightsBetween(params.depDate, params.retDate);
-
-  async function runSearch() {
-    setLoading(true); setHasSearched(false); setAiRec(""); setExpandedId(null); setShowCount(8);
-    const [forecasts] = await Promise.all([
-      fetchForecasts(MOUNTAINS),
-      new Promise(r=>setTimeout(r,800))
-    ]);
-    setLiveData(forecasts);
-    const scored = MOUNTAINS
-      .map(m=>({...m, score:scoreResort(m,params,forecasts), estimatedCost:calcTripCost(m,nights,params.groupSize,params.origin)}))
-      .filter(m=>m.score>0)
-      .sort((a,b)=>b.score-a.score);
-    setResults(scored); setLoading(false); setHasSearched(true);
-    setTimeout(()=>resultsRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),120);
-    if (scored.length>0) {
-      setAiLoading(true);
-      try { setAiRec(await getAIRec(scored[0],params,scored,forecasts)); }
-      catch(e) { setAiRec("Couldn't load recommendation — check your connection and try again."); }
-      setAiLoading(false);
+  var results = MOUNTAINS.filter(function(m) {
+    if (budget > 0) {
+      var minPrice = m.lodgingTiers && m.lodgingTiers.length > 0
+        ? Math.min.apply(null, m.lodgingTiers.map(function(t){ return t.pricePerNight; }))
+        : 999;
+      if (minPrice > budget) return false;
     }
-  }
+    if (skill) {
+      var skillMap = {beginner:'beginner', intermediate:'intermediate', advanced:'advanced'};
+      if (!m.tags.includes(skillMap[skill])) return false;
+    }
+    if (pass && m.skiPass !== pass) return false;
+    return true;
+  });
 
-  return (
-    <div style={{minHeight:"100vh",position:"relative",zIndex:1}}>
-      {showAbout && <WhyModal onClose={()=>setShowAbout(false)}/>}
+  results.forEach(function(m) { m._score = scoreResort(m, origin); });
 
-      
-      <nav className="nav">
-        <div style={{maxWidth:1100,margin:"0 auto",padding:"0 2rem",height:58,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-          <div style={{display:"flex",alignItems:"center",gap:10}}>
-            <div style={{width:34,height:34,background:"var(--bark)",borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",color:"var(--cream)",fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",fontStyle:"italic",fontWeight:700}}>S</div>
-            <span style={{fontFamily:"'Playfair Display',serif",fontSize:"1.25rem",color:"var(--bark)",letterSpacing:"-0.01em"}}>SummitSync</span>
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:"1.25rem"}}>
-            <span style={{fontSize:"0.72rem",color:"var(--text-light)",display:"flex",alignItems:"center",gap:5}}>
-              <span style={{width:6,height:6,background:"var(--pine-light)",borderRadius:"50%",animation:"pulse 2.5s infinite",display:"inline-block"}}/>
-              Live forecasts
-            </span>
-            <button onClick={()=>setShowAbout(true)} className="btn-ghost" style={{padding:"6px 15px",fontSize:"0.8rem",fontWeight:600}}>
-              Why SummitSync
-            </button>
-          </div>
-        </div>
-      </nav>
+  results.sort(function(a, b) {
+    if (sort === 'snow')   return b.snowScore - a.snowScore;
+    if (sort === 'value')  return b.valueScore - a.valueScore;
+    if (sort === 'crowds') return a.crowdScore - b.crowdScore;
+    if (sort === 'access') return b.accessScore - a.accessScore;
+    return b._score - a._score;
+  });
 
-      
-      <div className="hero-bg" style={{paddingTop:"4rem",paddingBottom:"3rem",textAlign:"center"}}>
-        <div style={{maxWidth:700,margin:"0 auto",padding:"0 2rem"}}>
-          <div style={{display:"inline-flex",alignItems:"center",gap:7,fontSize:"0.68rem",fontWeight:600,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--pine-light)",background:"var(--pine-pale)",border:"1px solid #b8d9c5in,borderRadius:99,padding:"5px 14px",marginBottom:"1.5rem"}}>
-            60 resorts · Live snow · Flights & hotels in one place
-          </div>
-          <h1 style={{fontFamily:"'Playfair Display',serif",fontSize:"clamp(2.2rem,5.5vw,3.4rem)",lineHeight:1.1,letterSpacing:"-0.02em",color:"var(--bark)",marginBottom:"1.1rem"}}>
-            Stop planning.<br/><em style={{color:"var(--pine-light)"}}>Start skiing.</em>
-          </h1>
-          <p style={{fontSize:"1.05rem",color:"var(--text-mid)",lineHeight:1.75,maxWidth:520,margin:"0 auto"}}>
-            Weekend ski trips were starting to leak into the week — and there are worse problems. Set your dates, budget, and origin. We handle the rest.
-          </p>
-        </div>
-      </div>
-
-      
-      <div style={{maxWidth:900,margin:"-1.5rem auto 0in,padding:"0 2rem",position:"relative",zIndex:10}}>
-        <div style={{background:"var(--snow)",border:"1px solid var(--border)",borderRadius:18,padding:"2rem",boxShadow:"0 8px 48px rgba(44,31,14,0.1)"}}>
-
-          
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"1rem",marginBottom:"1rem"}}>
-            <div>
-              <label className="ss-label">Departure Date</label>
-              <input type="date" value={params.depDate} onChange={e=>{set("depDate",e.target.value); if(e.target.value>=params.retDate){const d=new Date(e.target.value);d.setDate(d.getDate()+3);set("retDate",d.toISOString().split("T")[0]);}}} className="ss-input"/>
-            </div>
-            <div>
-              <label className="ss-label">Return Date</label>
-              <input type="date" value={params.retDate} min={params.depDate} onChange={e=>set("retDate",e.target.value)} className="ss-input"/>
-            </div>
-            <div>
-              <label className="ss-label">Total Budget</label>
-              <input type="number" value={params.budget} onChange={e=>set("budget",+e.target.value)} min={400} step={100} className="ss-input" style={{paddingLeft:22,backgroundImage:"url('data:image/svg+xml,%3Csvg xmlns=\"http://www.w3.org/2000/svg\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\"%3E%3Ctext y=\"10\" font-size=\"11\" fill=\"%239e8a72\" font-family=\"Arial\"%3E$%3C/text%3E%3C/svg%3E')",backgroundRepeat:"no-repeat",backgroundPosition:"10px center"}}/>
-            </div>
-            <div>
-              <label className="ss-label">Skiers</label>
-              <input type="number" value={params.groupSize} onChange={e=>set("groupSize",+e.target.value)} min={1} max={20} className="ss-input"/>
-            </div>
-          </div>
-
-          
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"1rem",marginBottom:"1.5rem"}}>
-            <div>
-              <label className="ss-label">Flying / Driving From</label>
-              <select value={params.origin} onChange={e=>set("origin",e.target.value)} className="ss-input">
-                <option value="denver">Denver, CO</option>
-                <option value="slc">Salt Lake City, UT</option>
-                <option value="seattle">Seattle, WA</option>
-                <option value="portland">Portland, OR</option>
-                <option value="sf">San Francisco, CA</option>
-                <option value="la">Los Angeles, CA</option>
-                <option value="bzn">Bozeman, MT</option>
-              </select>
-            </div>
-            <div>
-              <label className="ss-label">Travel Mode</label>
-              <select value={params.travel} onChange={e=>set("travel",e.target.value)} className="ss-input">
-                <option value="either">Either</option>
-                <option value="drive">Drive Only</option>
-                <option value="fly">Fly Only</option>
-              </select>
-            </div>
-            <div>
-              <label className="ss-label">Ski Style</label>
-              <select value={params.style} onChange={e=>set("style",e.target.value)} className="ss-input">
-                <option value="all-mountain">All-Mountain</option>
-                <option value="powder">Powder Chase</option>
-                <option value="park">Park / Freestyle</option>
-                <option value="family">Family</option>
-                <option value="value">Best Value</option>
-                <option value="luxury">Luxury</option>
-              </select>
-            </div>
-            <div>
-              <label className="ss-label">Skill Level</label>
-              <select value={params.skill} onChange={e=>set("skill",e.target.value)} className="ss-input">
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-              </select>
-            </div>
-          </div>
-
-          
-          <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:"1.25rem",flexWrap:"wrap"}}>
-            <div style={{fontSize:"0.78rem",color:"var(--text-light)",background:"var(--cream-dark)",borderRadius:99,padding:"5px 12px",border:"1px solid var(--border)"}}>
-              📅 <strong style={{color:"var(--text)"}}>{nights} night{nights!==1?"s":""}</strong> · {fmt(params.depDate)} – {fmt(params.retDate)}
-            </div>
-            <div style={{fontSize:"0.78rem",color:"var(--text-light)",background:"var(--cream-dark)",borderRadius:99,padding:"5px 12px",border:"1px solid var(--border)"}}>
-              💰 <strong style={{color:"var(--text)"}}>${(params.budget/params.groupSize/nights).toFixed(0)}/person/night</strong> all-in budget
-            </div>
-          </div>
-
-          <button onClick={runSearch} disabled={loading} className="btn-primary"
-            style={{width:"100%",height:52,fontSize:"0.97rem",letterSpacing:"0.02em",
-              opacity:loading?0.7:1,display:"flex",alignItems:"center",justifyContent:"center",gap:8}}>
-            {loading ? (
-              <><div style={{width:18,height:18,border:"2px solid rgba(255,255,255,0.3)",borderTopColor:"#fff",borderRadius:"50%",animation:"spin 0.7s linear infinite"}}/>
-              Fetching live forecasts for 60 mountains…</>
-            ) : `Find My Mountain →`}
-          </button>
-        </div>
-      </div>
-
-      
-      {hasSearched && (
-        <div ref={resultsRef} style={{maxWidth:900,margin:"3.5rem auto 0in,padding:"0 2rem",animation:"fadeUp 0.4s ease"}}>
-
-          
-          <div className="ai-card" style={{marginBottom:"2rem"}}>
-            <div style={{display:"flex",gap:14,alignItems:"flex-start",position:"relative",zIndex:1}}>
-              <div style={{width:38,height:38,background:"var(--pine)",borderRadius:9,flexShrink:0,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem",boxShadow:"0 2px 8px rgba(31,74,46,0.4)"}}>✦</div>
-              <div style={{flex:1}}>
-                <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.12em",textTransform:"uppercase",color:"#7eb89a",marginBottom:6}}>SummitSync Pick — {fmt(params.depDate)} trip</div>
-                {aiLoading ? (
-                  <div style={{display:"flex",flexDirection:"column",gap:6}}>
-                    {[1,0.7,0.5].map((w,i)=>(
-                      <div key={i} style={{height:13,borderRadius:4,width:`${w*100}%`,background:"linear-gradient(90deg,#3a2a18 25%,#4a3a28 50%,#3a2a18 75%)",backgroundSize:"600px 100%",animation:"shimmer 1.2s infinite"}}/>
-                    ))}
-                  </div>
-                ) : (
-                  <p style={{color:"#e8ddd0in,fontSize:"0.95rem",lineHeight:1.75,margin:0}}>{aiRec}</p>
-                )}
-              </div>
-            </div>
-          </div>
-
-          
-          <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"1.25rem",flexWrap:"wrap",gap:8}}>
-            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"1.5rem",color:"var(--bark)"}}>{results.length} Matches</h2>
-            <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-              <span style={{fontSize:"0.7rem",color:"var(--text-light)"}}>Live snow · click to expand</span>
-              <span style={{fontSize:"0.68rem",color:"var(--border)"}}>|</span>
-              {[["🔵","Epic"],["🟦","Ikon"],["🟢","Mtn Collective"],["🟠","Indy"],["⚪","Independent"]].map(([dot,l])=>(
-                <span key={l} style={{fontSize:"0.67rem",color:"var(--text-light)",whiteSpace:"nowrap"}}>{dot} {l}</span>
-              ))}
-            </div>
-          </div>
-
-          {results.slice(0,showCount).map((m,i)=>(
-            <ResultCard key={m.id} mountain={m} rank={i+1} params={params}
-              isExpanded={expandedId===m.id}
-              onToggle={()=>setExpandedId(expandedId===m.id?null:m.id)}
-              liveData={liveData}/>
-          ))}
-
-          {results.length > showCount && (
-            <button onClick={()=>setShowCount(c=>c+8)} className="btn-ghost"
-              style={{width:"100%",padding:"13px",fontSize:"0.85rem",fontWeight:600,marginBottom:"1rem",background:"var(--snow)"}}>
-              Show {Math.min(8, results.length-showCount)} more ({results.length-showCount} remaining)
-            </button>
-          )}
-
-          
-          <div style={{marginTop:"2.5rem",marginBottom:"3rem"}}>
-            <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"1.4rem",color:"var(--bark)",marginBottom:"1.25rem"}}>Weather Snapshot — Top 3</h2>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.875rem"}}>
-              {results.slice(0,3).map(m=>{
-                const live=liveData?.[m.id];
-                const fc=live?.forecast||[];
-                const total=fc.reduce((s,d)=>s+(d.snow||0),0);
-                const trend=total>18?{label:"↑ Active storm",bg:"var(--pine-pale)",color:"var(--pine-light)"}:total>6?{label:"→ Mixed",bg:"var(--gold-pale)",color:"var(--gold)"}:{label:"↓ Dry stretch",bg:"var(--rust-pale)",color:"var(--rust)"};
-                return (
-                  <div key={m.id} style={{background:"var(--snow)",border:"1px solid var(--border)",borderRadius:14,padding:"1.25rem"}}>
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:6}}>
-                      <div style={{fontSize:"0.7rem",fontWeight:700,letterSpacing:"0.06em",textTransform:"uppercase",color:"var(--text-light)"}}>{m.name}</div>
-                      {live&&<span style={{fontSize:"0.58rem",fontWeight:800,color:"var(--slate)",background:"var(--slate-pale)",borderRadius:99,padding:"2px 7px",letterSpacing:"0.06em"}}>LIVE</span>}
-                    </div>
-                    <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.9rem",lineHeight:1,color:"var(--bark)"}}>{total}"</div>
-                    <div style={{fontSize:"0.72rem",color:"var(--text-light)",marginTop:2,marginBottom:8}}>5-day forecast snowfall</div>
-                    <div style={{display:"inline-flex",fontSize:"0.7rem",fontWeight:700,background:trend.bg,color:trend.color,borderRadius:99,padding:"3px 10px",marginBottom:8}}>{trend.label}</div>
-                    <div style={{fontSize:"0.72rem",color:"var(--text-mid)",marginBottom:8}}>{m.averageSnowfall}" season average</div>
-                    <a href={m.openSnowLink} target="_blank" rel="noopener noreferrer"
-                      style={{display:"inline-flex",alignItems:"center",gap:4,fontSize:"0.7rem",fontWeight:700,color:"var(--slate)",textDecoration:"none"}}>
-                      ❄️ Full forecast on OpenSnow →
-                    </a>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {!hasSearched && !loading && (
-        <div style={{textAlign:"center",padding:"5rem 2rem 3rem",color:"var(--text-light)",fontSize:"0.9rem"}}>
-          <div style={{fontSize:"2.5rem",marginBottom:"0.75rem",animation:"float 3s ease-in-out infinite"}}>⛷</div>
-          Set your dates and hit <strong style={{color:"var(--text)"}}>Find My Mountain</strong>
-        </div>
-      )}
-
-      
-      <BestOfStrips/>
-      <MapSection results={results} params={params}/>
-
-      
-      <footer style={{borderTop:"1px solid var(--border)",padding:"2rem",textAlign:"center",background:"var(--cream-dark)"}}>
-        <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1rem",color:"var(--bark)",marginBottom:6}}>SummitSync</div>
-        <p style={{fontSize:"0.72rem",color:"var(--text-light)",lineHeight:1.8}}>
-          60 western resorts · Live forecasts via Open-Meteo · Flights via Google Flights · Hotels via Booking.com & Expedia<br/>
-          Built by a skier, for skiers. Not affiliated with any resort or booking platform.
-        </p>
-      </footer>
-    </div>
-  );
+  state.results = results;
+  state.expanded = null;
+  renderCards();
+  showTab('results');
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+// ── RENDER CARDS ─────────────────────────────────────────────────────────────
+function renderCards() {
+  var container = document.getElementById('cards-container');
+  var count = document.getElementById('results-count');
+  count.textContent = 'Showing ' + state.results.length + ' resort' + (state.results.length !== 1 ? 's' : '');
 
+  if (state.results.length === 0) {
+    container.innerHTML = '<div class="empty"><h3>No resorts match your filters.</h3><p>Try adjusting your budget or skill level.</p></div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  state.results.forEach(function(m, i) {
+    container.appendChild(buildCard(m, i));
+  });
+}
+
+function buildCard(m, rank) {
+  var wrap = document.createElement('div');
+  wrap.className = 'card-wrap';
+  wrap.style.animationDelay = Math.min(rank * 0.04, 0.4) + 's';
+
+  var pass = PASS_CONFIG[m.skiPass] || PASS_CONFIG.indep;
+  var hasScore = m._score !== undefined;
+
+  var bannerHtml = '';
+  if (m.skiPass) {
+    bannerHtml = '<div class="pass-banner pass-' + m.skiPass + '">' + pass.label + '</div>';
+  }
+
+  var tagsHtml = m.tags.slice(0, 4).map(function(t) {
+    return '<span class="tag">' + t + '</span>';
+  }).join('');
+
+  var scoreHtml = '';
+  if (hasScore) {
+    scoreHtml = [
+      {lbl:'Overall', val: m._score},
+      {lbl:'Snow',    val: m.snowScore},
+      {lbl:'Value',   val: m.valueScore},
+    ].map(function(s) {
+      return '<div class="score-item">' +
+        '<span class="score-label">' + s.lbl + '</span>' +
+        '<div class="score-val">' + s.val + '</div>' +
+        '<div class="score-bar-track"><div class="score-bar-fill" style="width:' + s.val + '%"></div></div>' +
+        '</div>';
+    }).join('');
+  }
+
+  var isExpanded = state.expanded === m.id;
+  var cardClass = 'card' + (m.skiPass ? '' : ' no-banner') + (rank < 3 && hasScore ? ' top-pick' : '');
+
+  wrap.innerHTML = bannerHtml +
+    '<div class="' + cardClass + '" id="card-' + m.id + '" onclick="toggleCard(\'' + m.id + '\')">' +
+      '<div class="card-top">' +
+        '<div class="card-left">' +
+          (rank < 3 && hasScore ? '<div class="card-rank">#' + (rank+1) + ' Pick</div>' : '') +
+          '<div class="card-name">' + m.name + '</div>' +
+          '<div class="card-meta">' + m.state + ' · ' + m.verticalDrop.toLocaleString() + 'ft vertical · ' + m.skiableAcres.toLocaleString() + ' acres</div>' +
+          '<div class="card-tags">' + tagsHtml + '</div>' +
+        '</div>' +
+        '<div class="card-scores">' + scoreHtml + '</div>' +
+      '</div>' +
+      '<div class="card-desc">' + m.description + '</div>' +
+      '<div class="expand-hint">' + (isExpanded ? '▲ Less info' : '▼ Flights, lodging & more') + '</div>' +
+      (isExpanded ? buildExpandedHtml(m) : '') +
+    '</div>';
+
+  return wrap;
+}
+
+function buildExpandedHtml(m) {
+  var prosHtml = m.pros.split(',').map(function(p) {
+    return '<div class="pro-item">' + p.trim() + '</div>';
+  }).join('');
+  var consHtml = m.cons.split(',').map(function(c) {
+    return '<div class="con-item">' + c.trim() + '</div>';
+  }).join('');
+
+  var statsHtml = [
+    {val: '$' + m.liftTicket, lbl:'Lift Ticket'},
+    {val: m.averageSnowfall + '"', lbl:'Avg Snowfall'},
+    {val: m.skiableAcres.toLocaleString(), lbl:'Acres'},
+    {val: m.verticalDrop.toLocaleString() + 'ft', lbl:'Vertical'},
+  ].map(function(s) {
+    return '<div class="stat-box"><div class="stat-val">' + s.val + '</div><div class="stat-lbl">' + s.lbl + '</div></div>';
+  }).join('');
+
+  var lodgingHtml = '';
+  if (m.lodgingTiers && m.lodgingTiers.length > 0) {
+    lodgingHtml = m.lodgingTiers.map(function(t, i) {
+      var tierName = t.tier === 'budget' ? 'Budget' : 'Luxury';
+      return '<a href="' + t.link + '" target="_blank" class="lodging-tier">' +
+        '<div class="lodging-name">' + tierName + ' · ~$' + t.pricePerNight + '/night</div>' +
+        '<div class="lodging-price">' + t.note + '</div>' +
+        '</a>';
+    }).join('');
+  }
+
+  var flightsHtml = '';
+  if (m.flyInOptions && m.flyInOptions.length > 0) {
+    flightsHtml = '<div class="flight-list">' + m.flyInOptions.map(function(f, i) {
+      var flightsUrl = 'https://www.google.com/travel/flights?q=flights+to+' + f.code;
+      return '<a href="' + flightsUrl + '" target="_blank" class="flight-opt ' + (i===0?'flight-best':'flight-alt') + '">' +
+        '<span>' + f.code + ' · ' + f.drive + ' drive</span>' +
+        '<span style="font-size:0.75rem;opacity:0.8">' + f.note.replace(/\.\.\.$/, '') + '</span>' +
+        '</a>';
+    }).join('') + '</div>';
+  } else {
+    flightsHtml = '<div style="font-size:0.85rem;color:var(--text-mid);">Drive-to resort — no flights needed.</div>';
+  }
+
+  var visitUrl = m.resortHomepage || m.resortLink;
+  var snowUrl = m.openSnowLink;
+
+  return '<div class="expanded-body">' +
+    '<div class="expanded-grid">' +
+      '<div class="exp-section">' +
+        '<span class="exp-label">Pros</span><div class="pros-cons">' + prosHtml + '</div>' +
+        '<span class="exp-label" style="margin-top:12px;display:block;">Cons</span><div class="pros-cons">' + consHtml + '</div>' +
+      '</div>' +
+      '<div class="exp-section">' +
+        '<span class="exp-label">Stats</span><div class="stats-grid">' + statsHtml + '</div>' +
+        (lodgingHtml ? '<span class="exp-label" style="margin-top:12px;display:block;">Lodging</span>' + lodgingHtml : '') +
+      '</div>' +
+    '</div>' +
+    '<div>' +
+      '<span class="exp-label">Fly In</span>' + flightsHtml +
+    '</div>' +
+    '<div class="btn-row">' +
+      '<a href="' + visitUrl + '" target="_blank" class="btn-primary">🏔 Visit Resort</a>' +
+      '<a href="' + snowUrl + '" target="_blank" class="btn-ghost">❄️ Snow Report</a>' +
+    '</div>' +
+  '</div>';
+}
+
+function toggleCard(id) {
+  state.expanded = state.expanded === id ? null : id;
+  renderCards();
+  if (state.expanded) {
+    setTimeout(function() {
+      var el = document.getElementById('card-' + id);
+      if (el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 50);
+  }
+}
+
+// ── MAP ──────────────────────────────────────────────────────────────────────
+function initMap() {
+  if (state.mapInit) return;
+  state.mapInit = true;
+
+  state.map = L.map('map').setView([42.5, -112], 5);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(state.map);
+
+  MOUNTAINS.forEach(function(m) {
+    var marker = L.circleMarker([m.lat, m.lon], {
+      radius: 7,
+      fillColor: '#1f4a2e',
+      color: '#fff',
+      weight: 2,
+      opacity: 1,
+      fillOpacity: 0.85
+    });
+
+    var visitUrl = m.resortHomepage || m.resortLink;
+    marker.bindPopup(
+      '<div class="popup-inner">' +
+        '<div class="popup-name">' + m.name + '</div>' +
+        '<div class="popup-meta">' + m.state + ' · ' + m.skiableAcres.toLocaleString() + ' acres · $' + m.liftTicket + '/day</div>' +
+        '<a href="' + visitUrl + '" target="_blank" class="popup-btn">Visit Resort →</a>' +
+      '</div>'
+    );
+    marker.addTo(state.map);
+    state.markers.push({m: m, marker: marker});
+  });
+}
+
+function highlightResults() {
+  var resultIds = state.results.map(function(m){ return m.id; });
+  state.markers.forEach(function(item) {
+    var inResults = resultIds.includes(item.m.id);
+    item.marker.setStyle({
+      fillColor: inResults ? '#c8901a' : '#1f4a2e',
+      radius: inResults ? 9 : 6,
+    });
+  });
+}
+
+// ── TABS ─────────────────────────────────────────────────────────────────────
+function showTab(name) {
+  ['results','map','bestof'].forEach(function(t) {
+    document.getElementById('view-' + t).style.display = t === name ? '' : 'none';
+    var tab = document.getElementById('tab-' + t);
+    if (tab) tab.className = 'tab' + (t === name ? ' active' : '');
+  });
+  if (name === 'map') {
+    initMap();
+    setTimeout(function(){ state.map && state.map.invalidateSize(); }, 100);
+    highlightResults();
+  }
+  if (name === 'bestof') renderBestOf();
+}
+
+// ── BEST OF ──────────────────────────────────────────────────────────────────
+function renderBestOf() {
+  var container = document.getElementById('bestof-container');
+  if (container.innerHTML) return;
+
+  container.innerHTML = BEST_OF.map(function(cat) {
+    var resortsHtml = cat.resorts.map(function(name) {
+      var m = MOUNTAINS.find(function(x){ return x.name === name; });
+      var url = m ? (m.resortHomepage || m.resortLink) : '#';
+      return '<div class="bestof-resort">' +
+        '<span>' + name + '</span>' +
+        '<a href="' + url + '" target="_blank">Visit →</a>' +
+        '</div>';
+    }).join('');
+
+    return '<div class="bestof-card">' +
+      '<div class="bestof-title">' + cat.emoji + ' ' + cat.title + '</div>' +
+      '<div class="bestof-desc">' + cat.desc + '</div>' +
+      resortsHtml +
+    '</div>';
+  }).join('');
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+function showModal() { document.getElementById('why-modal').style.display = 'flex'; }
+function hideModal() { document.getElementById('why-modal').style.display = 'none'; }
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+(function init() {
+  MOUNTAINS.forEach(function(m) { m._score = scoreResort(m, 'DEN'); });
+  MOUNTAINS.sort(function(a, b){ return b._score - a._score; });
+  state.results = MOUNTAINS.slice();
+  renderCards();
+})();
 </script>
 </body>
 </html>
