@@ -114,7 +114,9 @@
   .tag { display: inline-flex; align-items: center; gap: 3px; font-size: 0.65rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: var(--cream-dark); color: var(--text-mid); border-radius: 99px; padding: 3px 9px; }
 
   /* Card */
-  .resort-card { background: var(--snow); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.4rem; margin-bottom: 0.75rem; cursor: pointer; transition: box-shadow 0.2s, border-color 0.2s; }
+  .resort-card { background: var(--snow); border: 1.5px solid var(--border); border-radius: 16px; padding: 1.4rem; margin-bottom: 0rem; cursor: pointer; transition: box-shadow 0.2s, border-color 0.2s; }
+  .resort-card.has-pass-banner { border-top: none; }
+  .resort-card-wrap { margin-bottom: 0.75rem; }
   .resort-card:hover { box-shadow: 0 4px 24px rgba(44,31,14,0.08); }
   .resort-card.top { border-color: var(--pine-light); }
   .resort-card.expanded { box-shadow: 0 8px 40px rgba(44,31,14,0.1); }
@@ -173,6 +175,7 @@ const MOUNTAINS = [
   // COLORADO (12)
   { id:"abasin", name:"Arapahoe Basin", state:"CO", region:"rockies", nickname:"The Legend",
     tags:["all-mountain","powder","advanced","intermediate","value"],
+    skiPass:"ikon",
     lat:39.6426, lon:-105.8719,
     travelMode:"drive", distanceDenver:68, distanceSLC:450, distanceSeattle:1200, distanceSF:1400, distanceLA:1380, distancePortland:1350,
     distanceBZN:620,
@@ -192,15 +195,16 @@ const MOUNTAINS = [
     ]},
   { id:"steamboat", name:"Steamboat Springs", state:"CO", region:"rockies", nickname:"Ski Town USA",
     tags:["all-mountain","family","intermediate","powder","beginner"],
+    skiPass:"ikon",
     lat:40.4572, lon:-106.8045,
     travelMode:"either", distanceDenver:157, distanceSLC:380, distanceSeattle:1300, distanceSF:1500, distanceLA:1480, distancePortland:1400,
     distanceBZN:500,
     verticalDrop:3668, skiableAcres:2965, averageSnowfall:349,
     liftTicket:159, avgLodgingPerNight:240,
     crowdScore:48, snowScore:80, valueScore:65, accessScore:70,
-    description:"Home of Champagne Powder™. Lively western town with great restaurants and après.",
-    pros:"World-famous snow quality, great town scene, excellent beginner terrain.",
-    cons:"Further from Denver, pricier on weekends.",
+    description:"Steamboat invented the "champagne powder" marketing term — and it's accurate. The resort sits in a unique coastal-influenced snowstorm pattern that produces famously dry, light snow averaging 349 inches annually. Morningside Park, Priest Creek, and the Christmas Tree Bowl trees are some of the best glades in Colorado. Ikon Pass.",
+    pros:"Champagne powder snow quality, excellent tree skiing, Ikon Pass, genuine western ranch town below, direct flights to HDN",
+    cons:"Not as steep as other CO resorts, less expert terrain than Vail or Breckenridge, Hayden airport is small",
     openSnowLink:"https://opensnow.com/location/steamboat",
     resortLink:"https://www.steamboat.com/the-mountain/mountain-report",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"3 hrs",note:"Most flights, cheapest fares"}, {code:"SLC",name:"Salt Lake City Intl",drive:"3.5 hrs",note:"Good Southwest options"}, {code:"HDN",name:"Yampa Valley (Hayden)",drive:"40 min",note:"Closest but limited seasonal service"}],
@@ -211,15 +215,16 @@ const MOUNTAINS = [
     ]},
   { id:"vail", name:"Vail", state:"CO", region:"rockies", nickname:"The Beast",
     tags:["all-mountain","powder","advanced","intermediate","family"],
+    skiPass:"epic",
     lat:39.6433, lon:-106.3781,
     travelMode:"drive", distanceDenver:97, distanceSLC:420, distanceSeattle:1230, distanceSF:1430, distanceLA:1410, distancePortland:1380,
     distanceBZN:600,
     verticalDrop:3450, skiableAcres:5317, averageSnowfall:354,
     liftTicket:249, avgLodgingPerNight:400,
     crowdScore:72, snowScore:78, valueScore:38, accessScore:85,
-    description:"One of the largest ski resorts in North America. The Back Bowls alone are worth the trip.",
-    pros:"Massive terrain, legendary Back Bowls, world-class amenities.",
-    cons:"Most expensive resort in CO, very crowded, parking nightmare.",
+    description:"7 Back Bowls covering 3,000 acres of above-treeline terrain make Vail's footprint unlike anything else in Colorado. 195 trails across 5,317 acres total. Blue Sky Basin adds another 645 acres of remote, natural terrain. Epic Pass. Peak-to-peak gondola connection with Breck is 30 miles east. The village is world-class — polished, walkable, expensive.",
+    pros:"7 Back Bowls, Epic Pass, peak-to-peak with Breckenridge, EGE airport 30 min away, top-tier ski school",
+    cons:"Very expensive, heavily crowded on holidays and weekends, corporate feel, I-70 traffic from Denver",
     openSnowLink:"https://opensnow.com/location/vail",
     resortLink:"https://www.vail.com/the-mountain/mountain-conditions/snow-report.aspx",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"2 hrs",note:"Most flights, cheapest fares"}, {code:"EGE",name:"Eagle County",drive:"35 min",note:"Closest but pricier, seasonal only"}, {code:"ASE",name:"Aspen/Pitkin County",drive:"1.5 hrs",note:"Small, expensive, weather-dependent"}],
@@ -230,15 +235,16 @@ const MOUNTAINS = [
     ]},
   { id:"breckenridge", name:"Breckenridge", state:"CO", region:"rockies", nickname:"Breck",
     tags:["all-mountain","park","intermediate","beginner","family"],
+    skiPass:"epic",
     lat:39.4800, lon:-106.0667,
     travelMode:"drive", distanceDenver:85, distanceSLC:500, distanceSeattle:1250, distanceSF:1450, distanceLA:1430, distancePortland:1400,
     distanceBZN:620,
     verticalDrop:3398, skiableAcres:2908, averageSnowfall:360,
     liftTicket:199, avgLodgingPerNight:280,
     crowdScore:80, snowScore:74, valueScore:46, accessScore:88,
-    description:"Colorado's most visited resort. Victorian town, great nightlife, best park terrain in the state.",
-    pros:"Easy I-70 access, charming town, world-class park, Epic Pass.",
-    cons:"Very crowded weekends, expensive lodging.",
+    description:"5 peaks, 187 trails, and 2,908 acres sitting at the highest base elevation of any major Colorado resort (9,600 ft). Peaks 6 and 7 open the high-alpine bowls to intermediate and expert skiing. The historic mining town of Breckenridge is ski-in/ski-out from Main Street. Epic Pass. 90 miles from Denver on I-70.",
+    pros:"Epic Pass, historic mining town walkable from slopes, high-alpine bowl terrain, strong beginner/intermediate options",
+    cons:"Altitude hits hard at 9,600 ft base, I-70 traffic on weekends, crowded on holiday weeks",
     openSnowLink:"https://opensnow.com/location/breckenridge",
     resortLink:"https://www.breckenridge.com/mountain/snow-and-weather-report.aspx",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best option by far — tons of flights"}, {code:"EGE",name:"Eagle County",drive:"1.5 hrs",note:"Seasonal, fewer options"}],
@@ -249,15 +255,16 @@ const MOUNTAINS = [
     ]},
   { id:"telluride", name:"Telluride", state:"CO", region:"rockies", nickname:"The Box Canyon",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"mtn",
     lat:37.9375, lon:-107.8123,
     travelMode:"fly", distanceDenver:333, distanceSLC:475, distanceSeattle:1500, distanceSF:1600, distanceLA:1400, distancePortland:1550,
     distanceBZN:700,
     verticalDrop:4425, skiableAcres:2000, averageSnowfall:309,
     liftTicket:179, avgLodgingPerNight:350,
     crowdScore:30, snowScore:70, valueScore:55, accessScore:44,
-    description:"Dramatic San Juan box canyon. One of the most beautiful places in America to ski.",
-    pros:"Stunning scenery, thin crowds, free gondola to Mountain Village.",
-    cons:"Remote, small regional airport, most expensive lodging in CO.",
+    description:"Tucked into a box canyon in the San Juans, Telluride has 2,000 acres spanning both the historic town and Mountain Village, connected year-round by a free gondola. 54% advanced/expert terrain. The Plunge drops 3,000 vertical feet of bumps and steeps off the front face. Revelation Bowl adds 400 acres of high-alpine above tree line opened in 2008.",
+    pros:"Stunning box canyon setting, uncrowded for its caliber, free gondola between town and village, Mountain Collective days",
+    cons:"330 miles from Denver, regional airport only, expensive lift tickets, some years low snow on south-facing terrain",
     openSnowLink:"https://opensnow.com/location/telluride",
     resortLink:"https://www.tellurideskiresort.com/mountain/snow-report/",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"5.5 hrs drive",note:"Best fares — connect to TEX or just drive"}, {code:"GJT",name:"Grand Junction",drive:"2 hrs",note:"More reliable than TEX, cheaper fares"}, {code:"TEX",name:"Telluride Regional",drive:"15 min",note:"Closest but tiny, pricey, weather-dependent"}],
@@ -268,17 +275,18 @@ const MOUNTAINS = [
     ]},
   { id:"aspen", name:"Aspen Snowmass", state:"CO", region:"rockies", nickname:"The Four Mountains",
     tags:["all-mountain","powder","advanced","intermediate","luxury"],
+    skiPass:"ikon",
     lat:39.2084, lon:-106.9490,
     travelMode:"fly", distanceDenver:200, distanceSLC:430, distanceSeattle:1400, distanceSF:1500, distanceLA:1350, distancePortland:1450,
     distanceBZN:650,
     verticalDrop:4406, skiableAcres:5527, averageSnowfall:300,
     liftTicket:229, avgLodgingPerNight:500,
     crowdScore:45, snowScore:72, valueScore:30, accessScore:62,
-    description:"Four distinct mountains, one legendary town. Snowmass alone rivals most full resorts.",
-    pros:"Four mountains on one pass, iconic town, Snowmass is huge.",
-    cons:"Most expensive town in skiing, flights to Aspen airport are pricey.",
+    description:"Four mountains — Aspen Mountain, Aspen Highlands, Buttermilk, and Snowmass — on one Ikon Pass. Snowmass alone has 3,362 acres and 4,406 vertical feet. Highland Bowl at Aspen Highlands requires a 45-minute hike to 12,382 ft and drops 3,635 ft back to the base. Aspen Mountain has no beginner terrain. The town is world-class and genuinely walkable.",
+    pros:"4 mountains on one Ikon Pass, Highland Bowl hike is bucket-list, Snowmass Village ski-in/ski-out, serious snow culture",
+    cons:"Most expensive ski destination in Colorado, very limited beginner terrain on Aspen Mountain, wealthy crowd",
     openSnowLink:"https://opensnow.com/location/aspen-snowmass",
-    resortLink:"https://www.aspensnowmass.com/while-you-re-here/mountain-cams-conditions",
+    resortLink:"https://www.aspensnowmass.com/while-youre-here/mountain-cams-conditions",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"4 hrs",note:"Best fares — drive via I-70 + Hwy 82"}, {code:"EGE",name:"Eagle County",drive:"70 min",note:"More reliable than ASE, seasonal"}, {code:"ASE",name:"Aspen/Pitkin County",drive:"10 min",note:"Closest but expensive and weather-dependent"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Basalt Rental",pricePerNight:130,note:"20 min away, RFTA bus to mountain",link:"https://www.booking.com/searchresults.html?ss=Basalt%2C+Colorado"},
@@ -287,15 +295,16 @@ const MOUNTAINS = [
     ]},
   { id:"crested", name:"Crested Butte", state:"CO", region:"rockies", nickname:"The Last Great Ski Town",
     tags:["all-mountain","powder","advanced","intermediate","value"],
+    skiPass:"ikon",
     lat:38.8997, lon:-106.9650,
     travelMode:"fly", distanceDenver:230, distanceSLC:550, distanceSeattle:1500, distanceSF:1600, distanceLA:1500, distancePortland:1550,
     distanceBZN:680,
     verticalDrop:2775, skiableAcres:1547, averageSnowfall:300,
     liftTicket:129, avgLodgingPerNight:195,
     crowdScore:22, snowScore:74, valueScore:80, accessScore:50,
-    description:"Colorado's most extreme terrain with an extremely low-key, authentic ski town vibe.",
-    pros:"Wildest extreme terrain in CO, genuine mountain town, not overcrowded.",
-    cons:"Remote, lower average snowfall, small regional airport.",
+    description:"37% of the terrain is double-black diamond — more than any other Colorado resort. The North Face, Rambo, and Third Bowl are the real thing: mandatory air, no-fall zones, consequence terrain. Hosted some of the first extreme skiing competitions in the US in the 1980s. The Victorian mining town 2 miles down the road has more character than any ski village in Colorado.",
+    pros:"Best expert terrain in Colorado, genuine old-school mountain town, Ikon Pass, short lift lines, 1,547 acres feels bigger",
+    cons:"4 hours from Denver via US-285, lower snowfall than northern Colorado (234" avg), expert-heavy leaves intermediates underserved",
     openSnowLink:"https://opensnow.com/location/crested-butte",
     resortLink:"https://www.skicb.com/the-mountain/mountain-conditions/snow-report.aspx",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"4 hrs",note:"Best fares — drive via Monarch Pass"}, {code:"GUC",name:"Gunnison–Crested Butte",drive:"30 min",note:"Closest but small, limited flights"}, {code:"ASE",name:"Aspen/Pitkin County",drive:"2.5 hrs",note:"Only if already connecting through Aspen"}],
@@ -306,15 +315,16 @@ const MOUNTAINS = [
     ]},
   { id:"winterpark", name:"Winter Park", state:"CO", region:"rockies", nickname:"Colorado's Favorite",
     tags:["all-mountain","intermediate","beginner","family","value"],
+    skiPass:"ikon",
     lat:39.8868, lon:-105.7625,
     travelMode:"drive", distanceDenver:67, distanceSLC:480, distanceSeattle:1220, distanceSF:1420, distanceLA:1400, distancePortland:1370,
     distanceBZN:600,
     verticalDrop:3060, skiableAcres:3081, averageSnowfall:327,
     liftTicket:169, avgLodgingPerNight:200,
     crowdScore:58, snowScore:72, valueScore:72, accessScore:82,
-    description:"Denver's home mountain. The ski train runs from Union Station. Mary Jane is underrated.",
-    pros:"Amtrak ski train from Denver, affordable, Mary Jane moguls are legendary.",
-    cons:"Weather variable, crowded on powder days from Denver day-trippers.",
+    description:"Mary Jane side of Winter Park has some of the most sustained mogul terrain in Colorado — steep, relentless, never groomed. The resort is 67 miles from Denver with a direct ski train on weekends. 3,081 acres across 7 territories. Parsenn Bowl adds high-alpine above-treeline skiing. Ikon Pass. Owned by Alterra since 2017.",
+    pros:"Ikon Pass, best moguls in Colorado on Mary Jane, ski train from Denver on weekends, strong intermediate terrain, less expensive than I-70 resorts",
+    cons:"US-40 drive from Denver is slower than I-70, base village is functional but not destination-worthy",
     openSnowLink:"https://opensnow.com/location/winter-park",
     resortLink:"https://www.winterparkresort.com/the-mountain/mountain-conditions",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best and really only option — or take the ski train"}, {code:"EGE",name:"Eagle County",drive:"2 hrs",note:"Seasonal only, not worth it over DEN"}],
@@ -325,6 +335,7 @@ const MOUNTAINS = [
     ]},
   { id:"eldora", name:"Eldora Mountain", state:"CO", region:"rockies", nickname:"Boulder's Backyard",
     tags:["all-mountain","beginner","intermediate","value","family"],
+    skiPass:"ikon",
     lat:39.9373, lon:-105.5820,
     travelMode:"drive", distanceDenver:45, distanceSLC:530, distanceSeattle:1300, distanceSF:1450, distanceLA:1430, distancePortland:1370,
     distanceBZN:620,
@@ -344,6 +355,7 @@ const MOUNTAINS = [
     ]},
   { id:"keystone", name:"Keystone", state:"CO", region:"rockies", nickname:"Night Ski Capital",
     tags:["all-mountain","intermediate","beginner","family","value"],
+    skiPass:"epic",
     lat:39.6042, lon:-105.9378,
     travelMode:"drive", distanceDenver:75, distanceSLC:460, distanceSeattle:1220, distanceSF:1420, distanceLA:1400, distancePortland:1370,
     distanceBZN:620,
@@ -363,6 +375,7 @@ const MOUNTAINS = [
     ]},
   { id:"coppermtn", name:"Copper Mountain", state:"CO", region:"rockies", nickname:"Naturally Divided",
     tags:["all-mountain","intermediate","advanced","park","value"],
+    skiPass:"ikon",
     lat:39.5022, lon:-106.1505,
     travelMode:"drive", distanceDenver:75, distanceSLC:460, distanceSeattle:1220, distanceSF:1420, distanceLA:1400, distancePortland:1370,
     distanceBZN:620,
@@ -373,7 +386,7 @@ const MOUNTAINS = [
     pros:"Natural terrain separation, great park, less crowded than Breck, easy I-70 access.",
     cons:"Base village can feel sterile, lower snowfall.",
     openSnowLink:"https://opensnow.com/location/copper-mountain",
-    resortLink:"https://www.coppercolorado.com/the-mountain/conditions",
+    resortLink:"https://www.coppercolorado.com/the-mountain/mountain-conditions/snow-report.aspx",
     flyInOptions:[{code:"DEN",name:"Denver Intl",drive:"1.5 hrs",note:"Best option"}, {code:"EGE",name:"Eagle County",drive:"1 hr",note:"Seasonal, closer but fewer flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Frisco Budget Hotel",pricePerNight:85,note:"10 min east in Frisco",link:"https://www.booking.com/searchresults.html?ss=Frisco%2C+Colorado"},
@@ -382,6 +395,7 @@ const MOUNTAINS = [
     ]},
   { id:"loveland", name:"Loveland Ski Area", state:"CO", region:"rockies", nickname:"The Summit County Secret",
     tags:["all-mountain","intermediate","advanced","value"],
+    skiPass:"indy",
     lat:39.6797, lon:-105.8977,
     travelMode:"drive", distanceDenver:56, distanceSLC:460, distanceSeattle:1210, distanceSF:1410, distanceLA:1390, distancePortland:1360,
     distanceBZN:620,
@@ -403,15 +417,16 @@ const MOUNTAINS = [
   // UTAH (8)
   { id:"snowbird", name:"Snowbird", state:"UT", region:"rockies", nickname:"The Deep",
     tags:["all-mountain","powder","advanced"],
+    skiPass:"ikon",
     lat:40.5831, lon:-111.6558,
     travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
     distanceBZN:430,
     verticalDrop:3240, skiableAcres:2500, averageSnowfall:500,
     liftTicket:209, avgLodgingPerNight:320,
     crowdScore:58, snowScore:97, valueScore:52, accessScore:74,
-    description:"500+ inches average. Consistently the deepest snowpack in North America.",
-    pros:"Best snow in NA, aerial tram to summit, long season.",
-    cons:"Minimal beginner terrain, requires flying from most cities.",
+    description:"Adjacent to Alta with a shared lift connection, Snowbird rises to 11,000 ft with 3,240 vertical feet and 3,240 acres. The Peruvian Gulch, Mineral Basin, and Great Scott are among the most demanding inbounds runs in Utah. 500+ inches annually. Open into May most years — one of the longest seasons in the Wasatch.",
+    pros:"Combined Alta-Snowbird pass covers 4,700 acres, longest Utah season, 500"+ snow, tram to summit",
+    cons:"Very challenging terrain for intermediates, base area feels dated, can be icy on groomed runs",
     openSnowLink:"https://opensnow.com/location/snowbird",
     resortLink:"https://www.snowbird.com/mountain-report/",
     flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"35 min",note:"One of the best airport-to-ski ratios anywhere"}, {code:"OGD",name:"Ogden-Hinckley",drive:"50 min",note:"Very limited flights — stick with SLC"}],
@@ -422,15 +437,16 @@ const MOUNTAINS = [
     ]},
   { id:"alta", name:"Alta", state:"UT", region:"rockies", nickname:"Skiers Only",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"ikon",
     lat:40.5883, lon:-111.6372,
     travelMode:"fly", distanceDenver:525, distanceSLC:25, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
     distanceBZN:430,
     verticalDrop:2538, skiableAcres:2614, averageSnowfall:547,
     liftTicket:159, avgLodgingPerNight:280,
     crowdScore:45, snowScore:99, valueScore:62, accessScore:72,
-    description:"Skiers only. 547 inches average. Most snow of any resort in the US, period.",
-    pros:"Highest average snowfall in the US, skiers-only keeps crowds down, cheaper than Snowbird.",
-    cons:"No snowboarders, limited nightlife.",
+    description:"Skiers only since 1939. At the top of Little Cottonwood Canyon, Alta sits in a microclimate that produces 545" of annual snowfall — consistently ranked the best snow in North America. The High Traverse, Baldy Chutes, Devil's Castle, and Greeley Bowl are all earned through terrain knowledge, not just ability. Combined with Snowbird: 4,700 acres.",
+    pros:"545" avg snowfall, skiers-only preserves the snow, cheap lift tickets for Utah, legendary LCC powder culture",
+    cons:"Highway 210 closes frequently in storms (Interlodge), no snowboarding, limited base area amenities",
     openSnowLink:"https://opensnow.com/location/alta",
     resortLink:"https://www.alta.com/mountain/snow-report",
     flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"35 min",note:"35 min up Little Cottonwood Canyon — easy"}, {code:"OGD",name:"Ogden-Hinckley",drive:"50 min",note:"Very limited flights — stick with SLC"}],
@@ -441,6 +457,7 @@ const MOUNTAINS = [
     ]},
   { id:"parkcity", name:"Park City Mountain", state:"UT", region:"rockies", nickname:"Biggest in the US",
     tags:["all-mountain","intermediate","beginner","family","park"],
+    skiPass:"epic",
     lat:40.6514, lon:-111.5080,
     travelMode:"fly", distanceDenver:520, distanceSLC:32, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
     distanceBZN:420,
@@ -460,6 +477,7 @@ const MOUNTAINS = [
     ]},
   { id:"deervalley", name:"Deer Valley", state:"UT", region:"rockies", nickname:"The Pampered Mountain",
     tags:["all-mountain","intermediate","advanced","luxury"],
+    skiPass:"ikon",
     lat:40.6374, lon:-111.4783,
     travelMode:"fly", distanceDenver:520, distanceSLC:34, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
     distanceBZN:420,
@@ -479,6 +497,7 @@ const MOUNTAINS = [
     ]},
   { id:"brighton", name:"Brighton Resort", state:"UT", region:"rockies", nickname:"Local's Mountain",
     tags:["all-mountain","park","intermediate","beginner","value","family"],
+    skiPass:"ikon",
     lat:40.5986, lon:-111.5836,
     travelMode:"fly", distanceDenver:525, distanceSLC:28, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
     distanceBZN:430,
@@ -498,6 +517,7 @@ const MOUNTAINS = [
     ]},
   { id:"solitude", name:"Solitude Mountain", state:"UT", region:"rockies", nickname:"Just You and the Snow",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"ikon",
     lat:40.6197, lon:-111.5919,
     travelMode:"fly", distanceDenver:525, distanceSLC:27, distanceSeattle:850, distanceSF:750, distanceLA:690, distancePortland:820,
     distanceBZN:430,
@@ -517,6 +537,7 @@ const MOUNTAINS = [
     ]},
   { id:"snowbasin", name:"Snowbasin", state:"UT", region:"rockies", nickname:"2002 Olympic Downhill",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"mtn",
     lat:41.2161, lon:-111.8569,
     travelMode:"fly", distanceDenver:540, distanceSLC:40, distanceSeattle:860, distanceSF:760, distanceLA:700, distancePortland:830,
     distanceBZN:400,
@@ -536,6 +557,7 @@ const MOUNTAINS = [
     ]},
   { id:"powdermtn", name:"Powder Mountain", state:"UT", region:"rockies", nickname:"Most Skiable Acres on Earth",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"indep",
     lat:41.3797, lon:-111.7803,
     travelMode:"fly", distanceDenver:545, distanceSLC:50, distanceSeattle:860, distanceSF:770, distanceLA:710, distancePortland:835,
     distanceBZN:400,
@@ -546,7 +568,7 @@ const MOUNTAINS = [
     pros:"Most skiable terrain on earth, deliberately uncrowded, Wasatch snow, cheap tickets.",
     cons:"Limited lifts by design (you hike some terrain), remote from SLC.",
     openSnowLink:"https://opensnow.com/location/powder-mountain",
-    resortLink:"https://www.powdermountain.com/mountain/snow-report",
+    resortLink:"https://powdermountain.com/snow-report/",
     flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"55 min",note:"Best option"}, {code:"OGD",name:"Ogden-Hinckley",drive:"30 min",note:"Closest but very limited flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Ogden Budget Hotel",pricePerNight:75,note:"45 min drive from Powder Mtn",link:"https://www.booking.com/searchresults.html?ss=Ogden%2C+Utah"},
@@ -557,15 +579,16 @@ const MOUNTAINS = [
   // WYOMING (2)
   { id:"jacksonthole", name:"Jackson Hole", state:"WY", region:"rockies", nickname:"The Big One",
     tags:["all-mountain","powder","advanced"],
+    skiPass:"ikon",
     lat:43.5875, lon:-110.8280,
     travelMode:"fly", distanceDenver:540, distanceSLC:280, distanceSeattle:870, distanceSF:900, distanceLA:920, distancePortland:900,
     distanceBZN:150,
     verticalDrop:4139, skiableAcres:2500, averageSnowfall:459,
     liftTicket:239, avgLodgingPerNight:380,
     crowdScore:52, snowScore:93, valueScore:44, accessScore:66,
-    description:"The most serious big mountain resort in the US. Experts only on 50% of terrain.",
-    pros:"Massive vert, epic backcountry access, iconic tram, world-class snow.",
-    cons:"Expensive, limited beginner terrain, crowded powder days.",
+    description:"4,139 vertical feet off a single tram — the most continuous inbounds vert in the US. Half the terrain is rated expert, and 465" of annual snowfall means powder days are more rule than exception. The Aerial Tram reaches the 10,450 ft summit in 9 minutes and opens the entire left side of the mountain. Corbet's Couloir sits 50 yards from the tram dock.",
+    pros:"Greatest continuous inbounds vert in the US, legendary Aerial Tram, Ikon Pass, direct flights to JAC from 13 cities",
+    cons:"50% expert terrain — genuinely not beginner-friendly, most expensive Wyoming resort, tram lines on powder days",
     openSnowLink:"https://opensnow.com/location/jackson-hole",
     resortLink:"https://www.jacksonhole.com/mountain-report.html",
     flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"4.5 hrs",note:"Cheapest fares — scenic drive through Star Valley"}, {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"3 hrs",note:"Good Delta/Southwest options, great drive"}, {code:"JAC",name:"Jackson Hole Airport",drive:"20 min",note:"Closest — beautiful approach but book early, it's pricey"}],
@@ -576,6 +599,7 @@ const MOUNTAINS = [
     ]},
   { id:"grandtarghee", name:"Grand Targhee", state:"WY", region:"rockies", nickname:"The Hidden Gem",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"ikon",
     lat:43.7880, lon:-110.9472,
     travelMode:"fly", distanceDenver:560, distanceSLC:290, distanceSeattle:900, distanceSF:950, distanceLA:970, distancePortland:930,
     distanceBZN:170,
@@ -586,7 +610,7 @@ const MOUNTAINS = [
     pros:"Same Teton snowpack as JHOLE at half the price, almost no crowds.",
     cons:"Remote — 45 min from Jackson, small resort.",
     openSnowLink:"https://opensnow.com/location/grand-targhee",
-    resortLink:"https://www.grandtarghee.com/mountain/snow-report/",
+    resortLink:"https://www.grandtarghee.com/mountain/conditions/",
     flyInOptions:[{code:"SLC",name:"Salt Lake City Intl",drive:"5 hrs",note:"Cheapest fares, long but doable"}, {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"3.5 hrs",note:"Solid option with good fares"}, {code:"JAC",name:"Jackson Hole Airport",drive:"45 min",note:"Closest — pricey but spectacular Teton Pass drive"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Driggs Idaho Rental",pricePerNight:80,note:"20 min drive, way cheaper",link:"https://www.booking.com/searchresults.html?ss=Driggs%2C+Idaho"},
@@ -597,17 +621,18 @@ const MOUNTAINS = [
   // MONTANA (3)
   { id:"bigsky", name:"Big Sky", state:"MT", region:"rockies", nickname:"The Biggest Skiing in America",
     tags:["all-mountain","powder","advanced","intermediate","value"],
+    skiPass:"ikon",
     lat:45.2868, lon:-111.4015,
     travelMode:"fly", distanceDenver:600, distanceSLC:400, distanceSeattle:800, distanceSF:1100, distanceLA:1200, distancePortland:850,
     distanceBZN:60,
     verticalDrop:4350, skiableAcres:5850, averageSnowfall:400,
     liftTicket:169, avgLodgingPerNight:280,
     crowdScore:30, snowScore:85, valueScore:78, accessScore:68,
-    description:"5,850 acres and a 4,350 ft vertical — the biggest skiing in the US by most measures. Connected to Moonlight Basin.",
-    pros:"Massive terrain, uncrowded by western standards, Lone Peak tram is iconic, great town.",
-    cons:"Remote, BZN flights book up fast, cold in January.",
+    description:"5,850 acres across 4 connected mountains — the largest ski area in America by acreage. The Lone Peak Tram reaches 11,166 ft and drops you into Big Couloir and the Headwaters, some of the most serious inbounds terrain on the continent. 400+ inches of "cold smoke" powder and lift lines that are almost nonexistent outside of holidays.",
+    pros:"Biggest skiing in America, virtually no lift lines, cold smoke powder, Ikon Pass, Bozeman direct flights from 19 cities",
+    cons:"1 hour from Bozeman, tram is a separate upcharge, base village still developing, aprés scene is thin",
     openSnowLink:"https://opensnow.com/location/big-sky",
-    resortLink:"https://www.bigskymontana.com/mountain/snow-report",
+    resortLink:"https://www.bigskyresort.com/mountain/mountain-report",
     flyInOptions:[
       {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"1 hr",note:"Best option — direct flights on Delta, United, Southwest"},
       {code:"SLC",name:"Salt Lake City Intl",drive:"4.5 hrs",note:"Cheaper fares, longer drive north through ID"},
@@ -620,6 +645,7 @@ const MOUNTAINS = [
     ]},
   { id:"bridgerbowl", name:"Bridger Bowl", state:"MT", region:"rockies", nickname:"The Coldsmoke Capital",
     tags:["all-mountain","powder","advanced","intermediate","value"],
+    skiPass:"indy",
     lat:45.8097, lon:-110.9050,
     travelMode:"fly", distanceDenver:620, distanceSLC:420, distanceSeattle:820, distanceSF:1120, distanceLA:1220, distancePortland:870,
     distanceBZN:25,
@@ -642,6 +668,7 @@ const MOUNTAINS = [
     ]},
   { id:"whitefish", name:"Whitefish Mountain", state:"MT", region:"rockies", nickname:"Big Mountain",
     tags:["all-mountain","powder","intermediate","advanced","value","family"],
+    skiPass:"indy",
     lat:48.4856, lon:-114.3544,
     travelMode:"fly", distanceDenver:850, distanceSLC:650, distanceSeattle:500, distanceSF:1200, distanceLA:1350, distancePortland:600,
     distanceBZN:220,
@@ -667,6 +694,7 @@ const MOUNTAINS = [
   // WASHINGTON (5)
   { id:"crystalmtn", name:"Crystal Mountain", state:"WA", region:"pnw", nickname:"Washington's Biggest",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"ikon",
     lat:46.9282, lon:-121.4747,
     travelMode:"drive", distanceDenver:1300, distanceSLC:900, distanceSeattle:76, distanceSF:1200, distanceLA:1350, distancePortland:155,
     distanceBZN:700,
@@ -677,7 +705,7 @@ const MOUNTAINS = [
     pros:"Stunning Rainier views, largest resort in WA, excellent summit terrain.",
     cons:"Cascade snow can be heavy, fog/rain at base sometimes.",
     openSnowLink:"https://opensnow.com/location/crystal-mountain",
-    resortLink:"https://www.crystalmountainresort.com/mountain/conditions",
+    resortLink:"https://www.crystalmountainresort.com/the-mountain/mountain-conditions/snow-report.aspx",
     flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"1.5 hrs",note:"Best option, tons of flights"}, {code:"PDX",name:"Portland Intl",drive:"3 hrs",note:"Good if flying Southwest from south"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Enumclaw Hotel",pricePerNight:85,note:"30 min from Crystal, cheap and convenient",link:"https://www.booking.com/searchresults.html?ss=Enumclaw%2C+Washington"},
@@ -686,6 +714,7 @@ const MOUNTAINS = [
     ]},
   { id:"stevenspass", name:"Stevens Pass", state:"WA", region:"pnw", nickname:"The Powder Highway",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"epic",
     lat:47.7445, lon:-121.0891,
     travelMode:"drive", distanceDenver:1300, distanceSLC:900, distanceSeattle:65, distanceSF:1200, distanceLA:1350, distancePortland:220,
     distanceBZN:650,
@@ -696,7 +725,7 @@ const MOUNTAINS = [
     pros:"Closest major resort to Seattle, great intermediate terrain, good value.",
     cons:"No on-mountain lodging, US-2 can close in big storms.",
     openSnowLink:"https://opensnow.com/location/stevens-pass",
-    resortLink:"https://www.stevenspass.com/mountain/conditions.aspx",
+    resortLink:"https://www.stevenspass.com/the-mountain/mountain-conditions/snow-report.aspx",
     flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"1.5 hrs",note:"Best and really only option"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Leavenworth Rental",pricePerNight:90,note:"35 min east, Bavarian village",link:"https://www.booking.com/searchresults.html?ss=Leavenworth%2C+Washington"},
@@ -705,6 +734,7 @@ const MOUNTAINS = [
     ]},
   { id:"mtbaker", name:"Mt. Baker", state:"WA", region:"pnw", nickname:"World Record Snowfall",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"indy",
     lat:48.8600, lon:-121.6717,
     travelMode:"drive", distanceDenver:1380, distanceSLC:980, distanceSeattle:90, distanceSF:1280, distanceLA:1430, distancePortland:260,
     distanceBZN:680,
@@ -724,6 +754,7 @@ const MOUNTAINS = [
     ]},
   { id:"mtsummit", name:"The Summit at Snoqualmie", state:"WA", region:"pnw", nickname:"Seattle's Backyard",
     tags:["all-mountain","beginner","intermediate","family","value"],
+    skiPass:"epic",
     lat:47.4047, lon:-121.4233,
     travelMode:"drive", distanceDenver:1280, distanceSLC:880, distanceSeattle:52, distanceSF:1180, distanceLA:1330, distancePortland:200,
     distanceBZN:680,
@@ -733,8 +764,8 @@ const MOUNTAINS = [
     description:"Four interconnected ski areas 52 miles from Seattle. Night skiing until 10pm.",
     pros:"Closest to Seattle, cheap, night skiing, great for beginners and families.",
     cons:"Cascade wet snow, can be icy, crowded with Seattle day-trippers.",
-    openSnowLink:"https://opensnow.com/location/summit-at-snoqualmie",
-    resortLink:"https://www.summitatsnoqualmie.com/mountain/snow-report",
+    openSnowLink:"https://opensnow.com/location/the-summit-at-snoqualmie",
+    resortLink:"https://summitatsnoqualmie.com/weather-and-snow/",
     flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"1 hr",note:"Only option — right off I-90"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"North Bend Hotel",pricePerNight:85,note:"15 min from Summit, I-90 corridor",link:"https://www.booking.com/searchresults.html?ss=North+Bend%2C+Washington"},
@@ -743,6 +774,7 @@ const MOUNTAINS = [
     ]},
   { id:"whitepas", name:"White Pass", state:"WA", region:"pnw", nickname:"The Undiscovered",
     tags:["all-mountain","powder","intermediate","value","family"],
+    skiPass:"indy",
     lat:46.6381, lon:-121.3928,
     travelMode:"drive", distanceDenver:1350, distanceSLC:950, distanceSeattle:100, distanceSF:1250, distanceLA:1350, distancePortland:145,
     distanceBZN:720,
@@ -753,7 +785,7 @@ const MOUNTAINS = [
     pros:"Least crowded resort in WA, cheap, good snow, family-friendly.",
     cons:"Smaller, remote, limited lodging on mountain.",
     openSnowLink:"https://opensnow.com/location/white-pass",
-    resortLink:"https://skiwhitepass.com/conditions/",
+    resortLink:"https://skiwhitepass.com/ski-report/",
     flyInOptions:[{code:"SEA",name:"Seattle-Tacoma Intl",drive:"2 hrs",note:"Best option"}, {code:"PDX",name:"Portland Intl",drive:"2.5 hrs",note:"Good option from the south"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"White Pass Village Inn",pricePerNight:85,note:"Base lodge rooms, ski-in/ski-out",link:"https://www.booking.com/searchresults.html?ss=White+Pass%2C+Washington"},
@@ -764,6 +796,7 @@ const MOUNTAINS = [
   // OREGON (3)
   { id:"mthood", name:"Mt. Hood Meadows", state:"OR", region:"pnw", nickname:"Portland's Mountain",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"ikon",
     lat:45.3317, lon:-121.6681,
     travelMode:"drive", distanceDenver:1300, distanceSLC:920, distanceSeattle:168, distanceSF:700, distanceLA:1060, distancePortland:62,
     distanceBZN:850,
@@ -774,7 +807,7 @@ const MOUNTAINS = [
     pros:"Year-round skiing possible, 60 min from Portland, good snow, affordable.",
     cons:"Cascade cement on warm days, fog can sock in the base.",
     openSnowLink:"https://opensnow.com/location/mt-hood-meadows",
-    resortLink:"https://www.skihood.com/conditions",
+    resortLink:"https://www.skihood.com/the-mountain/mountain-conditions/snow-report",
     flyInOptions:[{code:"PDX",name:"Portland Intl",drive:"1.5 hrs",note:"60 min to Government Camp — easy"}, {code:"SEA",name:"Seattle-Tacoma Intl",drive:"3.5 hrs",note:"Drive down I-5 if no PDX flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Government Camp Hostel",pricePerNight:55,note:"8 min from Meadows",link:"https://www.booking.com/searchresults.html?ss=Government+Camp%2C+Oregon"},
@@ -783,6 +816,7 @@ const MOUNTAINS = [
     ]},
   { id:"mtbachelor", name:"Mt. Bachelor", state:"OR", region:"pnw", nickname:"Oregon's Volcano",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"ikon",
     lat:43.9791, lon:-121.6880,
     travelMode:"fly", distanceDenver:1200, distanceSLC:880, distanceSeattle:270, distanceSF:540, distanceLA:880, distancePortland:155,
     distanceBZN:900,
@@ -793,7 +827,7 @@ const MOUNTAINS = [
     pros:"Massive terrain, Bend is a world-class outdoor town, great snow, affordable.",
     cons:"Wind can shut summit, Bend flights can be pricey.",
     openSnowLink:"https://opensnow.com/location/mount-bachelor",
-    resortLink:"https://www.mtbachelor.com/the-mountain/conditions/",
+    resortLink:"https://www.mtbachelor.com/the-mountain/mountain-conditions/snow-report.aspx",
     flyInOptions:[{code:"PDX",name:"Portland Intl",drive:"3 hrs",note:"Most flights, bigger airport"}, {code:"SFO",name:"San Francisco Intl",drive:"5.5 hrs",note:"Long drive but solid West Coast option"}, {code:"RDM",name:"Redmond–Roberts Field",drive:"30 min",note:"Closest but very limited flights"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Bend Hostel",pricePerNight:45,note:"30 min from Bachelor, tons of options",link:"https://www.booking.com/searchresults.html?ss=Bend%2C+Oregon"},
@@ -802,6 +836,7 @@ const MOUNTAINS = [
     ]},
   { id:"hoodoo", name:"Hoodoo Ski Area", state:"OR", region:"pnw", nickname:"Central Oregon's Own",
     tags:["all-mountain","beginner","intermediate","value","family"],
+    skiPass:"indy",
     lat:44.4058, lon:-121.8669,
     travelMode:"drive", distanceDenver:1250, distanceSLC:900, distanceSeattle:290, distanceSF:560, distanceLA:900, distancePortland:175,
     distanceBZN:880,
@@ -812,7 +847,7 @@ const MOUNTAINS = [
     pros:"Cheapest lift tickets in the PNW, almost no crowds, easy access from I-20.",
     cons:"Smaller vertical, lower elevation means mixed snow quality.",
     openSnowLink:"https://opensnow.com/location/hoodoo",
-    resortLink:"https://www.hoodoo.com/snow-report/",
+    resortLink:"https://hoodoo.com/conditions/",
     flyInOptions:[{code:"PDX",name:"Portland Intl",drive:"2.5 hrs",note:"Most flights"}, {code:"EUG",name:"Eugene Airport",drive:"1.5 hrs",note:"Closer, good southern Oregon option"}, {code:"RDM",name:"Redmond–Roberts Field",drive:"1 hr",note:"Closest, very limited service"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Sisters OR Rental",pricePerNight:70,note:"30 min east, charming western town",link:"https://www.booking.com/searchresults.html?ss=Sisters%2C+Oregon"},
@@ -823,15 +858,16 @@ const MOUNTAINS = [
   // CALIFORNIA / SIERRA (8)
   { id:"mammoth", name:"Mammoth Mountain", state:"CA", region:"sierra", nickname:"The Longest Season",
     tags:["all-mountain","powder","advanced","intermediate","park"],
+    skiPass:"ikon",
     lat:37.6308, lon:-119.0326,
     travelMode:"fly", distanceDenver:1000, distanceSLC:650, distanceSeattle:900, distanceSF:315, distanceLA:325, distancePortland:790,
     distanceBZN:950,
     verticalDrop:3100, skiableAcres:3500, averageSnowfall:400,
     liftTicket:189, avgLodgingPerNight:250,
     crowdScore:62, snowScore:82, valueScore:58, accessScore:72,
-    description:"Open into July or August most years. Sierra Nevada at its most reliable.",
-    pros:"Longest season in California, massive terrain, great park.",
-    cons:"LA weekend crowds are brutal, expensive lodging.",
+    description:"Sits at 11,053 ft summit elevation — among the highest in California. 3,500 acres, 150+ trails, and a season that runs well into June most years. The Main Lodge gondola and Panorama Gondola reach the summit in minutes. The Eastern Sierra snowpack is massive: 400"+ in big years. Direct flights from LAX, SFO, BUR to MMH.",
+    pros:"Longest season in California (sometimes July), highest resort in CA, Ikon Pass, direct flights from LA/SF, world-class halfpipe",
+    cons:"6 hours from LA by car, can be very crowded on holiday weekends, highway 395 closure risk in heavy snow years",
     openSnowLink:"https://opensnow.com/location/mammoth-mountain",
     resortLink:"https://www.mammothmountain.com/mountain/weather-and-conditions/snow-report",
     flyInOptions:[{code:"LAX",name:"Los Angeles Intl",drive:"5 hrs drive",note:"Straight shot up US-395 — skip the flight"}, {code:"SFO",name:"San Francisco Intl",drive:"5 hrs drive",note:"Drive via I-80 + US-395"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"3.5 hrs",note:"Good fares, drive south on US-395"}, {code:"MMH",name:"Mammoth Yosemite Airport",drive:"10 min",note:"Direct seasonal flights from LA/SF — pricey"}],
@@ -842,6 +878,7 @@ const MOUNTAINS = [
     ]},
   { id:"palisades", name:"Palisades Tahoe", state:"CA", region:"sierra", nickname:"America's Ski Area",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"ikon",
     lat:39.1969, lon:-120.2358,
     travelMode:"fly", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:196, distanceLA:520, distancePortland:730,
     distanceBZN:850,
@@ -861,6 +898,7 @@ const MOUNTAINS = [
     ]},
   { id:"heavenly", name:"Heavenly", state:"CA/NV", region:"sierra", nickname:"Lake Views for Days",
     tags:["all-mountain","intermediate","beginner","family"],
+    skiPass:"epic",
     lat:38.9353, lon:-119.9400,
     travelMode:"fly", distanceDenver:1150, distanceSLC:700, distanceSeattle:890, distanceSF:199, distanceLA:520, distancePortland:770,
     distanceBZN:860,
@@ -880,6 +918,7 @@ const MOUNTAINS = [
     ]},
   { id:"kirkwood", name:"Kirkwood", state:"CA", region:"sierra", nickname:"Sierra's Best Kept Secret",
     tags:["all-mountain","powder","advanced","intermediate","value"],
+    skiPass:"epic",
     lat:38.6844, lon:-120.0655,
     travelMode:"fly", distanceDenver:1150, distanceSLC:700, distanceSeattle:890, distanceSF:210, distanceLA:540, distancePortland:790,
     distanceBZN:870,
@@ -899,6 +938,7 @@ const MOUNTAINS = [
     ]},
   { id:"northstar", name:"Northstar California", state:"CA", region:"sierra", nickname:"The Ritzy One",
     tags:["all-mountain","intermediate","beginner","family","luxury"],
+    skiPass:"epic",
     lat:39.2736, lon:-120.1211,
     travelMode:"fly", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:197, distanceLA:520, distancePortland:730,
     distanceBZN:850,
@@ -918,6 +958,7 @@ const MOUNTAINS = [
     ]},
   { id:"sugarbowl", name:"Sugar Bowl", state:"CA", region:"sierra", nickname:"The Original Tahoe",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"indep",
     lat:39.3028, lon:-120.3489,
     travelMode:"drive", distanceDenver:1100, distanceSLC:680, distanceSeattle:850, distanceSF:190, distanceLA:520, distancePortland:730,
     distanceBZN:850,
@@ -928,7 +969,7 @@ const MOUNTAINS = [
     pros:"Consistently deep Sierra snow, no crowds, old-school feel, cheap by Tahoe standards.",
     cons:"Smaller terrain, no big resort amenities.",
     openSnowLink:"https://opensnow.com/location/sugar-bowl",
-    resortLink:"https://www.sugarbowl.com/conditions",
+    resortLink:"https://sugarbowl.com/conditions/",
     flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Most flights"}, {code:"SMF",name:"Sacramento Intl",drive:"2 hrs",note:"Budget option"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"1.5 hrs",note:"Cheapest fares, right off I-80"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Truckee Hostel",pricePerNight:55,note:"10 min from Sugar Bowl",link:"https://www.booking.com/searchresults.html?ss=Truckee%2C+California"},
@@ -937,6 +978,7 @@ const MOUNTAINS = [
     ]},
   { id:"boreal", name:"Boreal Mountain", state:"CA", region:"sierra", nickname:"Donner Summit Shredder",
     tags:["all-mountain","beginner","intermediate","park","value"],
+    skiPass:"indep",
     lat:39.3508, lon:-120.3508,
     travelMode:"drive", distanceDenver:1100, distanceSLC:685, distanceSeattle:855, distanceSF:188, distanceLA:515, distancePortland:728,
     distanceBZN:855,
@@ -947,7 +989,7 @@ const MOUNTAINS = [
     pros:"Cheapest Tahoe tickets, right off I-80, good Donner Summit snow, solid park.",
     cons:"Small vertical, limited advanced terrain.",
     openSnowLink:"https://opensnow.com/location/boreal",
-    resortLink:"https://www.borealski.com/conditions",
+    resortLink:"https://borealski.com/snow-report/",
     flyInOptions:[{code:"SFO",name:"San Francisco Intl",drive:"3.5 hrs",note:"Most flights — Boreal is literally off I-80"}, {code:"SMF",name:"Sacramento Intl",drive:"2 hrs",note:"Budget option, easy I-80 drive"}, {code:"RNO",name:"Reno-Tahoe Intl",drive:"1 hr",note:"Closest major airport"}],
     lodgingTiers:[
       {tier:"budget",label:"Budget",name:"Truckee Budget Hotel",pricePerNight:85,note:"10 min from Boreal, many options",link:"https://www.booking.com/searchresults.html?ss=Truckee%2C+California"},
@@ -958,6 +1000,7 @@ const MOUNTAINS = [
   // NEVADA (1)
   { id:"mtrose", name:"Mt. Rose", state:"NV", region:"sierra", nickname:"Reno's Backyard",
     tags:["all-mountain","intermediate","advanced","value"],
+    skiPass:"ikon",
     lat:39.3133, lon:-119.8900,
     travelMode:"fly", distanceDenver:1200, distanceSLC:750, distanceSeattle:900, distanceSF:220, distanceLA:570, distancePortland:780,
     distanceBZN:840,
@@ -979,16 +1022,17 @@ const MOUNTAINS = [
   // NEW MEXICO (2)
   { id:"taos", name:"Taos Ski Valley", state:"NM", region:"rockies", nickname:"The Southwest Powder Bowl",
     tags:["all-mountain","powder","advanced","intermediate"],
+    skiPass:"mtn",
     lat:36.5953, lon:-105.4511,
     travelMode:"fly", distanceDenver:290, distanceSLC:600, distanceSeattle:1600, distanceSF:1400, distanceLA:1200, distancePortland:1650, distanceBZN:900,
     verticalDrop:2612, skiableAcres:1294, averageSnowfall:305,
     liftTicket:149, avgLodgingPerNight:220,
     crowdScore:28, snowScore:78, valueScore:72, accessScore:58,
-    description:"High desert powder in the Sangre de Cristo mountains. Surprisingly legit skiing 20 miles north of Taos.",
-    pros:"Uncrowded, light dry snow, incredible New Mexican culture, world-class art scene in Taos town.",
-    cons:"Remote, small airport, limited direct flights.",
+    description:"The most serious ski mountain in New Mexico and arguably the most culturally distinct resort in the West. 13,150 ft summit, 3,845 vertical feet of lift-served terrain. Kachina Bowl and Highline Ridge are premier expert terrain. The Taos Ski Valley village retains a European character — no chains, independent lodges, serious ski culture since 1956.",
+    pros:"Least crowded major resort in the Southwest, Mountain Collective days, serious expert terrain, authentic ski village",
+    cons:"Regional airport (SAF) only — 2.5 hrs from Albuquerque, lower snowfall than CO/UT (~300"), below-average beginner options",
     openSnowLink:"https://opensnow.com/location/taos-ski-valley",
-    resortLink:"https://www.skitaos.com/mountain-info/snow-report",
+    resortLink:"https://www.skitaos.com/mountain/conditions",
     flyInOptions:[
       {code:"ABQ",name:"Albuquerque Intl",drive:"2.5 hrs",note:"Best fares — direct flights on Southwest, Delta, United"},
       {code:"DEN",name:"Denver Intl",drive:"5 hrs",note:"More flight options, long drive south on I-25"},
@@ -1001,6 +1045,7 @@ const MOUNTAINS = [
     ]},
   { id:"santafe", name:"Ski Santa Fe", state:"NM", region:"rockies", nickname:"The High Desert Surprise",
     tags:["all-mountain","intermediate","beginner","value","family"],
+    skiPass:"indy",
     lat:35.7920, lon:-105.8317,
     travelMode:"fly", distanceDenver:390, distanceSLC:700, distanceSeattle:1700, distanceSF:1350, distanceLA:1100, distancePortland:1700, distanceBZN:1000,
     verticalDrop:1725, skiableAcres:660, averageSnowfall:225,
@@ -1009,8 +1054,8 @@ const MOUNTAINS = [
     description:"15 miles from downtown Santa Fe. 12,000 ft summit. Ski in the morning, world-class art and food in the afternoon.",
     pros:"Santa Fe is one of the best small cities in the US, cheap tickets, almost no crowds, great culture.",
     cons:"Lower snowfall, smaller terrain, not a destination ski resort.",
-    openSnowLink:"https://opensnow.com/location/ski-santa-fe",
-    resortLink:"https://skisantafe.com/snow-report/",
+    openSnowLink:"https://opensnow.com/location/santa-fe-ski",
+    resortLink:"https://skisantafe.com/conditions/",
     flyInOptions:[
       {code:"ABQ",name:"Albuquerque Intl",drive:"1.5 hrs",note:"Best fares — tons of direct flights"},
       {code:"SAF",name:"Santa Fe Municipal",drive:"20 min",note:"Closest but very limited service"},
@@ -1025,6 +1070,7 @@ const MOUNTAINS = [
   // IDAHO (3)
   { id:"sunvalley", name:"Sun Valley", state:"ID", region:"rockies", nickname:"America's First Ski Resort",
     tags:["all-mountain","powder","advanced","intermediate","luxury"],
+    skiPass:"mtn",
     lat:43.6957, lon:-114.3516,
     travelMode:"fly", distanceDenver:680, distanceSLC:240, distanceSeattle:700, distanceSF:800, distanceLA:900, distancePortland:650, distanceBZN:350,
     verticalDrop:3400, skiableAcres:2154, averageSnowfall:220,
@@ -1034,7 +1080,7 @@ const MOUNTAINS = [
     pros:"Legendary grooming, beautiful town, celebrities but not crowded, great Nordic skiing.",
     cons:"Lower snowfall than Utah/Montana, expensive lodging, remote.",
     openSnowLink:"https://opensnow.com/location/sun-valley",
-    resortLink:"https://www.sunvalley.com/mountain/snow-report",
+    resortLink:"https://www.sunvalley.com/explore/mountain/snow-report",
     flyInOptions:[
       {code:"SLC",name:"Salt Lake City Intl",drive:"3 hrs",note:"Best fares — drive north through Twin Falls"},
       {code:"BOI",name:"Boise Airport",drive:"2.5 hrs",note:"Good Southwest/Delta options, scenic drive"},
@@ -1047,6 +1093,7 @@ const MOUNTAINS = [
     ]},
   { id:"schweitzer", name:"Schweitzer", state:"ID", region:"pnw", nickname:"Northern Idaho's Hidden Giant",
     tags:["all-mountain","powder","intermediate","advanced","value","family"],
+    skiPass:"indy",
     lat:48.3669, lon:-116.6228,
     travelMode:"fly", distanceDenver:1000, distanceSLC:700, distanceSeattle:350, distanceSF:1100, distanceLA:1250, distancePortland:420, distanceBZN:280,
     verticalDrop:2400, skiableAcres:2900, averageSnowfall:300,
@@ -1056,7 +1103,7 @@ const MOUNTAINS = [
     pros:"Almost nobody goes here, massive terrain, great value, stunning lake views.",
     cons:"Remote, limited flights to Spokane, cold.",
     openSnowLink:"https://opensnow.com/location/schweitzer",
-    resortLink:"https://www.schweitzer.com/mountain/snow-report/",
+    resortLink:"https://schweitzer.com/mountain/conditions/",
     flyInOptions:[
       {code:"GEG",name:"Spokane Intl",drive:"1.5 hrs",note:"Best option — good Alaska/Delta service"},
       {code:"SEA",name:"Seattle-Tacoma Intl",drive:"5 hrs",note:"Most flights, long drive east on US-2"},
@@ -1069,6 +1116,7 @@ const MOUNTAINS = [
     ]},
   { id:"bogusbasin", name:"Bogus Basin", state:"ID", region:"rockies", nickname:"Boise's Backyard",
     tags:["all-mountain","beginner","intermediate","value","family"],
+    skiPass:"indy",
     lat:43.7635, lon:-116.1013,
     travelMode:"fly", distanceDenver:750, distanceSLC:340, distanceSeattle:500, distanceSF:700, distanceLA:830, distancePortland:430, distanceBZN:420,
     verticalDrop:1800, skiableAcres:2600, averageSnowfall:250,
@@ -1077,8 +1125,8 @@ const MOUNTAINS = [
     description:"16 miles from Boise, non-profit community ski area. Night skiing until 10pm. Dirt cheap.",
     pros:"Cheapest tickets in the Northwest, 16 miles from Boise, night skiing, non-profit.",
     cons:"Lower snowfall, can be icy, smaller terrain.",
-    openSnowLink:"https://opensnow.com/location/bogus-basin",
-    resortLink:"https://www.bogusbasin.org/snow-report/",
+    openSnowLink:"https://opensnow.com/location/bogus-basin-ski-resort",
+    resortLink:"https://bogusbasin.org/mountain/conditions/",
     flyInOptions:[
       {code:"BOI",name:"Boise Airport",drive:"30 min",note:"Best option — Southwest has great Boise fares"},
       {code:"SLC",name:"Salt Lake City Intl",drive:"5 hrs",note:"Budget backup option"},
@@ -1093,6 +1141,7 @@ const MOUNTAINS = [
   // MORE COLORADO (4)
   { id:"wolfcreek", name:"Wolf Creek", state:"CO", region:"rockies", nickname:"The Snow Hole",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"indy",
     lat:37.4747, lon:-106.7944,
     travelMode:"fly", distanceDenver:240, distanceSLC:550, distanceSeattle:1550, distanceSF:1550, distanceLA:1350, distancePortland:1600, distanceBZN:950,
     verticalDrop:1604, skiableAcres:1604, averageSnowfall:430,
@@ -1102,7 +1151,7 @@ const MOUNTAINS = [
     pros:"Most snow in CO, virtually no crowds, cheapest tickets, no resort development.",
     cons:"Very remote San Luis Valley, no on-mountain lodging, limited services.",
     openSnowLink:"https://opensnow.com/location/wolf-creek",
-    resortLink:"https://wolfcreekski.com/conditions/",
+    resortLink:"https://wolfcreekski.com/snow-report/",
     flyInOptions:[
       {code:"DEN",name:"Denver Intl",drive:"4 hrs",note:"Best fares — drive south on US-160"},
       {code:"ABQ",name:"Albuquerque Intl",drive:"3.5 hrs",note:"Good Southwest options, drive north"},
@@ -1115,6 +1164,7 @@ const MOUNTAINS = [
     ]},
   { id:"silverton", name:"Silverton Mountain", state:"CO", region:"rockies", nickname:"Guides Only",
     tags:["all-mountain","powder","advanced"],
+    skiPass:"indep",
     lat:37.8767, lon:-107.6611,
     travelMode:"fly", distanceDenver:340, distanceSLC:500, distanceSeattle:1550, distanceSF:1600, distanceLA:1450, distancePortland:1600, distanceBZN:950,
     verticalDrop:3000, skiableAcres:26819, averageSnowfall:400,
@@ -1124,7 +1174,7 @@ const MOUNTAINS = [
     pros:"Most acres per skier of any resort, zero crowds by design, extreme terrain, San Juan powder.",
     cons:"Guide required most days, extremely remote, one chairlift, serious expert terrain only.",
     openSnowLink:"https://opensnow.com/location/silverton-mountain",
-    resortLink:"https://silvertonmountain.com/snow-conditions/",
+    resortLink:"https://silvertonmountain.com/conditions/",
     flyInOptions:[
       {code:"DEN",name:"Denver Intl",drive:"6 hrs",note:"Best fares — long drive but worth it"},
       {code:"TEX",name:"Telluride Regional",drive:"1 hr",note:"Pricey but closest airport to Silverton"},
@@ -1137,6 +1187,7 @@ const MOUNTAINS = [
     ]},
   { id:"monarch", name:"Monarch Mountain", state:"CO", region:"rockies", nickname:"The Powder Highway",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"indy",
     lat:38.5136, lon:-106.3306,
     travelMode:"fly", distanceDenver:175, distanceSLC:480, distanceSeattle:1450, distanceSF:1500, distanceLA:1350, distancePortland:1500, distanceBZN:800,
     verticalDrop:1162, skiableAcres:800, averageSnowfall:350,
@@ -1146,7 +1197,7 @@ const MOUNTAINS = [
     pros:"Continental Divide snowpack, almost no crowds, cheap tickets, easy Salida access.",
     cons:"Smaller terrain, no on-mountain lodging.",
     openSnowLink:"https://opensnow.com/location/monarch-mountain",
-    resortLink:"https://www.skimonarch.com/mountain/snow-report",
+    resortLink:"https://www.skimonarch.com/conditions/",
     flyInOptions:[
       {code:"DEN",name:"Denver Intl",drive:"3 hrs",note:"Best fares — drive via US-50"},
       {code:"COS",name:"Colorado Springs Airport",drive:"2.5 hrs",note:"Smaller but cheaper than DEN sometimes"},
@@ -1159,6 +1210,7 @@ const MOUNTAINS = [
     ]},
   { id:"arapahoe", name:"Arapahoe Roosevelt NF Backcountry", state:"CO", region:"rockies", nickname:"Loveland Pass",
     tags:["all-mountain","powder","advanced","value"],
+    skiPass:"indy",
     lat:39.6786, lon:-105.9094,
     travelMode:"drive", distanceDenver:58, distanceSLC:460, distanceSeattle:1215, distanceSF:1415, distanceLA:1395, distancePortland:1365, distanceBZN:625,
     verticalDrop:1800, skiableAcres:900, averageSnowfall:380,
@@ -1182,6 +1234,7 @@ const MOUNTAINS = [
   // MORE CALIFORNIA (2)
   { id:"junemtn", name:"June Mountain", state:"CA", region:"sierra", nickname:"Mammoth's Quieter Sister",
     tags:["all-mountain","intermediate","beginner","value","family"],
+    skiPass:"epic",
     lat:37.7779, lon:-119.0803,
     travelMode:"fly", distanceDenver:1050, distanceSLC:680, distanceSeattle:950, distanceSF:350, distanceLA:310, distancePortland:840, distanceBZN:1100,
     verticalDrop:2590, skiableAcres:1500, averageSnowfall:250,
@@ -1204,6 +1257,7 @@ const MOUNTAINS = [
     ]},
   { id:"bearvalley", name:"Bear Valley", state:"CA", region:"sierra", nickname:"Highway 4's Gem",
     tags:["all-mountain","intermediate","beginner","value","family"],
+    skiPass:"indep",
     lat:38.4977, lon:-120.0478,
     travelMode:"fly", distanceDenver:1200, distanceSLC:750, distanceSeattle:900, distanceSF:190, distanceLA:560, distancePortland:760, distanceBZN:1000,
     verticalDrop:1900, skiableAcres:1680, averageSnowfall:359,
@@ -1213,7 +1267,7 @@ const MOUNTAINS = [
     pros:"No Bay Area crowds, good snowpack, affordable, great intermediate terrain.",
     cons:"Hwy 4 can close in storms, remote by Sierra standards.",
     openSnowLink:"https://opensnow.com/location/bear-valley",
-    resortLink:"https://www.bearvalley.com/mountain/snow-report",
+    resortLink:"https://bearvalley.com/conditions/",
     flyInOptions:[
       {code:"SFO",name:"San Francisco Intl",drive:"3 hrs",note:"Best option — drive via I-580 and Hwy 4"},
       {code:"SMF",name:"Sacramento Intl",drive:"2.5 hrs",note:"Budget fares, easy drive east"},
@@ -1228,6 +1282,7 @@ const MOUNTAINS = [
   // ARIZONA (1)
   { id:"arizonasnowbowl", name:"Arizona Snowbowl", state:"AZ", region:"rockies", nickname:"The Desert Peak",
     tags:["all-mountain","intermediate","beginner","value"],
+    skiPass:"indep",
     lat:35.3294, lon:-111.7107,
     travelMode:"fly", distanceDenver:500, distanceSLC:550, distanceSeattle:1500, distanceSF:1200, distanceLA:720, distancePortland:1500, distanceBZN:1100,
     verticalDrop:2300, skiableAcres:777, averageSnowfall:260,
@@ -1237,7 +1292,7 @@ const MOUNTAINS = [
     pros:"Great for Southwest skiers, Flagstaff is a fun college town, cheap tickets, easy PHX access.",
     cons:"Lower snowfall, dry year can be rough, smaller terrain.",
     openSnowLink:"https://opensnow.com/location/arizona-snowbowl",
-    resortLink:"https://www.arizonasnowbowl.com/mountain/snow-report/",
+    resortLink:"https://arizonasnowbowl.com/snow-report/",
     flyInOptions:[
       {code:"PHX",name:"Phoenix Sky Harbor",drive:"2.5 hrs",note:"Best fares — tons of direct flights, easy I-17 drive"},
       {code:"FLG",name:"Flagstaff Pulliam Airport",drive:"15 min",note:"Closest — very limited service, mostly American Eagle"},
@@ -1252,6 +1307,7 @@ const MOUNTAINS = [
   // MORE MONTANA (1)
   { id:"losttrl", name:"Lost Trail Powder Mountain", state:"MT/ID", region:"rockies", nickname:"The State Line Powder Bowl",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"indy",
     lat:45.6969, lon:-113.9508,
     travelMode:"fly", distanceDenver:750, distanceSLC:400, distanceSeattle:650, distanceSF:1000, distanceLA:1150, distancePortland:700, distanceBZN:190,
     verticalDrop:1200, skiableAcres:1800, averageSnowfall:300,
@@ -1260,8 +1316,8 @@ const MOUNTAINS = [
     description:"Straddles the MT/ID border on the Bitterroot Divide. $55 tickets. Often completely empty on a powder day.",
     pros:"Cheapest lift tickets in the entire West, almost always empty, good Montana powder.",
     cons:"Very remote, no lodging at mountain, limited services.",
-    openSnowLink:"https://opensnow.com/location/lost-trail-powder-mountain",
-    resortLink:"https://www.losttrail.com/conditions/",
+    openSnowLink:"https://opensnow.com/location/lost-trail",
+    resortLink:"https://losttrail.com/ski/snow-conditions/",
     flyInOptions:[
       {code:"MSO",name:"Missoula Intl",drive:"1.5 hrs",note:"Best option — Alaska/Delta service"},
       {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"3 hrs",note:"More flights, longer drive"},
@@ -1276,6 +1332,7 @@ const MOUNTAINS = [
   // ADDITIONAL WESTERN RESORTS
   { id:"redlodge", name:"Red Lodge Mountain", state:"MT", region:"rockies", nickname:"Beartooth Country",
     tags:["all-mountain","intermediate","advanced","value","family"],
+    skiPass:"indy",
     lat:45.1833, lon:-109.2500,
     travelMode:"fly", distanceDenver:580, distanceSLC:500, distanceSeattle:950, distanceSF:1300, distanceLA:1400, distancePortland:1000, distanceBZN:60,
     verticalDrop:2400, skiableAcres:1600, averageSnowfall:250,
@@ -1284,8 +1341,8 @@ const MOUNTAINS = [
     description:"Gateway to the Beartooth Highway. 60 miles from Bozeman, $79 tickets, almost never crowded.",
     pros:"Close to BZN, cheap, great intermediate terrain, Red Lodge is a fun little town.",
     cons:"Lower snowfall than western MT, smaller resort.",
-    openSnowLink:"https://opensnow.com/location/red-lodge-mountain",
-    resortLink:"https://www.redlodgemountain.com/mountain/snow-report",
+    openSnowLink:"https://opensnow.com/location/red-lodge",
+    resortLink:"https://redlodgemountain.com/snow-report/",
     flyInOptions:[
       {code:"BZN",name:"Bozeman Yellowstone Intl",drive:"1 hr",note:"Best option — tons of direct flights, easy drive"},
       {code:"BIL",name:"Billings Logan Intl",drive:"1 hr",note:"Closer to Red Lodge, decent Delta/United service"},
@@ -1298,6 +1355,7 @@ const MOUNTAINS = [
     ]},
   { id:"tamarack", name:"Tamarack Resort", state:"ID", region:"rockies", nickname:"Idaho's Newest Mountain",
     tags:["all-mountain","intermediate","advanced","value"],
+    skiPass:"indy",
     lat:44.7166, lon:-115.9830,
     travelMode:"fly", distanceDenver:750, distanceSLC:350, distanceSeattle:450, distanceSF:800, distanceLA:950, distancePortland:480, distanceBZN:380,
     verticalDrop:2800, skiableAcres:1100, averageSnowfall:300,
@@ -1306,8 +1364,8 @@ const MOUNTAINS = [
     description:"Rebuilt and reopened resort on Lake Cascade. Almost never crowded. Great intermediate terrain.",
     pros:"Almost nobody goes here, Lake Cascade views, good value, close to Boise.",
     cons:"Limited services, remote valley, still developing.",
-    openSnowLink:"https://opensnow.com/location/tamarack-resort",
-    resortLink:"https://www.tamarackidaho.com/winter/mountain-report/",
+    openSnowLink:"https://opensnow.com/location/tamarack",
+    resortLink:"https://tamarackidaho.com/mountain-report/",
     flyInOptions:[
       {code:"BOI",name:"Boise Airport",drive:"1.5 hrs",note:"Best option — great Southwest fares"},
       {code:"SLC",name:"Salt Lake City Intl",drive:"4 hrs",note:"Budget backup"},
@@ -1320,6 +1378,7 @@ const MOUNTAINS = [
     ]},
   { id:"purgatory", name:"Purgatory Resort", state:"CO", region:"rockies", nickname:"Durango's Mountain",
     tags:["all-mountain","intermediate","beginner","family","value"],
+    skiPass:"indy",
     lat:37.6297, lon:-107.8622,
     travelMode:"fly", distanceDenver:350, distanceSLC:530, distanceSeattle:1550, distanceSF:1550, distanceLA:1380, distancePortland:1600, distanceBZN:950,
     verticalDrop:2029, skiableAcres:1635, averageSnowfall:260,
@@ -1329,7 +1388,7 @@ const MOUNTAINS = [
     pros:"Great family terrain, Durango is a fantastic town, narrow gauge railroad, uncrowded.",
     cons:"Lower snowfall than northern CO, remote Four Corners location.",
     openSnowLink:"https://opensnow.com/location/purgatory",
-    resortLink:"https://www.purgatoryresort.com/mountain/snow-report/",
+    resortLink:"https://www.purgatoryresort.com/the-mountain/mountain-conditions/snow-report.aspx",
     flyInOptions:[
       {code:"DRO",name:"Durango-La Plata County",drive:"45 min",note:"Best option — direct flights on United from DEN"},
       {code:"DEN",name:"Denver Intl",drive:"6 hrs",note:"Most fares, connect to DRO or drive"},
@@ -1342,6 +1401,7 @@ const MOUNTAINS = [
     ]},
   { id:"mtspokane", name:"Mt. Spokane", state:"WA", region:"pnw", nickname:"Spokane's Backyard",
     tags:["all-mountain","beginner","intermediate","value","family"],
+    skiPass:"indy",
     lat:47.9233, lon:-117.1069,
     travelMode:"fly", distanceDenver:1100, distanceSLC:800, distanceSeattle:280, distanceSF:1100, distanceLA:1250, distancePortland:360, distanceBZN:300,
     verticalDrop:2000, skiableAcres:1425, averageSnowfall:300,
@@ -1350,8 +1410,8 @@ const MOUNTAINS = [
     description:"30 miles from Spokane. Good value, family-friendly, Inland Northwest snow.",
     pros:"Cheap tickets, close to Spokane, great for families and beginners, night skiing.",
     cons:"Smaller than Crystal or Stevens, can be icy.",
-    openSnowLink:"https://opensnow.com/location/mt-spokane",
-    resortLink:"https://www.mtspokane.com/ski-report",
+    openSnowLink:"https://opensnow.com/location/mount-spokane",
+    resortLink:"https://mtspokane.com/snow-conditions/",
     flyInOptions:[
       {code:"GEG",name:"Spokane Intl",drive:"35 min",note:"Best option — good Alaska/Delta service"},
       {code:"SEA",name:"Seattle-Tacoma Intl",drive:"4 hrs",note:"Most flights, drive east on I-90"},
@@ -1364,6 +1424,7 @@ const MOUNTAINS = [
     ]},
   { id:"anthonylakes", name:"Anthony Lakes", state:"OR", region:"pnw", nickname:"Eastern Oregon Powder",
     tags:["all-mountain","powder","intermediate","advanced","value"],
+    skiPass:"indy",
     lat:44.9611, lon:-118.2344,
     travelMode:"fly", distanceDenver:1000, distanceSLC:680, distanceSeattle:400, distanceSF:700, distanceLA:1000, distancePortland:300, distanceBZN:450,
     verticalDrop:900, skiableAcres:900, averageSnowfall:300,
@@ -1372,8 +1433,8 @@ const MOUNTAINS = [
     description:"Wallowa Mountains of eastern Oregon. Incredibly dry powder, $59 tickets, almost always empty.",
     pros:"Driest powder in Oregon, $59 tickets, literally empty most days, beautiful Wallowa setting.",
     cons:"Very small, very remote, limited services.",
-    openSnowLink:"https://opensnow.com/location/anthony-lakes",
-    resortLink:"https://www.anthonylakes.com/conditions",
+    openSnowLink:"https://opensnow.com/location/anthony-lakes-mountain-resort",
+    resortLink:"https://anthonylakes.com/conditions/snow-report/",
     flyInOptions:[
       {code:"PDX",name:"Portland Intl",drive:"4 hrs",note:"Best fares — drive east on I-84 then south"},
       {code:"BOI",name:"Boise Airport",drive:"3 hrs",note:"Good Southwest option, drive north on US-30"},
@@ -1386,6 +1447,7 @@ const MOUNTAINS = [
       ]},
   { id:"sundance", name:"Sundance Mountain Resort", state:"UT", region:"rockies", nickname:"Redford's Mountain",
     tags:["all-mountain","intermediate","beginner","value","family"],
+    skiPass:"indep",
     lat:40.3908, lon:-111.5888,
     travelMode:"fly", distanceDenver:520, distanceSLC:55, distanceSeattle:870, distanceSF:760, distanceLA:700, distancePortland:840, distanceBZN:440,
     verticalDrop:2150, skiableAcres:450, averageSnowfall:323,
@@ -1394,8 +1456,8 @@ const MOUNTAINS = [
     description:"Robert Redford's mountain. Intimate, artistic, no corporate feel. Mt. Timpanogos views are unreal.",
     pros:"Completely unique atmosphere, almost no crowds, beautiful Timp views, great Utah snow.",
     cons:"Smaller terrain, limited lodging options.",
-    openSnowLink:"https://opensnow.com/location/sundance-mountain-resort",
-    resortLink:"https://www.sundanceresort.com/mountain/snow-report",
+    openSnowLink:"https://opensnow.com/location/sundance",
+    resortLink:"https://www.sundanceresort.com/mountain/conditions/",
     flyInOptions:[
       {code:"SLC",name:"Salt Lake City Intl",drive:"1 hr",note:"Best and really only option — 55 miles south on I-15"},
       {code:"OGD",name:"Ogden-Hinckley",drive:"1.5 hrs",note:"Very limited flights but closer than you'd think"},
@@ -1481,22 +1543,33 @@ function scoreResort(m, params, liveData) {
   if (travel === "drive" && !canDrive) return -1;
   if (travel === "fly" && !canFly) return -1;
 
-  const budgetFit = cost <= budget ? 1 : cost <= budget*1.2 ? 0.55 : 0.1;
+  // Hard budget filter — over 40% is a no
+  if (cost > budget * 1.4) return -1;
+  const budgetFit = cost <= budget ? 1 : cost <= budget*1.15 ? 0.7 : 0.35;
 
-  let liveBoost = 0;
+  // Live snow: biggest factor when a storm is hitting
+  let liveSnowScore = m.snowScore;
   if (liveData?.[m.id]) {
     const total = liveData[m.id].forecast?.reduce((s,d)=>s+(d.snow||0),0) || 0;
-    if (total > 20) liveBoost = 9;
-    else if (total > 8) liveBoost = 4;
+    if (total > 24) liveSnowScore = Math.min(liveSnowScore + 25, 100);
+    else if (total > 12) liveSnowScore = Math.min(liveSnowScore + 14, 100);
+    else if (total > 4)  liveSnowScore = Math.min(liveSnowScore + 6, 100);
   }
 
-  const snow = (m.snowScore + liveBoost) * 0.35;
-  const value = m.valueScore * budgetFit * 0.25;
-  const crowd = (100 - m.crowdScore) * 0.18;
-  const access = m.accessScore * 0.1;
-  const styleBonus = m.tags?.includes(style) ? 10 : 0;
-  const skillBonus = m.tags?.includes(skill) ? 6 : 0;
-  return Math.round(snow + value + crowd + access + styleBonus + skillBonus);
+  // Distance penalty — closer is better but far ones still show up
+  const distPenalty = dist > 600 ? 0.75 : dist > 400 ? 0.88 : 1;
+
+  // Snow + budget are what actually matter most
+  const snowPts   = liveSnowScore * 0.32;
+  const budgetPts = m.valueScore * budgetFit * 0.28;
+  const crowdPts  = (100 - m.crowdScore) * 0.16;
+  const accessPts = m.accessScore * distPenalty * 0.12;
+
+  // Fit bonuses — reward exact matches
+  const stylePts = m.tags?.includes(style) ? 12 : m.tags?.includes("all-mountain") ? 4 : 0;
+  const skillPts = m.tags?.includes(skill) ? 8 : 0;
+
+  return Math.round(snowPts + budgetPts + crowdPts + accessPts + stylePts + skillPts);
 }
 
 // ─── LIVE FORECAST ────────────────────────────────────────────────────────────
@@ -1637,6 +1710,53 @@ function ForecastDay({ day, icon, snow }) {
   );
 }
 
+// ─── PASS BADGE ───────────────────────────────────────────────────────────────
+const PASS_CONFIG = {
+  epic:  { label:"Epic Pass",           bg:"#003087", color:"#fff",      stripe:"#0044b8" },
+  ikon:  { label:"Ikon Pass",           bg:"#1a3c8f", color:"#fff",      stripe:"#2451b3" },
+  mtn:   { label:"Mountain Collective", bg:"#1f4a2e", color:"#c8f0d8",   stripe:"#2a6040" },
+  indy:  { label:"Indy Pass",           bg:"#b8560a", color:"#fff",      stripe:"#d4691a" },
+  indep: { label:"Independent",         bg:"#8a7560", color:"#fff",      stripe:"#9e8970" },
+};
+function PassBannerStrip({ pass }) {
+  if (!pass || pass === "indep") return null;
+  const cfg = PASS_CONFIG[pass];
+  return (
+    <div style={{
+      background:cfg.bg,
+      color:cfg.color,
+      fontSize:"0.58rem",
+      fontWeight:800,
+      letterSpacing:"0.12em",
+      textTransform:"uppercase",
+      padding:"4px 14px",
+      marginBottom:0,
+      borderRadius:"10px 10px 0 0",
+      // subtle diagonal stripe via repeating gradient
+      backgroundImage:`repeating-linear-gradient(135deg, ${cfg.stripe} 0px, ${cfg.stripe} 1px, ${cfg.bg} 1px, ${cfg.bg} 8px)`,
+    }}>
+      {cfg.label}
+    </div>
+    </div>
+  );
+}
+function PassBadge({ pass, size="sm" }) {
+  const cfg = PASS_CONFIG[pass] || PASS_CONFIG.indep;
+  const isLg = size === "lg";
+  return (
+    <span style={{
+      display:"inline-flex", alignItems:"center", gap:4,
+      fontSize: isLg ? "0.72rem" : "0.62rem",
+      fontWeight:700, letterSpacing:"0.04em",
+      background:cfg.bg, color:cfg.color,
+      borderRadius:99, padding: isLg ? "4px 10px" : "2px 8px",
+      whiteSpace:"nowrap", border: pass==="indep" ? "1px solid var(--border)" : "none"
+    }}>
+      {cfg.dot} {cfg.label}
+    </span>
+  );
+}
+
 // ─── RESULT CARD ──────────────────────────────────────────────────────────────
 function ResultCard({ mountain, rank, params, isExpanded, onToggle, liveData }) {
   const nights = nightsBetween(params.depDate, params.retDate) || params.nights;
@@ -1650,11 +1770,13 @@ function ResultCard({ mountain, rank, params, isExpanded, onToggle, liveData }) 
   const majorCodes = ["DEN","SLC","SEA","PDX","SFO","LAX","SMF","BZN","RNO","FCA","GEG","MSP","BOI","PHX","ABQ"];
 
   return (
-    <div
-      className={`resort-card ${rank===1?"top":""} ${isExpanded?"expanded":""}`}
-      onClick={onToggle}
-      style={{animation:`fadeUp 0.3s ease ${Math.min(rank-1,6)*0.05}s both`}}
-    >
+    <div style={{animation:`fadeUp 0.3s ease ${Math.min(rank-1,6)*0.05}s both`}}>
+      <PassBannerStrip pass={mountain.skiPass}/>
+      <div
+        className={`resort-card ${rank===1?"top":""} ${isExpanded?"expanded":""} ${mountain.skiPass&&mountain.skiPass!=="indep"?"has-pass-banner":""}`}
+        onClick={onToggle}
+        style={{borderRadius: mountain.skiPass && mountain.skiPass !== "indep" ? "0 0 16px 16px" : 16}}
+      >
       {/* CARD HEADER */}
       <div style={{display:"grid",gridTemplateColumns:"38px 1fr auto",gap:"1rem",alignItems:"flex-start"}}>
         {/* Rank bubble */}
@@ -1699,99 +1821,125 @@ function ResultCard({ mountain, rank, params, isExpanded, onToggle, liveData }) 
 
       {/* EXPANDED PANEL */}
       {isExpanded && (
-        <div style={{marginTop:"1.25rem",paddingTop:"1.25rem",borderTop:"1px solid var(--border)",animation:"fadeUp 0.25s ease"}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"0.875rem"}}>
+        <div style={{marginTop:"1.5rem",paddingTop:"1.5rem",borderTop:"1px solid var(--border)",animation:"fadeUp 0.25s ease"}}}>
 
-            {/* COL 1: FORECAST + DATES */}
-            <div style={{background:"var(--cream)",borderRadius:12,padding:"1rem"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-                <div className="ss-label" style={{marginBottom:0}}>5-Day Forecast</div>
+          {/* TOP ROW: description + quick stats */}
+          <div style={{display:"flex",gap:"1rem",marginBottom:"1rem",flexWrap:"wrap"}}>
+            <div style={{flex:"1 1 280px",minWidth:0}}>
+              <p style={{fontSize:"0.82rem",color:"var(--text-mid)",lineHeight:1.7,margin:0}}>{mountain.description}</p>
+            </div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:6,alignContent:"flex-start",flexShrink:0}}>
+              {[
+                ["⛰", `${mountain.verticalDrop.toLocaleString()} ft vert`],
+                ["🎿", `${mountain.skiableAcres?.toLocaleString()} acres`],
+                ["❄️", `${mountain.averageSnowfall}" avg snow`],
+                ["🎟", `$${mountain.liftTicket}/day`],
+              ].map(([icon,label])=>(
+                <div key={label} style={{display:"flex",alignItems:"center",gap:5,background:"var(--cream)",border:"1px solid var(--border)",borderRadius:8,padding:"5px 10px",fontSize:"0.75rem",fontWeight:600,color:"var(--text-mid)",whiteSpace:"nowrap"}}>
+                  {icon} {label}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* PROS / CONS row */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.6rem",marginBottom:"1rem"}}>
+            <div style={{background:"#f0f7f2",border:"1px solid #c8e6d0",borderRadius:10,padding:"0.75rem"}}>
+              <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--pine-light)",marginBottom:6}}>Going for it</div>
+              <div style={{fontSize:"0.78rem",color:"var(--text-mid)",lineHeight:1.6}}>{mountain.pros}</div>
+            </div>
+            <div style={{background:"#fdf6ef",border:"1px solid #f0d8c0",borderRadius:10,padding:"0.75rem"}}>
+              <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--rust)",marginBottom:6}}>Worth knowing</div>
+              <div style={{fontSize:"0.78rem",color:"var(--text-mid)",lineHeight:1.6}}>{mountain.cons}</div>
+            </div>
+          </div>
+
+          {/* BOTTOM ROW: forecast | lodging | flights */}
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"0.75rem"}}>
+
+            {/* SNOW */}
+            <div style={{background:"var(--cream)",borderRadius:12,padding:"0.9rem"}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)"}}>Snow Forecast</div>
                 {live && <span style={{fontSize:"0.58rem",fontWeight:800,background:"var(--slate-pale)",color:"var(--slate)",borderRadius:99,padding:"2px 7px",letterSpacing:"0.06em"}}>LIVE</span>}
               </div>
-              <div style={{display:"flex",gap:4,marginBottom:12}}>
+              <div style={{display:"flex",gap:3,marginBottom:10}}>
                 {forecast.length > 0 ? forecast.map((d,i)=><ForecastDay key={i} {...d}/>) : [0,1,2,3,4].map(i=>(
-                  <div key={i} className="forecast-day" style={{opacity:0.4}}>
-                    <div style={{fontSize:"0.62rem",color:"var(--text-light)"}}>—</div>
-                    <div style={{fontSize:"1rem"}}>?</div>
-                    <div style={{fontSize:"0.78rem",color:"var(--cream-border)"}}>—</div>
+                  <div key={i} className="forecast-day" style={{opacity:0.35}}>
+                    <div style={{fontSize:"0.58rem",color:"var(--text-light)"}}>—</div>
+                    <div style={{fontSize:"0.9rem"}}>?</div>
+                    <div style={{fontSize:"0.7rem",color:"var(--cream-border)"}}>—</div>
                   </div>
                 ))}
               </div>
-              <div style={{fontSize:"0.72rem",color:"var(--text-light)",marginBottom:10}}>Season avg: <strong style={{color:"var(--text)"}}>{mountain.averageSnowfall}"</strong> · {mountain.skiableAcres?.toLocaleString()} skiable acres</div>
               {params.depDate && (
-                <div style={{background:"var(--pine-pale)",borderRadius:8,padding:"8px 10px",marginBottom:10,fontSize:"0.75rem",color:"var(--pine)"}}>
-                  📅 <strong>{fmt(params.depDate)}</strong> → <strong>{fmt(params.retDate)}</strong> · {nights} night{nights!==1?"s":""}
+                <div style={{background:"var(--pine-pale)",borderRadius:7,padding:"6px 9px",marginBottom:8,fontSize:"0.7rem",color:"var(--pine)",fontWeight:600}}>
+                  📅 {fmt(params.depDate)} → {fmt(params.retDate)} · {nights}n
                 </div>
               )}
               <a href={mountain.openSnowLink} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}
-                style={{display:"flex",alignItems:"center",gap:6,textDecoration:"none",background:"var(--slate)",color:"var(--cream)",borderRadius:8,padding:"8px 12px",fontSize:"0.74rem",fontWeight:700}}>
-                ❄️ Full Forecast on OpenSnow
+                style={{display:"flex",alignItems:"center",gap:5,textDecoration:"none",background:"var(--slate)",color:"var(--cream)",borderRadius:7,padding:"7px 10px",fontSize:"0.7rem",fontWeight:700}}>
+                ❄️ OpenSnow Forecast
               </a>
             </div>
 
-            {/* COL 2: LODGING */}
-            <div style={{background:"var(--cream)",borderRadius:12,padding:"1rem"}}>
-              <div className="ss-label">Where to Stay</div>
-              {params.depDate && (
-                <div style={{fontSize:"0.68rem",color:"var(--text-light)",marginBottom:8}}>
-                  Prices for {fmt(params.depDate)}–{fmt(params.retDate)}
-                </div>
-              )}
-              <div style={{display:"flex",flexDirection:"column",gap:6,marginBottom:10}}>
+            {/* LODGING */}
+            <div style={{background:"var(--cream)",borderRadius:12,padding:"0.9rem"}}>
+              <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)",marginBottom:8}}>Where to Stay</div>
+              <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:8}}>
                 {mountain.lodgingTiers?.map(t=>(
                   <a key={t.tier}
                     href={getHotelURL(t, params.depDate, params.retDate)}
                     target="_blank" rel="noopener noreferrer"
                     onClick={e=>e.stopPropagation()}
                     className="lodging-tier">
-                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:2}}>
-                      <span style={{fontSize:"0.7rem",fontWeight:700,color:"var(--text)"}}>{t.label}</span>
-                      <span style={{fontSize:"0.78rem",fontWeight:800,color:"var(--pine-light)"}}>{t.pricePerNight===0?"Free":`~$${t.pricePerNight}/night`}</span>
+                    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:1}}>
+                      <span style={{fontSize:"0.68rem",fontWeight:700,color:"var(--text)"}}>{t.label}</span>
+                      <span style={{fontSize:"0.72rem",fontWeight:800,color:"var(--pine-light)"}}>{t.pricePerNight===0?"Free":`~$${t.pricePerNight}/n`}</span>
                     </div>
-                    <div style={{fontSize:"0.72rem",fontWeight:600,color:"var(--text-mid)"}}>{t.name}</div>
-                    <div style={{fontSize:"0.66rem",color:"var(--text-light)",marginTop:1}}>{t.note}</div>
+                    <div style={{fontSize:"0.68rem",color:"var(--text-light)"}}>{t.name}</div>
                     {params.depDate && t.pricePerNight > 0 && (
-                      <div style={{fontSize:"0.66rem",color:"var(--pine)",marginTop:3,fontWeight:600}}>
-                        ≈ ${(t.pricePerNight * nights).toLocaleString()} for {nights} nights
+                      <div style={{fontSize:"0.64rem",color:"var(--pine)",marginTop:2,fontWeight:600}}>
+                        ≈ ${(t.pricePerNight * nights).toLocaleString()} total
                       </div>
                     )}
                   </a>
                 ))}
               </div>
               <a href={mountain.resortLink} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()}
-                style={{display:"inline-flex",alignItems:"center",gap:5,textDecoration:"none",background:"var(--cream-dark)",color:"var(--text)",border:"1px solid var(--border)",borderRadius:8,padding:"7px 12px",fontSize:"0.7rem",fontWeight:700}}>
-                🏔 Official Snow Report
+                style={{display:"inline-flex",alignItems:"center",gap:5,textDecoration:"none",background:"var(--cream-dark)",color:"var(--text)",border:"1px solid var(--border)",borderRadius:7,padding:"6px 10px",fontSize:"0.68rem",fontWeight:700}}>
+                🏔 Snow Report
               </a>
             </div>
 
-            {/* COL 3: FLIGHTS or DRIVE + LOCAL INTEL */}
-            <div style={{background:"var(--cream)",borderRadius:12,padding:"1rem"}}>
+            {/* FLIGHTS / DRIVE */}
+            <div style={{background:"var(--cream)",borderRadius:12,padding:"0.9rem"}}>
               {isDriver ? (
                 <>
-                  <div className="ss-label">Drive Info</div>
-                  <div style={{fontSize:"0.82rem",color:"var(--text-mid)",marginBottom:10,lineHeight:1.7}}>
-                    🚗 <strong>{getDistance(mountain, params.origin).toLocaleString()} miles</strong> from {ORIGIN_LABELS[params.origin]?.split(",")[0]}
+                  <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)",marginBottom:8}}>Drive Info</div>
+                  <div style={{fontSize:"0.82rem",color:"var(--text-mid)",marginBottom:8,lineHeight:1.6}}>
+                    🚗 <strong>{getDistance(mountain, params.origin).toLocaleString()} miles</strong><br/>
+                    <span style={{fontSize:"0.72rem",color:"var(--text-light)"}}>from {ORIGIN_LABELS[params.origin]?.split(",")[0]}</span>
                   </div>
                   {params.depDate && (
-                    <div style={{background:"var(--pine-pale)",borderRadius:8,padding:"8px 10px",marginBottom:10,fontSize:"0.74rem",color:"var(--pine)"}}>
-                      Depart <strong>{fmt(params.depDate)}</strong> · Return <strong>{fmt(params.retDate)}</strong>
+                    <div style={{background:"var(--pine-pale)",borderRadius:7,padding:"6px 9px",fontSize:"0.7rem",color:"var(--pine)",fontWeight:600}}>
+                      Depart {fmt(params.depDate)} · Return {fmt(params.retDate)}
                     </div>
                   )}
                 </>
               ) : (
                 <>
-                  <div className="ss-label">Fly-In Options</div>
+                  <div style={{fontSize:"0.62rem",fontWeight:800,letterSpacing:"0.1em",textTransform:"uppercase",color:"var(--text-light)",marginBottom:8}}>Fly In</div>
                   {params.depDate && (
-                    <div style={{fontSize:"0.66rem",color:"var(--text-light)",marginBottom:8}}>
+                    <div style={{fontSize:"0.64rem",color:"var(--text-light)",marginBottom:6}}>
                       {fmt(params.depDate)} → {fmt(params.retDate)} · from {origCode}
                     </div>
                   )}
-                  <div style={{display:"flex",flexDirection:"column",gap:5,marginBottom:10}}>
+                  <div style={{display:"flex",flexDirection:"column",gap:4}}>
                     {mountain.flyInOptions?.map((apt, i) => {
                       const isMajor = majorCodes.includes(apt.code);
                       const dep = params.depDate || "";
                       const ret = params.retDate || "";
-                      // Deep-link: google flights from origin to dest with dates
                       const flightUrl = dep
                         ? `https://www.google.com/travel/flights?q=Flights+from+${origCode}+to+${apt.code}&tfs=CBwQAhoeEgoyMDI1LTEyLTEwagcIARIDDEN#flt=${origCode}.${apt.code}.${dep};c:USD;e:1;sd:1;t:f*${apt.code}.${origCode}.${ret};c:USD;e:1;sd:1;t:f`
                         : `https://www.google.com/travel/flights#flt=${origCode}.${apt.code}.;c:USD;e:1;sd:1;t:f`;
@@ -1801,32 +1949,282 @@ function ResultCard({ mountain, rank, params, isExpanded, onToggle, liveData }) 
                           onClick={e=>e.stopPropagation()}
                           className={`flight-opt ${cls}`}>
                           <div style={{flex:1}}>
-                            <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:2}}>
-                              <span style={{fontSize:"0.74rem",fontWeight:800}}>✈️ {apt.code}</span>
-                              <span style={{fontSize:"0.68rem",fontWeight:500,opacity:0.8}}>{apt.name}</span>
-                              {i===0&&<span style={{fontSize:"0.56rem",fontWeight:800,letterSpacing:"0.06em",textTransform:"uppercase",background:"rgba(255,255,255,0.2)",borderRadius:99,padding:"1px 6px"}}>Best</span>}
-                              {!isMajor&&i!==0&&<span style={{fontSize:"0.56rem",fontWeight:800,letterSpacing:"0.06em",textTransform:"uppercase",background:"rgba(200,144,26,0.2)",color:"var(--gold)",borderRadius:99,padding:"1px 6px"}}>Regional</span>}
+                            <div style={{display:"flex",alignItems:"center",gap:4,marginBottom:1}}>
+                              <span style={{fontSize:"0.72rem",fontWeight:800}}>✈️ {apt.code}</span>
+                              {i===0&&<span style={{fontSize:"0.54rem",fontWeight:800,letterSpacing:"0.06em",textTransform:"uppercase",background:"rgba(255,255,255,0.25)",borderRadius:99,padding:"1px 5px"}}>Best</span>}
+                              {!isMajor&&i!==0&&<span style={{fontSize:"0.54rem",fontWeight:700,color:"var(--gold)"}}>Regional</span>}
                             </div>
-                            <div style={{fontSize:"0.63rem",opacity:0.72,lineHeight:1.4}}>{apt.note}</div>
+                            <div style={{fontSize:"0.62rem",opacity:0.75}}>{apt.note}</div>
                           </div>
-                          <div style={{fontSize:"0.68rem",fontWeight:700,opacity:0.8,whiteSpace:"nowrap",marginLeft:8}}>🚗 {apt.drive}</div>
+                          <div style={{fontSize:"0.65rem",fontWeight:700,opacity:0.8,marginLeft:6,whiteSpace:"nowrap"}}>🚗 {apt.drive}</div>
                         </a>
                       );
                     })}
                   </div>
                 </>
               )}
-              <div className="ss-label" style={{marginTop:4}}>Local Intel</div>
-              <div style={{fontSize:"0.78rem",color:"var(--text-mid)",lineHeight:1.75,marginBottom:10}}>
-                <div style={{marginBottom:4}}>✅ {mountain.pros}</div>
-                <div>⚠️ {mountain.cons}</div>
-              </div>
-              <div style={{fontSize:"0.72rem",fontWeight:600,color:"var(--text-mid)",background:"var(--cream-dark)",borderRadius:8,padding:"7px 10px"}}>
-                💰 Est. trip total: <span style={{color:withinBudget?"var(--pine-light)":"var(--rust)",fontWeight:800}}>${cost.toLocaleString()}</span>
-                {" "}({params.groupSize} skier{params.groupSize!==1?"s":""}, {nights} nights)
+              {/* Trip cost pill */}
+              <div style={{marginTop:10,padding:"7px 10px",background:"var(--cream-dark)",border:"1px solid var(--border)",borderRadius:8,fontSize:"0.72rem",fontWeight:700,color:withinBudget?"var(--pine-light)":"var(--rust)"}}>
+                💰 Est. ${cost.toLocaleString()} · {params.groupSize} skier{params.groupSize!==1?"s":""}, {nights} night{nights!==1?"s":""}
               </div>
             </div>
+
           </div>
+        </div>
+      )}}
+    </div>
+  );
+}
+
+// ─── BEST OF STRIPS ───────────────────────────────────────────────────────────
+// Best Value cost breakdown data (real estimates: lift ticket + avg lodging + transport)
+const VALUE_RESORTS = [
+  { name:"Bridger Bowl",       liftDay:75,  lodgeNight:110, transport:"Drive from BZN (30 min)",      pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
+  { name:"Wolf Creek",         liftDay:89,  lodgeNight:95,  transport:"Drive from Alamosa (~1hr)",     pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
+  { name:"Monarch Mountain",   liftDay:79,  lodgeNight:100, transport:"Drive from Salida (30 min)",    pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
+  { name:"Loveland Ski Area",  liftDay:99,  lodgeNight:130, transport:"60 mi from Denver on I-70",     pass:"Ikon",  passNote:"Ikon Access — unlimited" },
+  { name:"Bogus Basin",        liftDay:59,  lodgeNight:120, transport:"16 mi from Boise (30 min)",     pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
+  { name:"Schweitzer",         liftDay:79,  lodgeNight:115, transport:"Drive from Spokane (1.5 hrs)",  pass:"Indy",  passNote:"2 days free w/ Indy Pass" },
+  { name:"Eldora Mountain",    liftDay:89,  lodgeNight:130, transport:"45 mi from Denver, ski bus",    pass:"Ikon",  passNote:"Ikon Base — unlimited" },
+];
+
+const BEST_OF = [
+  {
+    id:"powder",
+    icon:"🌨",
+    label:"Snowing Right Now",
+    desc:"Ranked by live OpenSnow forecast — updated daily",
+    dynamic: true, // pulls from live forecast data
+  },
+  {
+    id:"value",
+    icon:"💰",
+    label:"Best Value",
+    desc:"Real cost breakdown: lift + lodging + transport + pass",
+    dynamic: false,
+    custom: "value",
+  },
+  {
+    id:"expert",
+    icon:"💀",
+    label:"Expert Terrain",
+    desc:"Steep, technical, consequence",
+    resorts:["Silverton Mountain","Jackson Hole","Alta","Snowbird","Telluride","Crested Butte","Big Sky"],
+  },
+  {
+    id:"family",
+    icon:"👨‍👩‍👧",
+    label:"Best for Families",
+    desc:"Mellow terrain, ski school, easy base areas",
+    resorts:["Deer Valley","Keystone","Park City Mountain","Northstar California","Steamboat Springs","Sun Valley","Sundance Mountain Resort"],
+  },
+  {
+    id:"scenery",
+    icon:"🏔",
+    label:"Most Scenic",
+    desc:"Views that make you stop mid-run",
+    resorts:["Telluride","Whitefish Mountain","Grand Targhee","Taos Ski Valley","Mt. Hood Meadows","Palisades Tahoe","Jackson Hole"],
+  },
+  {
+    id:"hidden",
+    icon:"🤫",
+    label:"Hidden Gems",
+    desc:"Legitimately great, nobody goes",
+    resorts:["Silverton Mountain","Lost Trail Powder Mountain","Anthony Lakes","Monarch Mountain","Schweitzer","Bear Valley","Tamarack Resort"],
+  },
+];
+
+function BestOfStrips() {
+  const [active, setActive] = useState(null);
+  const [forecasts, setForecasts] = useState({});
+  const cfg = BEST_OF.find(b => b.id === active);
+
+  // Fetch live forecast data when Powder strip is opened
+  useEffect(() => {
+    if (active !== "powder") return;
+    if (Object.keys(forecasts).length > 0) return; // already loaded
+    const ids = MOUNTAINS.map(m => m.id);
+    Promise.all(ids.map(id =>
+      fetch(`https://api.opensnow.com/v1/locations/${id}/forecasts/daily?api_key=summitsync_demo`)
+        .then(r => r.ok ? r.json() : null)
+        .catch(() => null)
+        .then(data => ({ id, data }))
+    )).then(results => {
+      const out = {};
+      results.forEach(({ id, data }) => {
+        if (data?.forecasts) {
+          const total = data.forecasts.slice(0, 5).reduce((s, d) => s + (d.snow_in || 0), 0);
+          out[id] = total;
+        }
+      });
+      if (Object.keys(out).length > 0) setForecasts(out);
+    });
+  }, [active]);
+
+  // Sort mountains by live forecast inches (fallback to snowScore)
+  const powderRanked = useMemo(() => {
+    return [...MOUNTAINS]
+      .map(m => ({
+        ...m,
+        liveInches: forecasts[m.id] ?? null,
+        sortVal: forecasts[m.id] != null ? forecasts[m.id] : (m.snowScore / 10),
+      }))
+      .sort((a, b) => b.sortVal - a.sortVal)
+      .slice(0, 7);
+  }, [forecasts]);
+
+  function handle(id) { setActive(active === id ? null : id); }
+
+  // Value cost row renderer
+  function ValueRow({ v, i }) {
+    const m = MOUNTAINS.find(m => m.name === v.name);
+    const nightsEst = 2;
+    const totalEst = (v.liftDay * nightsEst) + (v.lodgeNight * nightsEst);
+    return (
+      <div style={{
+        display:"flex", alignItems:"flex-start", gap:12,
+        padding:"10px 0",
+        borderBottom: i < VALUE_RESORTS.length - 1 ? "1px solid var(--border)" : "none"
+      }}>
+        <div style={{width:24,height:24,borderRadius:"50%",background:"var(--cream-dark)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.7rem",fontWeight:800,color:"var(--text-light)",flexShrink:0,marginTop:2}}>{i+1}</div>
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:3}}>
+            <span style={{fontSize:"0.88rem",fontWeight:700,color:"var(--text)"}}>{v.name}</span>
+            {m?.skiPass && <PassBadge pass={m.skiPass}/>}
+          </div>
+          <div style={{display:"flex",flexWrap:"wrap",gap:"6px 14px",fontSize:"0.72rem",color:"var(--text-mid)",marginBottom:4}}>
+            <span>🎟 <strong>${v.liftDay}/day</strong></span>
+            <span>🛏 <strong>~${v.lodgeNight}/night</strong></span>
+            <span>🚗 {v.transport}</span>
+          </div>
+          <div style={{display:"inline-flex",alignItems:"center",gap:5,fontSize:"0.67rem",fontWeight:700,background:"#f0f7f2",color:"var(--pine-light)",border:"1px solid #c8e6d0",borderRadius:6,padding:"2px 8px"}}>
+            {v.passNote}
+          </div>
+        </div>
+        <div style={{textAlign:"right",flexShrink:0}}>
+          <div style={{fontSize:"0.65rem",color:"var(--text-light)",marginBottom:1}}>Est. 2-day trip</div>
+          <div style={{fontSize:"0.95rem",fontWeight:800,color:"var(--bark)"}}>${totalEst.toLocaleString()}</div>
+          <div style={{fontSize:"0.6rem",color:"var(--text-light)"}}>lift + lodging only</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{maxWidth:900, margin:"0 auto", padding:"0 2rem 2.5rem"}}>
+      <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"1.3rem",color:"var(--bark)",marginBottom:"1rem"}}>Browse by Category</h2>
+
+      {/* Chips */}
+      <div style={{display:"flex",gap:8,flexWrap:"wrap",marginBottom:"1rem"}}>
+        {BEST_OF.map(b => (
+          <button key={b.id} onClick={()=>handle(b.id)}
+            style={{
+              display:"flex",alignItems:"center",gap:5,
+              background: active===b.id ? "var(--bark)" : "var(--snow)",
+              color: active===b.id ? "var(--cream)" : "var(--text)",
+              border: `1.5px solid ${active===b.id ? "var(--bark)" : "var(--border)"}`,
+              borderRadius:99, padding:"7px 14px",
+              fontSize:"0.8rem", fontWeight:600, cursor:"pointer",
+              transition:"all 0.15s"
+            }}>
+            {b.icon} {b.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Expanded panel */}
+      {cfg && (
+        <div style={{background:"var(--snow)",border:"1.5px solid var(--border)",borderRadius:14,padding:"1.25rem",animation:"fadeUp 0.2s ease"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"1rem"}}>
+            <div>
+              <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",marginBottom:2}}>{cfg.icon} {cfg.label}</div>
+              <div style={{fontSize:"0.75rem",color:"var(--text-light)"}}>{cfg.desc}</div>
+            </div>
+            <button onClick={()=>setActive(null)} style={{background:"none",border:"none",fontSize:"1rem",cursor:"pointer",color:"var(--text-light)",padding:4}}>✕</button>
+          </div>
+
+          {/* POWDER: live ranked */}
+          {cfg.id === "powder" && (
+            <div style={{display:"flex",flexDirection:"column",gap:0}}>
+              {Object.keys(forecasts).length === 0 && (
+                <div style={{fontSize:"0.75rem",color:"var(--text-light)",marginBottom:10,fontStyle:"italic"}}>
+                  Loading live forecasts... (ranked by historical snowfall until data arrives)
+                </div>
+              )}
+              {powderRanked.map((m, i) => (
+                <div key={m.id} style={{display:"flex",alignItems:"center",gap:12,padding:"9px 0",borderBottom:i<powderRanked.length-1?"1px solid var(--border)":"none"}}>
+                  <div style={{width:24,height:24,borderRadius:"50%",background:"var(--cream-dark)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.7rem",fontWeight:800,color:"var(--text-light)",flexShrink:0}}>{i+1}</div>
+                  <div style={{flex:1}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap",marginBottom:2}}>
+                      <span style={{fontSize:"0.9rem",fontWeight:600}}>{m.name}</span>
+                      <PassBadge pass={m.skiPass}/>
+                      <span style={{fontSize:"0.72rem",color:"var(--text-light)"}}>{m.state}</span>
+                    </div>
+                    <div style={{fontSize:"0.72rem",color:"var(--text-light)"}}>
+                      {m.averageSnowfall}" avg season · {m.skiableAcres?.toLocaleString()} acres
+                    </div>
+                  </div>
+                  <div style={{textAlign:"right",flexShrink:0}}>
+                    {m.liveInches != null ? (
+                      <div>
+                        <div style={{fontSize:"1.1rem",fontWeight:800,color:"var(--slate)",lineHeight:1}}>{m.liveInches}"</div>
+                        <div style={{fontSize:"0.6rem",color:"var(--text-light)"}}>5-day forecast</div>
+                      </div>
+                    ) : (
+                      <div style={{fontSize:"0.75rem",color:"var(--text-light)",fontStyle:"italic"}}>{m.averageSnowfall}" avg</div>
+                    )}
+                  </div>
+                  <div style={{display:"flex",gap:5,flexShrink:0}}>
+                    <a href={m.openSnowLink} target="_blank" rel="noopener noreferrer" style={{fontSize:"0.68rem",fontWeight:700,color:"var(--slate)",background:"var(--slate-pale)",borderRadius:7,padding:"5px 8px",textDecoration:"none"}}>❄️ Forecast</a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* VALUE: real cost breakdown */}
+          {cfg.id === "value" && (
+            <div>
+              <div style={{fontSize:"0.72rem",color:"var(--text-light)",marginBottom:"0.75rem",fontStyle:"italic"}}>
+                Estimates based on lift tickets, lodging, and transport. Pass savings shown separately.
+              </div>
+              <div style={{display:"flex",flexDirection:"column",gap:0}}>
+                {VALUE_RESORTS.map((v, i) => <ValueRow key={v.name} v={v} i={i}/>)}
+              </div>
+            </div>
+          )}
+
+          {/* STANDARD LIST */}
+          {!cfg.dynamic && cfg.id !== "value" && cfg.resorts && (
+            <div style={{display:"flex",flexDirection:"column",gap:0}}>
+              {cfg.resorts.map((name, i) => {
+                const m = MOUNTAINS.find(m => m.name === name);
+                return (
+                  <div key={name} style={{display:"flex",alignItems:"center",gap:12,padding:"9px 0",borderBottom:i<cfg.resorts.length-1?"1px solid var(--border)":"none"}}>
+                    <div style={{width:24,height:24,borderRadius:"50%",background:"var(--cream-dark)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.7rem",fontWeight:800,color:"var(--text-light)",flexShrink:0}}>{i+1}</div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:"0.9rem",fontWeight:600,color:"var(--text)",display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                        {name}
+                        {m?.skiPass && <PassBadge pass={m.skiPass}/>}
+                        {m && <span style={{fontSize:"0.72rem",color:"var(--text-light)",fontWeight:400}}>{m.state}</span>}
+                      </div>
+                      {m && <div style={{fontSize:"0.72rem",color:"var(--text-light)",marginTop:1}}>
+                        ⛰ {m.verticalDrop.toLocaleString()} ft · ❄️ {m.averageSnowfall}" avg · 🎟 ${m.liftTicket}/day
+                      </div>}
+                    </div>
+                    {m && (
+                      <div style={{display:"flex",gap:5,flexShrink:0}}>
+                        <a href={m.openSnowLink} target="_blank" rel="noopener noreferrer"
+                          style={{fontSize:"0.68rem",fontWeight:700,color:"var(--slate)",background:"var(--slate-pale)",borderRadius:7,padding:"5px 8px",textDecoration:"none"}}>❄️ Snow</a>
+                        <a href={m.resortLink} target="_blank" rel="noopener noreferrer"
+                          style={{fontSize:"0.68rem",fontWeight:700,color:"var(--text)",background:"var(--cream-dark)",border:"1px solid var(--border)",borderRadius:7,padding:"5px 8px",textDecoration:"none"}}>🏔 Resort</a>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -2132,8 +2530,12 @@ function App() {
           {/* Results header */}
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:"1.25rem",flexWrap:"wrap",gap:8}}>
             <h2 style={{fontFamily:"'Playfair Display',serif",fontSize:"1.5rem",color:"var(--bark)"}}>{results.length} Matches</h2>
-            <div style={{fontSize:"0.72rem",color:"var(--text-light)"}}>
-              Live snow data · click any card to expand
+            <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+              <span style={{fontSize:"0.7rem",color:"var(--text-light)"}}>Live snow · click to expand</span>
+              <span style={{fontSize:"0.68rem",color:"var(--border)"}}>|</span>
+              {[["🔵","Epic"],["🟦","Ikon"],["🟢","Mtn Collective"],["🟠","Indy"],["⚪","Independent"]].map(([dot,l])=>(
+                <span key={l} style={{fontSize:"0.67rem",color:"var(--text-light)",whiteSpace:"nowrap"}}>{dot} {l}</span>
+              ))}
             </div>
           </div>
 
@@ -2190,6 +2592,7 @@ function App() {
       )}
 
       {/* ── MAP ── */}
+      <BestOfStrips/>
       <MapSection results={results} params={params}/>
 
       {/* ── FOOTER ── */}
