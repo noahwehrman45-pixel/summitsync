@@ -742,9 +742,10 @@ function renderStormTracker(){
     fetch(url).then(function(r){return r.json();}).then(function(data){
       var days=data.daily;
       var rawSnows=days.snowfall_sum||[];
-      // Open-Meteo snowfall_sum is ALWAYS in cm — convert to inches
-      var snows=rawSnows.map(function(v){ return v ? Math.round((v*3.937)*10)/10 : 0; }); // SWE cm -> snow depth inches (10:1 ratio)
-      days.snowfall_sum = snows; // store converted values
+      // Raw API values logged so we can verify units
+      console.log('[SummitSync] '+m.name+' raw snowfall_sum:', rawSnows, '5-day sum:', rawSnows.reduce(function(a,b){return a+(b||0);},0));
+      var snows=rawSnows.map(function(v){ return v ? Math.round((v/25.4)*10)/10 : 0; });
+      days.snowfall_sum = snows;
       var totalSnow5=snows.reduce(function(a,b){return a+(b||0);},0);
       var totalSnow2=snows.slice(0,2).reduce(function(a,b){return a+(b||0);},0);
       var peakDay=snows.indexOf(Math.max.apply(null,snows));
@@ -776,7 +777,10 @@ function renderStormCards(data){
   var header='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">'+
     '<div><div style="font-family:Playfair Display,serif;font-size:1.3rem;font-weight:700;color:var(--bark);">Storm Tracker</div>'+
     '<div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">60 resorts ranked by 5-day forecasted snowfall &middot; inches &middot; fetched '+fetchedAt+'</div></div>'+
-    '<button onclick="stormDataCache=null;renderStormTracker();" class="btn-ghost" style="font-size:0.78rem;">&#8635; Refresh</button>'+
+    '<div style="display:flex;gap:6px;">'+
+    '<button onclick="openAdminPanel()" class="btn-ghost" style="font-size:0.78rem;background:#1e1208;color:#faf8f4;border-color:#1e1208;">&#9998; Update Forecasts</button>'+
+    '<button onclick="stormDataCache=null;renderStormTracker();" class="btn-ghost" style="font-size:0.78rem;">&#8635; Live Data</button>'+
+    '</div>'+
   '</div>';
   var summaryBanner='';
   if(hasAnySnow){
@@ -856,6 +860,156 @@ function hideModal(){document.getElementById('why-modal').style.display='none';}
   MOUNTAINS.sort(function(a,b){return b._score-a._score;});
   state.results=MOUNTAINS.slice();renderCards();
 })();
+
+// ── ADMIN FORECAST PANEL ────────────────────────────────────────────────────
+var manualForecasts = {}; // id -> inches
+
+function openAdminPanel() {
+  // Pre-fill with existing manual values
+  Object.keys(manualForecasts).forEach(function(id) {
+    var el = document.getElementById('fc-' + id);
+    if(el && manualForecasts[id] > 0) el.value = manualForecasts[id];
+  });
+  document.getElementById('admin-panel').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAdminPanel() {
+  document.getElementById('admin-panel').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function clearForecasts() {
+  document.querySelectorAll('#admin-inputs input').forEach(function(el) { el.value = ''; });
+}
+
+function applyForecasts() {
+  var count = 0;
+  MOUNTAINS.forEach(function(m) {
+    var el = document.getElementById('fc-' + m.id);
+    var val = el ? parseFloat(el.value) : NaN;
+    if(!isNaN(val) && val >= 0) {
+      manualForecasts[m.id] = val;
+      count++;
+    }
+  });
+  // Update timestamp
+  var now = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+  document.getElementById('admin-last-updated').textContent = now;
+  // Bust cache and re-render storm with manual data
+  stormDataCache = buildManualStormData();
+  closeAdminPanel();
+  showTab('storm');
+  renderStormCards(stormDataCache);
+}
+
+function buildManualStormData() {
+  return MOUNTAINS.map(function(m) {
+    var inches = manualForecasts[m.id] || 0;
+    return {
+      resort: m,
+      totalSnow7: inches,
+      totalSnow3: Math.round(inches * 0.5 * 10) / 10, // rough 2-day estimate
+      peakDay: inches > 0 ? 1 : -1,
+      snowDays: inches > 6 ? 4 : inches > 3 ? 3 : inches > 1 ? 2 : inches > 0 ? 1 : 0,
+      days: null, // no bar chart for manual data
+      isManual: true
+    };
+  }).sort(function(a, b) { return b.totalSnow7 - a.totalSnow7; });
+}
+
+// Keyboard shortcut: Shift+U
+document.addEventListener('keydown', function(e) {
+  if(e.shiftKey && e.key === 'U') openAdminPanel();
+});
+
+// Add update button to storm tab header area
+document.addEventListener('DOMContentLoaded', function() {
+  // Also expose via nav
+});
+
 </script>
+
+<!-- ADMIN FORECAST UPDATE PANEL -->
+<div id="admin-panel" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.7);overflow-y:auto;padding:2rem 1rem;">
+  <div style="max-width:680px;margin:0 auto;background:#faf8f4;border-radius:16px;padding:1.75rem;box-shadow:0 8px 40px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+      <div>
+        <div style="font-family:Playfair Display,serif;font-size:1.3rem;font-weight:700;color:#1e1208;">OpenSnow Forecast Update</div>
+        <div style="font-size:0.75rem;color:#9e8a72;margin-top:2px;">Enter 5-day totals in inches from opensnow.com · Last updated: <span id="admin-last-updated">never</span></div>
+      </div>
+      <button onclick="closeAdminPanel()" style="background:none;border:1px solid #ddd5c8;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:0.82rem;color:#6b5540;">✕ Close</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:60vh;overflow-y:auto;padding-right:4px;" id="admin-inputs">
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Arapahoe Basin</label><input type="number" id="fc-abasin" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Steamboat Springs</label><input type="number" id="fc-steamboat" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Vail</label><input type="number" id="fc-vail" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Breckenridge</label><input type="number" id="fc-breckenridge" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Telluride</label><input type="number" id="fc-telluride" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Aspen Snowmass</label><input type="number" id="fc-aspen" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Crested Butte</label><input type="number" id="fc-crested" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Winter Park</label><input type="number" id="fc-winterpark" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Eldora Mountain</label><input type="number" id="fc-eldora" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Keystone</label><input type="number" id="fc-keystone" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Copper Mountain</label><input type="number" id="fc-coppermtn" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Loveland Ski Area</label><input type="number" id="fc-loveland" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Snowbird</label><input type="number" id="fc-snowbird" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Alta</label><input type="number" id="fc-alta" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Park City Mountain</label><input type="number" id="fc-parkcity" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Deer Valley</label><input type="number" id="fc-deervalley" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Brighton Resort</label><input type="number" id="fc-brighton" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Solitude Mountain</label><input type="number" id="fc-solitude" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Snowbasin</label><input type="number" id="fc-snowbasin" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Powder Mountain</label><input type="number" id="fc-powdermtn" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Jackson Hole</label><input type="number" id="fc-jacksonthole" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Grand Targhee</label><input type="number" id="fc-grandtarghee" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Big Sky</label><input type="number" id="fc-bigsky" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Bridger Bowl</label><input type="number" id="fc-bridgerbowl" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Whitefish Mountain Resort</label><input type="number" id="fc-whitefish" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Crystal Mountain</label><input type="number" id="fc-crystalmtn" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Stevens Pass</label><input type="number" id="fc-stevenspass" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Mt Baker Ski Area</label><input type="number" id="fc-mtbaker" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Summit at Snoqualmie</label><input type="number" id="fc-mtsummit" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">White Pass</label><input type="number" id="fc-whitepas" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Mt. Hood Meadows</label><input type="number" id="fc-mthood" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Mt. Bachelor</label><input type="number" id="fc-mtbachelor" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Hoodoo Ski Area</label><input type="number" id="fc-hoodoo" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Mammoth Mountain</label><input type="number" id="fc-mammoth" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Palisades Tahoe</label><input type="number" id="fc-palisades" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Heavenly Mountain Resort</label><input type="number" id="fc-heavenly" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Kirkwood</label><input type="number" id="fc-kirkwood" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Northstar California</label><input type="number" id="fc-northstar" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Sugar Bowl Resort</label><input type="number" id="fc-sugarbowl" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Boreal Mountain Resort</label><input type="number" id="fc-boreal" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Mt Rose Ski Tahoe</label><input type="number" id="fc-mtrose" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Taos Ski Valley</label><input type="number" id="fc-taos" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Ski Santa Fe</label><input type="number" id="fc-santafe" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Sun Valley</label><input type="number" id="fc-sunvalley" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Schweitzer</label><input type="number" id="fc-schweitzer" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Bogus Basin Mountain Recreation Area</label><input type="number" id="fc-bogusbasin" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Wolf Creek Ski Area</label><input type="number" id="fc-wolfcreek" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Silverton Mountain</label><input type="number" id="fc-silverton" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Monarch Mountain</label><input type="number" id="fc-monarch" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Arapahoe Basin Ski Area</label><input type="number" id="fc-arapahoe" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">June Mountain</label><input type="number" id="fc-junemtn" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Bear Valley Mountain Resort</label><input type="number" id="fc-bearvalley" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Arizona Snowbowl</label><input type="number" id="fc-arizonasnowbowl" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Lost Trail Powder Mountain</label><input type="number" id="fc-losttrl" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Red Lodge Mountain</label><input type="number" id="fc-redlodge" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Tamarack Resort</label><input type="number" id="fc-tamarack" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Purgatory Resort</label><input type="number" id="fc-purgatory" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Mt Spokane Ski Area</label><input type="number" id="fc-mtspokane" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Anthony Lakes</label><input type="number" id="fc-anthonylakes" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+      <div style="display:flex;align-items:center;gap:8px;background:#f2ede4;border-radius:8px;padding:6px 10px;"><label style="flex:1;font-size:0.8rem;color:#1e1208;font-weight:500;">Sundance Mountain Resort</label><input type="number" id="fc-sundance" min="0" max="200" step="0.5" placeholder="0" style="width:60px;border:1px solid #ddd5c8;border-radius:6px;padding:4px 6px;font-size:0.85rem;text-align:center;background:#fff;"><span style="font-size:0.75rem;color:#9e8a72;">"</span></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:1.25rem;">
+      <button onclick="applyForecasts()" style="flex:1;background:#1e1208;color:#faf8f4;border:none;border-radius:8px;padding:10px;font-weight:700;font-size:0.9rem;cursor:pointer;">Apply Forecasts to Storm Tracker</button>
+      <button onclick="clearForecasts()" style="background:none;border:1px solid #ddd5c8;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:0.82rem;color:#6b5540;">Clear All</button>
+    </div>
+    <div style="margin-top:0.75rem;font-size:0.72rem;color:#9e8a72;text-align:center;">
+      Open with <kbd style="background:#f2ede4;border:1px solid #ddd5c8;border-radius:4px;padding:1px 5px;">Shift + U</kbd> · Data stays until page refresh
+    </div>
+  </div>
+</div>
 </body>
 </html>
