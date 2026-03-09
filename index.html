@@ -546,6 +546,9 @@ function runSearch(){
     // Drive-only filter — check origin-specific driveable list, not resort's global travelMode
     if(origin === 'drive' && !isDriveableFrom(origin, m.id)) return false;
 
+    // Pass filter — only show resorts on selected pass
+    if(pass && m.skiPass !== pass) return false;
+
     // Budget filter — total trip cost
     if(budget > 0) {
       var cost = estimateTripCost(m, origin, skiDays, nights, pass);
@@ -686,15 +689,18 @@ function renderStormTracker(){
   MOUNTAINS.forEach(function(m){
     var url='https://api.open-meteo.com/v1/forecast?latitude='+m.lat+'&longitude='+m.lon+
       '&daily=snowfall_sum,temperature_2m_max,temperature_2m_min,windspeed_10m_max'+
-      '&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&timezone=auto&forecast_days=7';
+      '&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=auto&forecast_days=5';
     fetch(url).then(function(r){return r.json();}).then(function(data){
       var days=data.daily;
-      var snows=days.snowfall_sum||[];
-      var totalSnow7=snows.reduce(function(a,b){return a+(b||0);},0);
-      var totalSnow3=snows.slice(0,3).reduce(function(a,b){return a+(b||0);},0);
+      var rawSnows=days.snowfall_sum||[];
+      // Open-Meteo snowfall_sum is ALWAYS in cm — convert to inches
+      var snows=rawSnows.map(function(v){ return v ? Math.round((v/2.54)*10)/10 : 0; });
+      days.snowfall_sum = snows; // store converted values
+      var totalSnow5=snows.reduce(function(a,b){return a+(b||0);},0);
+      var totalSnow2=snows.slice(0,2).reduce(function(a,b){return a+(b||0);},0);
       var peakDay=snows.indexOf(Math.max.apply(null,snows));
-      var snowDays=snows.filter(function(s){return s>0.1;}).length;
-      results.push({resort:m,totalSnow7:Math.round(totalSnow7*10)/10,totalSnow3:Math.round(totalSnow3*10)/10,peakDay:peakDay,snowDays:snowDays,days:days});
+      var snowDays=snows.filter(function(s){return s>0.5;}).length;
+      results.push({resort:m,totalSnow7:Math.round(totalSnow5*10)/10,totalSnow3:Math.round(totalSnow2*10)/10,peakDay:peakDay,snowDays:snowDays,days:days});
     }).catch(function(){
       results.push({resort:m,totalSnow7:0,totalSnow3:0,peakDay:-1,snowDays:0,days:null});
     }).finally(function(){
@@ -712,38 +718,39 @@ function renderStormTracker(){
 }
 function renderStormCards(data){
   var container=document.getElementById('storm-container');if(!container)return;
-  var withSnow=data.filter(function(d){return d.totalSnow7>0.1;});
-  var noSnow=data.filter(function(d){return d.totalSnow7<=0.1;});
-  var display=withSnow.length>0?withSnow:data.slice(0,12);
+  // Always show all resorts sorted by forecasted snow — no filtering, no hiding
+  var display=data;
   var fetchedAt=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  var topResort=display[0];
+  var noSnowCount=data.filter(function(d){return d.totalSnow7<0.5;}).length;
+  var hasAnySnow=topResort&&topResort.totalSnow7>=0.5;
   var header='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;">'+
     '<div><div style="font-family:Playfair Display,serif;font-size:1.3rem;font-weight:700;color:var(--bark);">Storm Tracker</div>'+
-    '<div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">All 60 resorts ranked by forecasted snowfall &middot; fetched '+fetchedAt+'</div></div>'+
+    '<div style="font-size:0.75rem;color:var(--text-light);margin-top:2px;">60 resorts ranked by 5-day forecasted snowfall &middot; inches &middot; fetched '+fetchedAt+'</div></div>'+
     '<button onclick="stormDataCache=null;renderStormTracker();" class="btn-ghost" style="font-size:0.78rem;">&#8635; Refresh</button>'+
   '</div>';
-  var topResort=display[0];
   var summaryBanner='';
-  if(topResort&&topResort.totalSnow7>0.5){
+  if(hasAnySnow){
     summaryBanner='<div style="background:var(--pine-pale);border:1px solid var(--pine-light);border-radius:10px;padding:10px 14px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;">'+
       '<div style="font-size:1.4rem;">&#10052;</div>'+
       '<div><div style="font-size:0.82rem;font-weight:700;color:var(--pine);">Best storm window: '+topResort.resort.name+'</div>'+
-      '<div style="font-size:0.75rem;color:var(--text-mid);">'+topResort.totalSnow7.toFixed(1)+'" forecast over 7 days &middot; '+topResort.snowDays+' snow day'+(topResort.snowDays!==1?'s':'')+
-      (noSnow.length>0?' &middot; '+noSnow.length+' resorts showing no forecasted snow':'')+
+      '<div style="font-size:0.75rem;color:var(--text-mid);">'+topResort.totalSnow7.toFixed(1)+'" forecasted over 5 days &middot; '+topResort.snowDays+' snow day'+(topResort.snowDays!==1?'s':'')+
+      (noSnowCount>0?' &middot; '+noSnowCount+' resorts dry this week':'')+
       '</div></div></div>';
   }else{
     summaryBanner='<div style="background:var(--cream-dark);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:1rem;">'+
-      '<div style="font-size:0.82rem;color:var(--text-mid);">&#9728; No significant snowfall forecasted at any resort in the next 7 days.</div></div>';
+      '<div style="font-size:0.82rem;color:var(--text-mid);">&#9728; Dry pattern across the West this week — ranked by most recent snowfall potential.</div></div>';
   }
   var cards=display.map(function(d,i){
     var m=d.resort;var hasData=d.days!==null;var visitUrl=m.resortHomepage||m.resortLink;
-    var hasSnow=d.totalSnow7>1.5;var isBest=i===0&&d.totalSnow7>0.5;
+    var hasSnow=d.totalSnow7>4;var isBest=i===0&&d.totalSnow7>1;
     var dayBars='';
     if(hasData){
-      var dates=d.days.time.slice(0,7);var snows=d.days.snowfall_sum.slice(0,7);
+      var dates=d.days.time.slice(0,5);var snows=d.days.snowfall_sum.slice(0,5);
       var localMax=Math.max.apply(null,snows)||1;
       dayBars='<div class="day-bars">'+dates.map(function(dt,j){
         var snow=snows[j]||0;var pct=Math.round((snow/localMax)*100);
-        var barColor=snow>2?'#1a6fff':snow>0.5?'#4a9eff':snow>0.1?'#8ec8ff':'var(--cream-border)';
+        var barColor=snow>4?'#0a4fcf':snow>2?'#1a6fff':snow>0.5?'#4a9eff':snow>0.1?'#8ec8ff':'var(--cream-border)';
         var day=new Date(dt+'T12:00:00').toLocaleDateString('en-US',{weekday:'short'});
         return'<div class="day-bar-wrap"><div class="day-lbl">'+(j===0?'Now':day)+'</div>'+
           '<div class="day-bar-track"><div class="day-bar-fill" style="height:'+pct+'%;background:'+barColor+';"></div></div>'+
@@ -753,7 +760,7 @@ function renderStormCards(data){
     var peakLabel='';
     if(d.peakDay>=0&&d.days){
       var peakSnow=d.days.snowfall_sum[d.peakDay]||0;
-      if(peakSnow>0.5){
+      if(peakSnow>1){
         var peakDate=new Date(d.days.time[d.peakDay]+'T12:00:00');
         var dayName=d.peakDay===0?'Today':d.peakDay===1?'Tomorrow':peakDate.toLocaleDateString('en-US',{weekday:'long'});
         peakLabel='<div style="font-size:0.7rem;color:var(--pine-light);font-weight:600;margin-top:4px;">Peak: '+dayName+' ('+peakSnow.toFixed(1)+'")</div>';
@@ -766,17 +773,16 @@ function renderStormCards(data){
         '<div class="storm-state">'+m.state+' &middot; '+m.averageSnowfall+'" season avg</div>'+
         peakLabel+
       '</div><div style="text-align:right;">'+
-        '<div class="storm-total" style="color:'+(d.totalSnow7>3?'var(--pine-light)':d.totalSnow7>0.5?'var(--slate)':'var(--text-light)')+';">'+(hasData&&d.totalSnow7>0?d.totalSnow7.toFixed(1)+'"':'&mdash;')+'</div>'+
-        '<div class="storm-total-lbl">7-day forecast</div>'+
-        (d.totalSnow3>0?'<div style="font-size:0.65rem;color:var(--text-light);margin-top:1px;">'+d.totalSnow3.toFixed(1)+'" next 3 days</div>':'')+
+        '<div class="storm-total" style="color:'+(d.totalSnow7>10?'var(--pine-light)':d.totalSnow7>3?'var(--slate)':'var(--text-light)')+';">'+(hasData&&d.totalSnow7>0?d.totalSnow7.toFixed(1)+'"':'&mdash;')+'</div>'+
+        '<div class="storm-total-lbl">5-day forecast</div>'+
+        (d.totalSnow3>0?'<div style="font-size:0.65rem;color:var(--text-light);margin-top:1px;">'+d.totalSnow3.toFixed(1)+'" next 2 days</div>':'')+
       '</div></div>'+
       dayBars+
       '<div class="storm-links"><a href="'+m.openSnowLink+'" target="_blank" class="storm-link storm-link-snow">OpenSnow &rarr;</a>'+
       '<a href="'+visitUrl+'" target="_blank" class="storm-link storm-link-resort">Resort Site</a></div>'+
     '</div>';
   }).join('');
-  container.innerHTML=header+summaryBanner+'<div class="storm-grid">'+cards+'</div>'+
-    (noSnow.length>0&&withSnow.length>0?'<div style="text-align:center;padding:1.5rem;font-size:0.78rem;color:var(--text-light);">'+noSnow.length+' resorts have no forecasted snow this week</div>':'');
+  container.innerHTML=header+summaryBanner+'<div class="storm-grid">'+cards+'</div>';
 }
 function showTab(name){
   ['results','map','bestof','storm'].forEach(function(t){
