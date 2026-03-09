@@ -61,7 +61,7 @@ select,input,button{font-family:inherit;}
 .card{background:var(--snow);border:1px solid var(--border);border-radius:0 12px 12px 12px;padding:1.1rem 1.25rem;cursor:pointer;transition:box-shadow 0.2s,border-color 0.2s;}
 .card.no-banner{border-radius:12px;}
 .card:hover{box-shadow:0 3px 18px rgba(30,18,8,0.07);border-color:var(--cream-border);}
-.card.top-pick{border-color:var(--pine-light);}
+.card.top-pick{border-color:var(--pine-light);box-shadow:0 0 0 1px var(--pine-light);}
 .card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;}
 .card-left{flex:1;min-width:0;}
 .card-rank{font-size:0.6rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--pine-light);margin-bottom:1px;}
@@ -79,7 +79,29 @@ select,input,button{font-family:inherit;}
 .expand-hint{font-size:0.7rem;color:var(--text-light);margin-top:5px;}
 .expanded-body{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);animation:fadeIn 0.2s ease;}
 .expanded-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
-@media(max-width:580px){.expanded-grid{grid-template-columns:1fr;}.card-scores{display:none;}}
+@media(max-width:720px){
+  .hero{padding:1.75rem 1rem 1.25rem;}
+  .hero h1{font-size:1.6rem;}
+  .hero p{font-size:0.85rem;margin-bottom:1rem;}
+  .filters{grid-template-columns:1fr 1fr!important;gap:0.5rem;padding:0.85rem;}
+  .main{padding:1rem;}
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .tab{font-size:0.75rem;padding:6px 10px;white-space:nowrap;}
+  .nav-inner{padding:0 1rem;}
+  .nav-logo{font-size:1rem;}
+  .nav-btn{font-size:0.72rem;padding:4px 7px;}
+  #map{height:380px;}
+  .storm-grid{grid-template-columns:1fr!important;}
+  .bestof-grid{grid-template-columns:1fr!important;}
+}
+@media(max-width:480px){
+  .filters{grid-template-columns:1fr!important;}
+  .card-top{flex-direction:column;gap:0.5rem;}
+  .expanded-grid{grid-template-columns:1fr;}
+  .card-scores{display:none;}
+  .hero h1{font-size:1.4rem;}
+  .search-btn{margin-top:0.25rem;}
+}
 .exp-label{font-size:0.6rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-light);margin-bottom:7px;display:block;}
 .pros-cons{display:flex;flex-direction:column;gap:5px;}
 .pro-item,.con-item{font-size:0.83rem;padding-left:14px;position:relative;line-height:1.4;color:var(--text-mid);}
@@ -150,7 +172,7 @@ select,input,button{font-family:inherit;}
 <body>
 <nav class="nav">
   <div class="nav-inner">
-    <div class="nav-logo">Summit<span>Sync</span></div>
+    <div class="nav-logo" onclick="showTab('results')" style="cursor:pointer;">Summit<span>Sync</span></div>
     <div style="display:flex;gap:4px;">
       <button class="nav-btn" onclick="showTab('results')">Results</button>
       <button class="nav-btn" onclick="showTab('map')">Map</button>
@@ -162,8 +184,8 @@ select,input,button{font-family:inherit;}
 </nav>
 <div class="hero">
   <div class="hero-inner">
-    <h1>Find your <em>mountain.</em></h1>
-    <p>60 western resorts scored on snow, value, access, and crowds — real data, no sponsored results.</p>
+    <h1>Find your <em>perfect storm.</em></h1>
+    <p>60 western resorts. Live snow forecasts, real budget math, no sponsored results. Built for skiers, not resorts.</p>
     <div class="filters" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));">
       <div class="filter-group">
         <label class="filter-label">Starting from</label>
@@ -222,7 +244,7 @@ select,input,button{font-family:inherit;}
         </select>
       </div>
       <div class="filter-group" style="display:flex;align-items:flex-end;">
-        <button class="search-btn" onclick="runSearch()">Find My Mountain</button>
+        <button class="search-btn" onclick="runSearch()" id="search-btn-main">&#x2605; Find My Mountain</button>
       </div>
     </div>
   </div>
@@ -539,6 +561,11 @@ function scoreResort(m, origin, userPass, skiDays) {
 }
 
 function runSearch(){
+  var btn = document.getElementById('search-btn-main');
+  if(btn){btn.textContent='Searching...';btn.disabled=true;}
+  setTimeout(function(){ _doSearch(); if(btn){btn.innerHTML='&#x2605; Find My Mountain';btn.disabled=false;} }, 80);
+}
+function _doSearch(){
   var origin = document.getElementById('f-origin').value;
   var daysVal = document.getElementById('f-days').value;
   var budget = parseInt(document.getElementById('f-budget').value) || 0;
@@ -590,13 +617,13 @@ function runSearch(){
   var countEl = document.getElementById('results-count');
   var budgetLabel = budget > 0 ? ' within $'+budget+' total' : '';
   var daysLabel = daysVal ? ' · '+skiDays+'-day trip' : '';
-  countEl.textContent = 'Showing '+results.length+' resort'+(results.length!==1?'s':'')+budgetLabel+daysLabel;
+  if(countEl) countEl.textContent = 'Showing '+results.length+' resort'+(results.length!==1?'s':'')+budgetLabel+daysLabel;
 }
 function renderCards(){
   var container=document.getElementById('cards-container');
   var count=document.getElementById('results-count');
   count.textContent='Showing '+state.results.length+' resort'+(state.results.length!==1?'s':'');
-  if(state.results.length===0){container.innerHTML='<div class="empty"><h3>No resorts match your filters.</h3><p>Try adjusting your budget or skill level.</p></div>';return;}
+  if(state.results.length===0){container.innerHTML='<div class="empty"><h3>No resorts match those filters.</h3><p>Try a higher budget, different pass, or broader skill level — or hit Search with fewer filters to see all 60 mountains.</p></div>';return;}
   container.innerHTML='';
   state.results.forEach(function(m,i){container.appendChild(buildCard(m,i));});
 }
@@ -621,7 +648,7 @@ function buildCard(m,rank){
     var flightLine = tc.isDrive ? '' : '<div style="font-size:0.6rem;color:var(--text-light);">$'+tc.flightLow+'&ndash;$'+tc.flightHigh+' flights (RT est.)</div>';
     costHtml = '<div style="display:flex;flex-direction:column;align-items:flex-end;flex-shrink:0;gap:1px;min-width:110px;">'+
       '<div style="font-size:0.95rem;font-weight:800;color:var(--bark);">$'+tc.totalLow+'&ndash;$'+tc.totalHigh+'</div>'+
-      '<div style="font-size:0.58rem;color:var(--text-light);text-align:right;">est. total &middot; '+m._skiDays+'-day trip</div>'+
+      '<div style="font-size:0.58rem;color:var(--text-light);text-align:right;">estimated range &middot; '+m._skiDays+' days</div>'+
       flightLine+
       '<div style="font-size:0.6rem;color:var(--text-light);text-align:right;">'+liftLine+'</div>'+
       '<div style="font-size:0.6rem;color:var(--text-light);text-align:right;">'+lodgeLine+'</div>'+
@@ -716,7 +743,7 @@ function renderStormTracker(){
       var days=data.daily;
       var rawSnows=days.snowfall_sum||[];
       // Open-Meteo snowfall_sum is ALWAYS in cm — convert to inches
-      var snows=rawSnows.map(function(v){ return v ? Math.round((v/2.54)*10)/10 : 0; });
+      var snows=rawSnows.map(function(v){ return v ? Math.round((v*3.937)*10)/10 : 0; }); // SWE cm -> snow depth inches (10:1 ratio)
       days.snowfall_sum = snows; // store converted values
       var totalSnow5=snows.reduce(function(a,b){return a+(b||0);},0);
       var totalSnow2=snows.slice(0,2).reduce(function(a,b){return a+(b||0);},0);
